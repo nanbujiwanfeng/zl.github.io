@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟用户登录</title>
+    <style>
+        /* 简单美化界面，提升体验 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .login-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-item {
+            margin-bottom: 20px;
+        }
+        .form-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        .form-item input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #409eff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background-color: #337ecc;
+        }
+        .tip {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: red;
+        }
+        .success-tip {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="login-title">用户登录</h2>
+        <div class="form-item">
+            <label for="username">用户名</label>
+            <input type="text" id="username" placeholder="请输入用户名">
+        </div>
+        <div class="form-item">
+            <label for="password">密码</label>
+            <input type="password" id="password" placeholder="请输入密码">
+        </div>
+        <button class="login-btn" id="loginBtn">登录</button>
+        <div class="tip" id="tip"></div>
+    </div>
+    <script>
+        // 1. 初始化用户数据（数组存储）
+        // 检查localStorage是否有用户数据，没有则初始化预设用户
+        function initUserList() {
+            const userList = JSON.parse(localStorage.getItem('userList'));
+            if (!userList) {
+                // 预设测试用户（数组形式，每个元素是用户对象）
+                const defaultUsers = [
+                    { username: 'admin', password: '123456' },
+                    { username: 'testuser', password: 'test123' }
+                ];
+                // 存储到localStorage（需转成JSON字符串，因为localStorage只能存字符串）
+                localStorage.setItem('userList', JSON.stringify(defaultUsers));
+            }
+        }
+        // 2. 登录验证函数
+        function login() {
+            // 获取输入的用户名和密码
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const tip = document.getElementById('tip');
+            // 空值校验
+            if (!username || !password) {
+                tip.textContent = '用户名和密码不能为空！';
+                return;
+            }
+            // 从localStorage读取用户数组
+            const userList = JSON.parse(localStorage.getItem('userList'));
+            // 遍历数组验证用户
+            const loginUser = userList.find(user => user.username === username && user.password === password);
+            if (loginUser) {
+                // 登录成功：存储当前登录用户信息，提示成功
+                localStorage.setItem('currentUser', JSON.stringify(loginUser));
+                tip.className = 'tip success-tip';
+                tip.textContent = `登录成功！欢迎你，${username}！`;
+                // 模拟跳转到首页（可替换为实际页面跳转）
+                setTimeout(() => {
+                    alert('即将跳转到首页');
+                }, 1500);
+            } else {
+                // 登录失败
+                tip.textContent = '用户名或密码错误！';
+            }
+        }
+
+        // 3. 页面加载时初始化用户数据
+        window.onload = function() {
+            initUserList();
+            // 绑定登录按钮点击事件
+            document.getElementById('loginBtn').addEventListener('click', login);
+        };
+    </script>
+</body>
+</html>
