@@ -1,0 +1,45 @@
+# ==================================================
+# Next Theme Configuration
+# ==================================================
+
+# 选择主题布局（4种可选，只保留一个）
+scheme: Muse
+# scheme: Mist
+# scheme: Pisces
+# scheme: Gemini
+
+# 网站信息
+title: 南不及晚风的博客
+subtitle: 大一软件工程学生的学习记录
+author: 张良
+
+# 侧边栏头像
+avatar:
+  url: /images/avatar.jpg
+  rounded: true
+  rotated: true
+
+# 语言设置
+language: zh-CN
+
+# 代码高亮
+codeblock:
+  theme:
+    light: night bright
+    dark: night
+  copy_button:
+    enable: true
+
+# 暗黑模式
+darkmode: true
+
+# 搜索功能
+search:
+  path: search.xml
+  field: post
+  content: true
+  format: html
+
+# 访问量统计
+busuanzi:
+  enable: true

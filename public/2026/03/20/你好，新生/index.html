@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>你好，新生！属于我的第一个博客 | 南不及晚风的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="登录交互界面 &lt;!DOCTYPE html&gt; &lt;html lang&#x3D;&quot;zh-CN&quot;&gt; &lt;head&gt;     &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;     &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width, initia">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你好，新生！属于我的第一个博客">
+<meta property="og:url" content="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/index.html">
+<meta property="og:site_name" content="南不及晚风的博客">
+<meta property="og:description" content="登录交互界面 &lt;!DOCTYPE html&gt; &lt;html lang&#x3D;&quot;zh-CN&quot;&gt; &lt;head&gt;     &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;     &lt;meta name&#x3D;&quot;viewport&quot; content&#x3D;&quot;width&#x3D;device-width, initia">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-20T13:52:53.000Z">
+<meta property="article:modified_time" content="2026-03-20T14:58:11.722Z">
+<meta property="article:author" content="张良">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/zl.github.io/atom.xml" title="南不及晚风的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/zl.github.io/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/zl.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/zl.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/zl.github.io/" id="logo">南不及晚风的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/zl.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/zl.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/zl.github.io/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://nanbujiwanfeng.github.io/zl.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-你好，新生" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/" class="article-date">
+  <time class="dt-published" datetime="2026-03-20T13:52:53.000Z" itemprop="datePublished">2026-03-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      你好，新生！属于我的第一个博客
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>登录交互界面</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;模拟用户登录&lt;/title&gt;
+    &lt;style&gt;
+        /* 简单美化界面，提升体验 */
+        * &#123;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        &#125;
+        .login-container &#123;
+            width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        &#125;
+        .login-title &#123;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        &#125;
+        .form-item &#123;
+            margin-bottom: 20px;
+        &#125;
+        .form-item label &#123;
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        &#125;
+        .form-item input &#123;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 16px;
+        &#125;
+        .login-btn &#123;
+            width: 100%;
+            padding: 12px;
+            background-color: #409eff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        &#125;
+        .login-btn:hover &#123;
+            background-color: #337ecc;
+        &#125;
+        .tip &#123;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: red;
+        &#125;
+        .success-tip &#123;
+            color: green;
+        &#125;
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;login-container&quot;&gt;
+        &lt;h2 class=&quot;login-title&quot;&gt;用户登录&lt;/h2&gt;
+        &lt;div class=&quot;form-item&quot;&gt;
+            &lt;label for=&quot;username&quot;&gt;用户名&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;username&quot; placeholder=&quot;请输入用户名&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;form-item&quot;&gt;
+            &lt;label for=&quot;password&quot;&gt;密码&lt;/label&gt;
+            &lt;input type=&quot;password&quot; id=&quot;password&quot; placeholder=&quot;请输入密码&quot;&gt;
+        &lt;/div&gt;
+        &lt;button class=&quot;login-btn&quot; id=&quot;loginBtn&quot;&gt;登录&lt;/button&gt;
+        &lt;div class=&quot;tip&quot; id=&quot;tip&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        // 1. 初始化用户数据（数组存储）
+        // 检查localStorage是否有用户数据，没有则初始化预设用户
+        function initUserList() &#123;
+            const userList = JSON.parse(localStorage.getItem(&#39;userList&#39;));
+            if (!userList) &#123;
+                // 预设测试用户（数组形式，每个元素是用户对象）
+                const defaultUsers = [
+                    &#123; username: &#39;admin&#39;, password: &#39;123456&#39; &#125;,
+                    &#123; username: &#39;testuser&#39;, password: &#39;test123&#39; &#125;
+                ];
+                // 存储到localStorage（需转成JSON字符串，因为localStorage只能存字符串）
+                localStorage.setItem(&#39;userList&#39;, JSON.stringify(defaultUsers));
+            &#125;
+        &#125;
+        // 2. 登录验证函数
+        function login() &#123;
+            // 获取输入的用户名和密码
+            const username = document.getElementById(&#39;username&#39;).value.trim();
+            const password = document.getElementById(&#39;password&#39;).value.trim();
+            const tip = document.getElementById(&#39;tip&#39;);
+            // 空值校验
+            if (!username || !password) &#123;
+                tip.textContent = &#39;用户名和密码不能为空！&#39;;
+                return;
+            &#125;
+            // 从localStorage读取用户数组
+            const userList = JSON.parse(localStorage.getItem(&#39;userList&#39;));
+            // 遍历数组验证用户
+            const loginUser = userList.find(user =&gt; user.username === username &amp;&amp; user.password === password);
+            if (loginUser) &#123;
+                // 登录成功：存储当前登录用户信息，提示成功
+                localStorage.setItem(&#39;currentUser&#39;, JSON.stringify(loginUser));
+                tip.className = &#39;tip success-tip&#39;;
+                tip.textContent = `登录成功！欢迎你，$&#123;username&#125;！`;
+                // 模拟跳转到首页（可替换为实际页面跳转）
+                setTimeout(() =&gt; &#123;
+                    alert(&#39;即将跳转到首页&#39;);
+                &#125;, 1500);
+            &#125; else &#123;
+                // 登录失败
+                tip.textContent = &#39;用户名或密码错误！&#39;;
+            &#125;
+        &#125;
+
+        // 3. 页面加载时初始化用户数据
+        window.onload = function() &#123;
+            initUserList();
+            // 绑定登录按钮点击事件
+            document.getElementById(&#39;loginBtn&#39;).addEventListener(&#39;click&#39;, login);
+        &#125;;
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/" data-id="cmna48ex600031svbbz0e87tw" data-title="你好，新生！属于我的第一个博客" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/zl.github.io/tags/javascript/" rel="tag">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/zl.github.io/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/zl.github.io/2026/03/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/zl.github.io/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/zl.github.io/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/zl.github.io/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/zl.github.io/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 10px;">前端</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/zl.github.io/archives/2026/03/">三月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/">你好，新生！属于我的第一个博客</a>
+          </li>
+        
+          <li>
+            <a href="/zl.github.io/2026/03/20/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 张良<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/zl.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/zl.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/zl.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/zl.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/zl.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+<!-- hexo injector body_end start -->
+    <!-- 浏览量显示 -->
+    <span>本文阅读量：<span id="my-blog-view-count">加载中...</span></span>
+    <!-- 引入自研浏览量JS -->
+    <script src="/my-blog-view.js"></script>
+  <!-- hexo injector body_end end --></body>
+</html>
