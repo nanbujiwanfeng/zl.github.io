@@ -71,6 +71,99 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-三子棋" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/zl.github.io/2026/04/07/%E4%B8%89%E5%AD%90%E6%A3%8B/" class="article-date">
+  <time class="dt-published" datetime="2026-04-07T06:12:06.007Z" itemprop="datePublished">2026-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>void printBoard(char board[3][3])<br>{<br>    printf(“\n”);<br>    printf(“  1 2 3\n”);<br>    for (int i &#x3D; 0; i &lt; 3; i++) {<br>        printf(“%d “, i + 1);<br>        for (int j &#x3D; 0; j &lt; 3; j++) {<br>            printf(“%c”, board[i][j]);<br>            if (j &lt; 2) printf(“|”);<br>        }<br>        printf(“\n”);<br>        if (i &lt; 2) printf(“  —–\n”);<br>    }<br>    printf(“\n”);<br>}</p>
+<p>int checkWinner(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++) {<br>        if (board[i][0] !&#x3D; ‘ ‘ &amp;&amp; board[i][0] &#x3D;&#x3D; board[i][1] &amp;&amp; board[i][1] &#x3D;&#x3D; board[i][2])<br>            return board[i][0];<br>        if (board[0][i] !&#x3D; ‘ ‘ &amp;&amp; board[0][i] &#x3D;&#x3D; board[1][i] &amp;&amp; board[1][i] &#x3D;&#x3D; board[2][i])<br>            return board[0][i];<br>    }<br>    if (board[0][0] !&#x3D; ‘ ‘ &amp;&amp; board[0][0] &#x3D;&#x3D; board[1][1] &amp;&amp; board[1][1] &#x3D;&#x3D; board[2][2])<br>        return board[0][0];<br>    if (board[0][2] !&#x3D; ‘ ‘ &amp;&amp; board[0][2] &#x3D;&#x3D; board[1][1] &amp;&amp; board[1][1] &#x3D;&#x3D; board[2][0])<br>        return board[0][2];<br>    return 0;<br>}</p>
+<p>int isBoardFull(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++)<br>        for (int j &#x3D; 0; j &lt; 3; j++)<br>            if (board[i][j] &#x3D;&#x3D; ‘ ‘) return 0;<br>    return 1;<br>}</p>
+<p>void initBoard(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++)<br>        for (int j &#x3D; 0; j &lt; 3; j++)<br>            board[i][j] &#x3D; ‘ ‘;<br>}</p>
+<p>int main()<br>{</p>
+<pre><code>char board[3][3];
+char current;
+int row, col;
+int winner;
+char playAgain = &#39;Y&#39;;
+
+printf(&quot;三子棋游戏\n&quot;);
+printf(&quot;玩家 X 和 玩家 O 轮流下棋。输入行和列（1-3）。\n&quot;);
+
+while (playAgain == &#39;Y&#39; || playAgain == &#39;y&#39;) &#123;
+    initBoard(board);
+    current = &#39;X&#39;;
+    winner = 0;
+
+    while (1) &#123;
+        printBoard(board);
+        printf(&quot;当前玩家: %c\n&quot;, current);
+        printf(&quot;请输入行 列（例如 2 3）：&quot;);
+
+        if (scanf(&quot;%d %d&quot;, &amp;row, &amp;col) != 2) &#123;
+            printf(&quot;输入格式错误，请输入两个数字。\n&quot;);
+            while (getchar() != &#39;\n&#39;);
+            continue;
+        &#125;
+
+        if (row &lt; 1 || row &gt; 3 || col &lt; 1 || col &gt; 3) &#123;
+            printf(&quot;输入超出范围，请输入 1 到 3。\n&quot;);
+            continue;
+        &#125;
+
+        if (board[row - 1][col - 1] != &#39; &#39;) &#123;
+            printf(&quot;该位置已被占用，请选择其他位置。\n&quot;);
+            continue;
+        &#125;
+
+        board[row - 1][col - 1] = current;
+        winner = checkWinner(board);
+        if (winner) break;
+        if (isBoardFull(board)) break;
+
+        current = (current == &#39;X&#39;) ? &#39;O&#39; : &#39;X&#39;;
+    &#125;
+
+    printBoard(board);
+    if (winner) &#123;
+        printf(&quot;玩家 %c 获胜！\n&quot;, winner);
+    &#125; else &#123;
+        printf(&quot;平局！\n&quot;);
+    &#125;
+
+    printf(&quot;是否再来一局？(Y/N): &quot;);
+    scanf(&quot; %c&quot;, &amp;playAgain);
+    while (getchar() != &#39;\n&#39;);
+    printf(&quot;\n&quot;);
+&#125;
+
+printf(&quot;谢谢游玩！\n&quot;);
+return 0;
+</code></pre>
+<p>}</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/04/07/%E4%B8%89%E5%AD%90%E6%A3%8B/" data-id="cmno952bl0003akvb8vfhd4cy" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-动态数组.1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/" class="article-date">
@@ -88,7 +181,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/" data-id="cmna48exa00081svb0dxl4mgu" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/" data-id="cmno952bp0005akvb45hy5ehw" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -262,7 +355,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/" data-id="cmna48ex600031svbbz0e87tw" data-title="你好，新生！属于我的第一个博客" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%96%B0%E7%94%9F/" data-id="cmno952bp0004akvb64bw98m9" data-title="你好，新生！属于我的第一个博客" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -315,7 +408,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/hello-world/" data-id="cmna48ex400011svb35mh2q4z" data-title="Hello World" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/2026/03/20/hello-world/" data-id="cmno952bf0001akvb2gdnb3lk" data-title="Hello World" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -359,7 +452,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/zl.github.io/archives/2026/03/">三月 2026</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/zl.github.io/archives/2026/04/">四月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/zl.github.io/archives/2026/03/">三月 2026</a></li></ul>
     </div>
   </div>
 
@@ -370,6 +463,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/zl.github.io/2026/04/07/%E4%B8%89%E5%AD%90%E6%A3%8B/">(no title)</a>
+          </li>
         
           <li>
             <a href="/zl.github.io/2026/03/28/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.1/">(no title)</a>
