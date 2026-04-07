@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+void printBoard(char board[3][3])
+{
+    printf("\n");
+    printf("  1 2 3\n");
+    for (int i = 0; i < 3; i++) {
+        printf("%d ", i + 1);
+        for (int j = 0; j < 3; j++) {
+            printf("%c", board[i][j]);
+            if (j < 2) printf("|");
+        }
+        printf("\n");
+        if (i < 2) printf("  -----\n");
+    }
+    printf("\n");
+}
+
+int checkWinner(char board[3][3])
+{
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2])
+            return board[i][0];
+        if (board[0][i] != ' ' && board[0][i] == board[1][i] && board[1][i] == board[2][i])
+            return board[0][i];
+    }
+    if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2])
+        return board[0][0];
+    if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0])
+        return board[0][2];
+    return 0;
+}
+
+int isBoardFull(char board[3][3])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (board[i][j] == ' ') return 0;
+    return 1;
+}
+
+void initBoard(char board[3][3])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            board[i][j] = ' ';
+}
+
+int main()
+{
+    
+    char board[3][3];
+    char current;
+    int row, col;
+    int winner;
+    char playAgain = 'Y';
+
+    printf("三子棋游戏\n");
+    printf("玩家 X 和 玩家 O 轮流下棋。输入行和列（1-3）。\n");
+
+    while (playAgain == 'Y' || playAgain == 'y') {
+        initBoard(board);
+        current = 'X';
+        winner = 0;
+
+        while (1) {
+            printBoard(board);
+            printf("当前玩家: %c\n", current);
+            printf("请输入行 列（例如 2 3）：");
+
+            if (scanf("%d %d", &row, &col) != 2) {
+                printf("输入格式错误，请输入两个数字。\n");
+                while (getchar() != '\n');
+                continue;
+            }
+
+            if (row < 1 || row > 3 || col < 1 || col > 3) {
+                printf("输入超出范围，请输入 1 到 3。\n");
+                continue;
+            }
+
+            if (board[row - 1][col - 1] != ' ') {
+                printf("该位置已被占用，请选择其他位置。\n");
+                continue;
+            }
+
+            board[row - 1][col - 1] = current;
+            winner = checkWinner(board);
+            if (winner) break;
+            if (isBoardFull(board)) break;
+
+            current = (current == 'X') ? 'O' : 'X';
+        }
+
+        printBoard(board);
+        if (winner) {
+            printf("玩家 %c 获胜！\n", winner);
+        } else {
+            printf("平局！\n");
+        }
+
+        printf("是否再来一局？(Y/N): ");
+        scanf(" %c", &playAgain);
+        while (getchar() != '\n');
+        printf("\n");
+    }
+
+    printf("谢谢游玩！\n");
+    return 0;
+}
