@@ -1,8 +1,11 @@
 /* ===================================
-   主题布局 — 页头、导航、侧栏、页脚、页面结构
+   主题框架 — 网站的整体骨架和外壳
+   改动这里的样式会影响所有页面
    =================================== */
 
-/* ---------- reset ---------- */
+/* ==============================================
+   一、浏览器默认样式重置（不用管，不要删）
+   ============================================== */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -29,29 +32,38 @@ a img { border: none; }
 input, button { margin: 0; padding: 0; }
 input::-moz-focus-inner, button::-moz-focus-inner { border: 0; padding: 0; }
 
-/* ---------- base ---------- */
+/* ==============================================
+   二、页面基础设置
+   ============================================== */
 html, body, #container { height: 100%; }
 body {
-  background: #eee;
+  width: 100%;
+  background: #eee;                     /* 页面背景色 */
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-text-size-adjust: 100%;
 }
-body { width: 100%; }
 body:before, body:after { content: ""; display: table; }
 body:after { clear: both; }
 
-/* ---------- grid ---------- */
-.outer { max-width: 1220px; margin: 0 auto; padding: 0 20px; }
+/* ---- 页面整体宽度 ---- */
+.outer {
+  max-width: 1220px;                    /* 网站最大宽度 */
+  margin: 0 auto;
+  padding: 0 20px;                      /* 左右留白 */
+}
 .outer:before, .outer:after { content: ""; display: table; }
 .outer:after { clear: both; }
+
+/* ---- 内部容器 ---- */
 .inner { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; }
 .left, .alignleft { float: left; }
 .right, .alignright { float: right; }
 .clear { clear: both; }
+
 #container { position: relative; }
 .mobile-nav-on { overflow: hidden; }
 
-/* ---------- wrap ---------- */
+/* ---- 页面主体包装 ---- */
 #wrap {
   height: 100%; width: 100%;
   position: absolute; top: 0; left: 0;
@@ -61,16 +73,21 @@ body:after { clear: both; }
 }
 .mobile-nav-on #wrap { left: 280px; }
 
-/* ---------- main content area ---------- */
+/* ---- 文章列表区宽度（桌面端） ---- */
 @media screen and (min-width: 768px) {
   #main { display: inline; float: left; width: 73.33333333333333%; margin: 0 0.833333333333333%; }
 }
 
-/* ---------- header ---------- */
+/* ==============================================
+   三、顶部横幅区域（#header）
+   就是页面最上面那张 banner 图片 + 网站标题
+   ============================================== */
 #header {
-  height: 300px; position: relative;
+  height: 300px;                        /* 横幅高度 */
+  position: relative;
   border-bottom: 1px solid #ddd;
 }
+/* 横幅顶部和底部的渐变遮罩 */
 #header:before, #header:after {
   content: ""; position: absolute; left: 0; right: 0; height: 40px;
 }
@@ -85,49 +102,70 @@ body:after { clear: both; }
 #header-outer { height: 100%; position: relative; }
 #header-inner { position: relative; overflow: hidden; }
 
-/* banner */
+/* ---- banner 背景图片 ---- */
 #banner {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  background: url("../images/banner.jpg") center #000;
-  background-size: cover;
+  background: url("../images/banner.jpg") center #000;  /* ← 改这里换横幅图片 */
+  background-size: cover;               /* 图片铺满 */
   z-index: -1;
 }
 
-/* site title */
+/* ---- 网站标题（图片上方的白色大字）---- */
 #header-title {
   text-align: center; height: 40px;
   position: absolute; top: 50%; left: 0;
   margin-top: -20px;
 }
 #logo, #subtitle {
-  text-decoration: none; color: #fff;
+  text-decoration: none; color: #fff;    /* 标题颜色：白色 */
   font-weight: 300; text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
-#logo { font-size: 40px; line-height: 40px; letter-spacing: 2px; }
-#subtitle { font-size: 16px; line-height: 16px; letter-spacing: 1px; }
+#logo {
+  font-size: 40px;                      /* 网站名 字号 */
+  line-height: 40px;
+  letter-spacing: 2px;                  /* 字间距 */
+}
+#subtitle {
+  font-size: 16px;                      /* 副标题 字号 */
+  line-height: 16px;
+  letter-spacing: 1px;
+}
 #subtitle-wrap { margin-top: 16px; }
 
-/* ---------- main nav ---------- */
-#main-nav { float: left; margin-left: -15px; }
+/* ==============================================
+   四、导航栏（桌面端顶部菜单）
+   ============================================== */
+#main-nav {
+  float: left;
+  margin-left: -15px;
+}
+/* 导航按钮通用样式 */
 .nav-icon, .main-nav-link {
-  float: left; color: #fff; opacity: 0.6;
+  float: left; color: #fff;            /* 导航文字颜色 */
+  opacity: 0.6;                         /* 默认半透明 */
   text-decoration: none; text-shadow: 0 1px rgba(0,0,0,0.2);
   transition: opacity 0.2s;
-  display: block; padding: 20px 15px;
+  display: block; padding: 20px 15px;   /* 导航按钮内边距 */
 }
-.nav-icon:hover, .main-nav-link:hover { opacity: 1; }
+.nav-icon:hover, .main-nav-link:hover {
+  opacity: 1;                           /* 鼠标悬停时变为完全不透明 */
+}
 .nav-icon {
   text-align: center; font-size: 14px;
   width: 14px; height: 14px; padding: 20px 15px;
   position: relative; cursor: pointer;
 }
 .main-nav-link { font-weight: 300; letter-spacing: 1px; }
+
+/* 手机端隐藏导航文字 */
 @media screen and (max-width: 479px) { .main-nav-link { display: none; } }
 #main-nav-toggle { display: none; }
 @media screen and (max-width: 479px) { #main-nav-toggle { display: block; } }
 
-/* ---------- sub nav / search ---------- */
+/* ==============================================
+   五、搜索框（导航栏右侧）
+   ============================================== */
 #sub-nav { float: right; margin-right: -15px; }
 #search-form-wrap {
   position: absolute; top: 15px; width: 150px; height: 30px;
@@ -154,25 +192,47 @@ body:after { clear: both; }
 }
 .search-form-submit:hover, .search-form-submit:focus { color: #777; }
 
-/* ---------- footer ---------- */
+/* ==============================================
+   六、页脚（页面最底部）
+   ============================================== */
 #footer {
-  background: #262a30; padding: 50px 0;
-  border-top: 1px solid #ddd; color: #999;
+  background: #262a30;                  /* 页脚背景色 */
+  padding: 50px 0;                      /* 页脚上下内边距 */
+  border-top: 1px solid #ddd;
+  color: #999;                          /* 页脚文字颜色 */
 }
 #footer a { color: #258fb8; text-decoration: none; }
 #footer a:hover { text-decoration: underline; }
-#footer-info { line-height: 1.6em; font-size: 0.85em; }
-
-/* ---------- sidebar ---------- */
-@media screen and (min-width: 768px) {
-  #sidebar { display: inline; float: left; width: 23.333333333333332%; margin: 0 0.833333333333333%; }
+#footer-info {
+  line-height: 1.6em;
+  font-size: 0.85em;                    /* 版权信息字号 */
 }
+
+/* ==============================================
+   七、侧边栏（桌面端右侧）
+   ============================================== */
+@media screen and (min-width: 768px) {
+  #sidebar {
+    display: inline; float: left;
+    width: 23.333333333333332%;          /* 侧边栏宽度 */
+    margin: 0 0.833333333333333%;
+  }
+}
+/* 侧边栏每个小部件的间距 */
 .widget-wrap { margin: 50px 0; }
+
+/* 侧边栏卡片 */
 .widget {
-  color: #777; text-shadow: 0 1px #fff;
-  background: #ddd; box-shadow: 0 -1px 4px #ccc inset;
-  border: 1px solid #ccc; padding: 15px; border-radius: 3px;
-  line-height: 1.6em; word-wrap: break-word; font-size: 0.9em;
+  color: #777;                          /* 卡片内文字颜色 */
+  text-shadow: 0 1px #fff;
+  background: #ddd;                     /* 卡片背景色 */
+  box-shadow: 0 -1px 4px #ccc inset;
+  border: 1px solid #ccc;
+  padding: 15px;                        /* 卡片内边距 */
+  border-radius: 3px;                   /* 圆角 */
+  line-height: 1.6em;
+  word-wrap: break-word;
+  font-size: 0.9em;
 }
 .widget a { color: #258fb8; text-decoration: none; }
 .widget a:hover { text-decoration: underline; }
@@ -180,11 +240,17 @@ body:after { clear: both; }
 .widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; }
 .widget ul ul, .widget ol ul { list-style: disc; }
 .widget ul ol, .widget ol ol { list-style: decimal; }
+
+/* 侧边栏小标题（如"标签"、"归档"） */
 .widget-title {
-  text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
-  color: #999; margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  text-decoration: none; text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;                          /* 小标题颜色 */
+  margin-bottom: 1em; margin-left: 5px;
+  line-height: 1em; text-shadow: 0 1px #fff;
+  font-weight: bold;
 }
+/* 标签/分类后面的数字（如 "前端 (1)"） */
 .category-list-count, .tag-list-count, .archive-list-count {
   padding-left: 5px; color: #999; font-size: 0.85em;
 }
@@ -192,54 +258,97 @@ body:after { clear: both; }
 .category-list-count:after, .tag-list-count:after, .archive-list-count:after { content: ")"; }
 .tagcloud a { margin-right: 5px; display: inline-block; }
 
-/* ---------- mobile nav ---------- */
+/* ==============================================
+   八、手机端侧滑菜单
+   ============================================== */
 @media screen and (max-width: 479px) {
   #mobile-nav {
     position: absolute; top: 0; left: 0;
-    width: 280px; height: 100%;
-    background: #191919; border-right: 1px solid #fff;
+    width: 280px;                       /* 菜单宽度 */
+    height: 100%;
+    background: #191919;                /* 菜单背景色 */
+    border-right: 1px solid #fff;
   }
   .mobile-nav-link {
-    display: block; color: #999; text-decoration: none;
-    padding: 15px 20px; font-weight: bold;
+    display: block; color: #999;
+    text-decoration: none;
+    padding: 15px 20px;
+    font-weight: bold;
   }
   .mobile-nav-link:hover { color: #fff; }
 }
 
-/* ---------- article card (layout only) ---------- */
-.article { margin: 50px 0; }
+/* ==============================================
+   九、文章卡片外观（首页和归档页的文章预览框）
+   这是包裹每篇文章的"卡片"容器
+   ============================================== */
+.article { margin: 50px 0; }            /* 卡片之间的间距 */
+
+/* ---- 卡片本身 ---- */
 .article-inner {
-  overflow: hidden; background: #fff;
-  box-shadow: 1px 2px 3px #ddd; border: 1px solid #ddd; border-radius: 3px;
+  overflow: hidden;
+  background: #fff;                     /* 卡片背景色 */
+  box-shadow: 1px 2px 3px #ddd;         /* 卡片阴影 */
+  border: 1px solid #ddd;               /* 卡片边框 */
+  border-radius: 3px;                   /* 卡片圆角 */
 }
+
+/* ---- 卡片顶部元信息（日期、分类）---- */
 .article-meta:before, .article-meta:after { content: ""; display: table; }
 .article-meta:after { clear: both; }
 .article-date {
   float: left; text-decoration: none; text-transform: uppercase;
-  letter-spacing: 2px; color: #999; margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  letter-spacing: 2px;
+  color: #999;                          /* 日期文字颜色 */
+  margin-bottom: 1em; margin-left: 5px;
+  line-height: 1em; text-shadow: 0 1px #fff;
+  font-weight: bold;
 }
-.article-category { float: left; line-height: 1em; color: #ccc; text-shadow: 0 1px #fff; margin-left: 8px; }
+.article-category {
+  float: left; line-height: 1em;
+  color: #ccc;
+  text-shadow: 0 1px #fff; margin-left: 8px;
+}
 .article-category:before { content: "\2022"; }
 .article-category-link {
   text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
-  color: #999; margin: 0 12px 1em; line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  color: #999; margin: 0 12px 1em;
+  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
 }
+
+/* ---- 卡片头部（文章标题）---- */
 .article-header { padding: 20px 20px 0; }
 .article-title {
-  text-decoration: none; font-size: 2em; font-weight: bold;
-  color: #555; line-height: 1.1em; transition: color 0.2s;
+  text-decoration: none;
+  font-size: 2em;                       /* 文章标题字号 */
+  font-weight: bold;
+  color: #555;                          /* 文章标题颜色 */
+  line-height: 1.1em;
+  transition: color 0.2s;
 }
-a.article-title:hover { color: #258fb8; }
+a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
+
+/* ---- "阅读全文"按钮 ---- */
 .article-more-link a {
-  display: inline-block; line-height: 1em; padding: 6px 15px;
-  border-radius: 15px; background: #eee; color: #999;
-  text-shadow: 0 1px #fff; text-decoration: none;
+  display: inline-block; line-height: 1em;
+  padding: 6px 15px;
+  border-radius: 15px;
+  background: #eee;                     /* 按钮背景色 */
+  color: #999;                          /* 按钮文字色 */
+  text-shadow: 0 1px #fff;
+  text-decoration: none;
 }
-.article-more-link a:hover { background: #258fb8; color: #fff; text-shadow: 0 1px #1e7293; }
+.article-more-link a:hover {
+  background: #258fb8;                  /* 鼠标悬停时按钮变色 */
+  color: #fff;
+  text-shadow: 0 1px #1e7293;
+}
+
+/* ---- 卡片底部（标签、分享链接）---- */
 .article-footer {
   font-size: 0.85em; line-height: 1.6em;
-  border-top: 1px solid #ddd; padding-top: 1.6em;
+  border-top: 1px solid #ddd;           /* 分割线 */
+  padding-top: 1.6em;
   margin: 0 20px 20px;
 }
 .article-footer:before, .article-footer:after { content: ""; display: table; }
@@ -253,7 +362,9 @@ a.article-title:hover { color: #258fb8; }
 .article-share-link { cursor: pointer; float: right; margin-left: 20px; }
 .article-share-link:before { padding-right: 6px; }
 
-/* article nav (prev/next) */
+/* ==============================================
+   十、文章内页的上一篇/下一篇导航
+   ============================================== */
 #article-nav { position: relative; }
 #article-nav:before, #article-nav:after { content: ""; display: table; }
 #article-nav:after { clear: both; }
@@ -262,13 +373,16 @@ a.article-title:hover { color: #258fb8; }
   #article-nav:before {
     width: 8px; height: 8px; position: absolute;
     top: 50%; left: 50%; margin-top: -4px; margin-left: -4px;
-    content: ""; border-radius: 50%; background: #ddd;
+    content: ""; border-radius: 50%;
+    background: #ddd;                   /* 中间圆点颜色 */
     box-shadow: 0 1px 2px #fff;
   }
 }
 .article-nav-link-wrap {
-  text-decoration: none; text-shadow: 0 1px #fff; color: #999;
-  box-sizing: border-box; margin-top: 50px; text-align: center; display: block;
+  text-decoration: none; text-shadow: 0 1px #fff;
+  color: #999;                          /* 链接文字色 */
+  box-sizing: border-box; margin-top: 50px;
+  text-align: center; display: block;
 }
 .article-nav-link-wrap:hover { color: #555; }
 @media screen and (min-width: 768px) {
@@ -276,26 +390,36 @@ a.article-title:hover { color: #258fb8; }
   #article-nav-newer { float: left; text-align: right; padding-right: 20px; }
   #article-nav-older { float: right; text-align: left; padding-left: 20px; }
 }
-.article-nav-caption { text-transform: uppercase; letter-spacing: 2px; color: #ddd; line-height: 1em; font-weight: bold; }
+.article-nav-caption {
+  text-transform: uppercase; letter-spacing: 2px;
+  color: #ddd;                          /* "上一篇"/"下一篇" 标签色 */
+  line-height: 1em; font-weight: bold;
+}
 #article-nav-newer .article-nav-caption { margin-right: -2px; }
 .article-nav-title { font-size: 0.85em; line-height: 1.6em; margin-top: 0.5em; }
 
-/* article share box */
+/* ==============================================
+   十一、文章分享弹窗
+   ============================================== */
 .article-share-box {
   position: absolute; display: none; background: #fff;
-  box-shadow: 1px 2px 10px rgba(0,0,0,0.2); border-radius: 3px;
-  margin-left: -145px; overflow: hidden; z-index: 1;
+  box-shadow: 1px 2px 10px rgba(0,0,0,0.2);
+  border-radius: 3px; margin-left: -145px;
+  overflow: hidden; z-index: 1;
 }
 .article-share-box.on { display: block; }
 .article-share-input {
   width: 100%; background: none; box-sizing: border-box;
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   padding: 0 15px; color: #555; outline: none;
-  border: 1px solid #ddd; border-radius: 3px 3px 0 0; height: 36px; line-height: 36px;
+  border: 1px solid #ddd; border-radius: 3px 3px 0 0;
+  height: 36px; line-height: 36px;
 }
 .article-share-links { background: #eee; }
 .article-share-links:before, .article-share-links:after { content: ""; display: table; }
 .article-share-links:after { clear: both; }
+
+/* 社交媒体分享按钮颜色 */
 .article-share-twitter, .article-share-facebook, .article-share-pinterest, .article-share-linkedin {
   width: 50px; height: 36px; display: block; float: left;
   position: relative; color: #999; text-shadow: 0 1px #fff;
@@ -308,45 +432,64 @@ a.article-title:hover { color: #258fb8; }
 }
 .article-share-twitter:hover, .article-share-facebook:hover,
 .article-share-pinterest:hover, .article-share-linkedin:hover { color: #fff; }
-.article-share-twitter:hover { background: #00aced; text-shadow: 0 1px #008abe; }
-.article-share-facebook:hover { background: #3b5998; text-shadow: 0 1px #2f477a; }
-.article-share-pinterest:hover { background: #cb2027; text-shadow: 0 1px #a21a1f; }
-.article-share-linkedin:hover { background: #0077b5; text-shadow: 0 1px #005f91; }
+.article-share-twitter:hover { background: #00aced; }     /* Twitter 蓝 */
+.article-share-facebook:hover { background: #3b5998; }    /* Facebook 蓝 */
+.article-share-pinterest:hover { background: #cb2027; }   /* Pinterest 红 */
+.article-share-linkedin:hover { background: #0077b5; }    /* LinkedIn 蓝 */
 
-/* ---------- archives layout ---------- */
+/* ==============================================
+   十二、归档页面布局
+   ============================================== */
 .archives-wrap { margin: 50px 0; }
 .archives:before, .archives:after { content: ""; display: table; }
 .archives:after { clear: both; }
 .archive-year-wrap { margin-bottom: 1em; }
+
+/* 年份标题 */
 .archive-year {
-  text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
-  color: #999; margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  text-decoration: none; text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;                          /* 年份文字颜色 */
+  margin-bottom: 1em; margin-left: 5px;
+  line-height: 1em; text-shadow: 0 1px #fff;
+  font-weight: bold;
 }
+
+/* 归档列表分栏 */
 .archives { column-gap: 10px; }
 @media screen and (min-width: 480px) and (max-width: 767px) { .archives { column-count: 2; } }
 @media screen and (min-width: 768px) { .archives { column-count: 3; } }
+
+/* 归档中每篇文章条目 */
 .archive-article { break-inside: avoid-column; overflow: hidden; }
 .archive-article-inner {
-  padding: 10px; margin-bottom: 15px; background: #fff;
-  box-shadow: 1px 2px 3px #ddd; border: 1px solid #ddd; border-radius: 3px;
+  padding: 10px; margin-bottom: 15px;
+  background: #fff;                     /* 条目背景色 */
+  box-shadow: 1px 2px 3px #ddd;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
 .archive-article-title {
-  text-decoration: none; font-weight: bold; color: #555;
+  text-decoration: none; font-weight: bold;
+  color: #555;                          /* 文章标题颜色 */
   transition: color 0.2s; line-height: 1.6em;
 }
 .archive-article-title:hover { color: #258fb8; }
 .archive-article-footer { margin-top: 1em; }
 .archive-article-date {
-  color: #999; text-decoration: none; font-size: 0.85em;
+  color: #999;                          /* 归档日期颜色 */
+  text-decoration: none; font-size: 0.85em;
   line-height: 1em; margin-bottom: 0.5em; display: block;
 }
 
-/* ---------- pagination ---------- */
+/* ==============================================
+   十三、分页导航（首页底部页码）
+   ============================================== */
 #page-nav {
   margin: 50px auto; background: #fff;
   box-shadow: 1px 2px 3px #ddd; border: 1px solid #ddd;
-  border-radius: 3px; text-align: center; color: #999; overflow: hidden;
+  border-radius: 3px; text-align: center;
+  color: #999; overflow: hidden;
 }
 #page-nav:before, #page-nav:after { content: ""; display: table; }
 #page-nav:after { clear: both; }
@@ -360,15 +503,22 @@ a.article-title:hover { color: #258fb8; }
 #page-nav .current { color: #555; font-weight: bold; }
 #page-nav .space { color: #ddd; }
 
-/* ---------- comments ---------- */
+/* ==============================================
+   十四、评论区外观
+   ============================================== */
 #comments {
-  background: #fff; box-shadow: 1px 2px 3px #ddd;
-  padding: 20px; border: 1px solid #ddd; border-radius: 3px;
+  background: #fff;                     /* 评论区背景 */
+  box-shadow: 1px 2px 3px #ddd;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
   margin: 50px 0;
 }
 #comments a { color: #258fb8; }
 
-/* ---------- gallery ---------- */
+/* ==============================================
+   十五、图片画廊（多图展示用）
+   ============================================== */
 .article-gallery { background: #000; position: relative; }
 .article-gallery-photos { position: relative; overflow: hidden; }
 .article-gallery-img { display: none; max-width: 100%; }
