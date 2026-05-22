@@ -1,0 +1,14 @@
+#!/bin/bash
+# 一键部署：提交 source 分支，合并到 main，推送到 GitHub
+set -e
+
+MSG="${1:-更新网站}"
+
+git add -A
+git commit -m "$MSG" || echo "没有新变更，跳过提交"
+git push origin source
+git checkout main
+git merge source -m "合并：$MSG"
+git push origin main
+git checkout source
+echo "部署完成"
