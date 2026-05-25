@@ -4,7 +4,7 @@
    =================================== */
 
 /* ==============================================
-   一、浏览器默认样式重置（不用管，不要删）
+   一、浏览器默认样式重置（统一各浏览器默认差异，不用管，不要删）
    ============================================== */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -33,7 +33,7 @@ input, button { margin: 0; padding: 0; }
 input::-moz-focus-inner, button::-moz-focus-inner { border: 0; padding: 0; }
 
 /* ==============================================
-   二、页面基础设置
+   二、页面基础设置（整体背景色、字体、最大宽度等）
    ============================================== */
 html, body, #container { height: 100%; }
 body {
@@ -45,7 +45,7 @@ body {
 body:before, body:after { content: ""; display: table; }
 body:after { clear: both; }
 
-/* ---- 页面整体宽度 ---- */
+/* ---- 页面整体宽度（网站内容区的最大宽度 1220px + 左右留白 20px）---- */
 .outer {
   max-width: 1220px;                    /* 网站最大宽度 */
   margin: 0 auto;
@@ -54,7 +54,7 @@ body:after { clear: both; }
 .outer:before, .outer:after { content: ""; display: table; }
 .outer:after { clear: both; }
 
-/* ---- 内部容器 ---- */
+/* ---- 内部容器（用于分栏布局的内部包裹层，左右浮动工具类）---- */
 .inner { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; }
 .left, .alignleft { float: left; }
 .right, .alignright { float: right; }
@@ -63,7 +63,7 @@ body:after { clear: both; }
 #container { position: relative; }
 .mobile-nav-on { overflow: hidden; }
 
-/* ---- 页面主体包装 ---- */
+/* ---- 页面主体包装（#wrap，整个页面的最外层容器，手机菜单打开时会向右平移）---- */
 #wrap {
   height: 100%; width: 100%;
   position: absolute; top: 0; left: 0;
@@ -73,23 +73,36 @@ body:after { clear: both; }
 }
 .mobile-nav-on #wrap { left: 280px; }
 
-/* ---- 文章列表区宽度（桌面端） ---- */
+/* ---- 文章列表区宽度（桌面端，左侧主内容区占 73%） ---- */
 @media screen and (min-width: 768px) {
   #main { display: inline; float: left; width: 73.33333333333333%; margin: 0 0.833333333333333%; }
 }
 
 /* ==============================================
-   三、顶部横幅区域（#header）
-   就是页面最上面那张 banner 图片 + 网站标题
+   三、顶部横幅区域（#banner，页面最上面的背景图区域，上面叠着博客标题和导航菜单）
    ============================================== */
 #header {
-  height: 300px;                        /* 横幅高度 */
+  height: 50vh;                         /* 手机：占半屏 */
+  min-height: 200px;
+  max-height: 450px;
   position: relative;
   border-bottom: 1px solid #ddd;
+  overflow: hidden;                     /* 防止内容溢出 */
 }
+
+/* 平板及以上：横幅稍矮 */
+@media screen and (min-width: 768px) {
+  #header { height: 35vh; }
+}
+/* 桌面大屏：横幅更矮 */
+@media screen and (min-width: 1024px) {
+  #header { height: 28vh; }
+}
+
 /* 横幅顶部和底部的渐变遮罩 */
 #header:before, #header:after {
   content: ""; position: absolute; left: 0; right: 0; height: 40px;
+  z-index: 2;                           /* 渐变在标题和导航上方 */
 }
 #header:before {
   top: 0;
@@ -99,42 +112,53 @@ body:after { clear: both; }
   bottom: 0;
   background: linear-gradient(transparent, rgba(0,0,0,0.2));
 }
-#header-outer { height: 100%; position: relative; }
+
+#header-outer {
+  height: 100%; position: relative;
+  z-index: 1;                           /* 标题和导航在 banner 上方 */
+}
 #header-inner { position: relative; overflow: hidden; }
 
-/* ---- banner 背景图片 ---- */
+/* ---- banner 背景图片（顶部横幅的那张大图，换成你自己的图就改这里）---- */
 #banner {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  background: url("../images/banner.jpg") center #000;  /* ← 改这里换横幅图片 */
-  background-size: cover;               /* 图片铺满 */
-  z-index: -1;
+  background: url("../images/banner.jpg") center / cover #000;  /* ← 改这里换横幅图片 */
+  z-index: 0;                           /* 最底层 */
 }
 
-/* ---- 网站标题（图片上方的白色大字）---- */
+/* 超宽屏：图片不放大超过原始分辨率，避免模糊
+   建议把 banner.jpg 换成 ≥2560px 宽的图可以去掉这个限制 */
+@media screen and (min-width: 1920px) {
+  #banner {
+    background-size: auto 100%;         /* 高度填满，宽度不拉伸 */
+  }
+}
+
+/* ---- 网站标题（叠在 banner 图上的白色大字：博客名 logo + 副标题 subtitle）---- */
 #header-title {
-  text-align: center; height: 40px;
-  position: absolute; top: 50%; left: 0;
-  margin-top: -20px;
+  text-align: center;
+  position: absolute; top: 50%; left: 0; right: 0;
+  transform: translateY(-50%);           /* 垂直居中，不依赖固定高度 */
 }
 #logo, #subtitle {
   text-decoration: none; color: #fff;    /* 标题颜色：白色 */
   font-weight: 300; text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 #logo {
-  font-size: 40px;                      /* 网站名 字号 */
-  line-height: 40px;
+  font-size: clamp(24px, 5vw, 40px);     /* 网站名 字号（自适应） */
+  line-height: 1.2;
   letter-spacing: 2px;                  /* 字间距 */
 }
 #subtitle {
-  font-size: 16px;                      /* 副标题 字号 */
-  line-height: 16px;
+  font-size: clamp(12px, 2vw, 16px);     /* 副标题 字号（自适应） */
+  line-height: 1.2;
   letter-spacing: 1px;
 }
 #subtitle-wrap { margin-top: 16px; }
 
 /* ==============================================
-   四、导航栏（桌面端顶部菜单）
+   四、导航栏（桌面端顶部菜单，如首页/归档/关于等链接）
    ============================================== */
 #main-nav {
   float: left;
@@ -164,7 +188,7 @@ body:after { clear: both; }
 @media screen and (max-width: 479px) { #main-nav-toggle { display: block; } }
 
 /* ==============================================
-   五、搜索框（导航栏右侧）
+   五、搜索框（导航栏右侧的放大镜图标，点击弹出搜索输入框）
    ============================================== */
 #sub-nav { float: right; margin-right: -15px; }
 #search-form-wrap {
@@ -193,7 +217,7 @@ body:after { clear: both; }
 .search-form-submit:hover, .search-form-submit:focus { color: #777; }
 
 /* ==============================================
-   六、页脚（页面最底部）
+   六、页脚（页面最底部的深色区域，放版权信息）
    ============================================== */
 #footer {
   background: #262a30;                  /* 页脚背景色 */
@@ -209,7 +233,7 @@ body:after { clear: both; }
 }
 
 /* ==============================================
-   七、侧边栏（桌面端右侧）
+   七、侧边栏（桌面端右侧，放标签云/分类/归档等小部件）
    ============================================== */
 @media screen and (min-width: 768px) {
   #sidebar {
@@ -259,7 +283,7 @@ body:after { clear: both; }
 .tagcloud a { margin-right: 5px; display: inline-block; }
 
 /* ==============================================
-   八、手机端侧滑菜单
+   八、手机端侧滑菜单（手机版从左侧滑出的导航面板）
    ============================================== */
 @media screen and (max-width: 479px) {
   #mobile-nav {
@@ -279,12 +303,11 @@ body:after { clear: both; }
 }
 
 /* ==============================================
-   九、文章卡片外观（首页和归档页的文章预览框）
-   这是包裹每篇文章的"卡片"容器
+   九、文章卡片外观（首页和归档页每一篇文章的预览卡片，白色底+阴影+圆角）
    ============================================== */
 .article { margin: 50px 0; }            /* 卡片之间的间距 */
 
-/* ---- 卡片本身 ---- */
+/* ---- 卡片本身（白色背景 + 浅灰阴影 + 3px 圆角的卡片容器）---- */
 .article-inner {
   overflow: hidden;
   background: #fff;                     /* 卡片背景色 */
@@ -293,7 +316,7 @@ body:after { clear: both; }
   border-radius: 3px;                   /* 卡片圆角 */
 }
 
-/* ---- 卡片顶部元信息（日期、分类）---- */
+/* ---- 卡片顶部元信息（文章发布日期 + 所属分类，灰色小字）---- */
 .article-meta:before, .article-meta:after { content: ""; display: table; }
 .article-meta:after { clear: both; }
 .article-date {
@@ -316,7 +339,7 @@ body:after { clear: both; }
   line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
 }
 
-/* ---- 卡片头部（文章标题）---- */
+/* ---- 卡片头部（文章大标题，2em 字号，hover 时变蓝色）---- */
 .article-header { padding: 20px 20px 0; }
 .article-title {
   text-decoration: none;
@@ -328,7 +351,7 @@ body:after { clear: both; }
 }
 a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 
-/* ---- "阅读全文"按钮 ---- */
+/* ---- "阅读全文"按钮（椭圆形灰色按钮，鼠标悬停变蓝）---- */
 .article-more-link a {
   display: inline-block; line-height: 1em;
   padding: 6px 15px;
@@ -344,7 +367,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
   text-shadow: 0 1px #1e7293;
 }
 
-/* ---- 卡片底部（标签、分享链接）---- */
+/* ---- 卡片底部（文章标签 #tag + 分享/评论链接，有顶部分割线）---- */
 .article-footer {
   font-size: 0.85em; line-height: 1.6em;
   border-top: 1px solid #ddd;           /* 分割线 */
@@ -363,7 +386,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-share-link:before { padding-right: 6px; }
 
 /* ==============================================
-   十、文章内页的上一篇/下一篇导航
+   十、文章内页的上一篇/下一篇导航（文章底部的翻页链接，中间有个小圆点）
    ============================================== */
 #article-nav { position: relative; }
 #article-nav:before, #article-nav:after { content: ""; display: table; }
@@ -399,7 +422,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-nav-title { font-size: 0.85em; line-height: 1.6em; margin-top: 0.5em; }
 
 /* ==============================================
-   十一、文章分享弹窗
+   十一、文章分享弹窗（点击分享按钮后弹出的窗口，可复制链接或分享到社交平台）
    ============================================== */
 .article-share-box {
   position: absolute; display: none; background: #fff;
@@ -438,14 +461,14 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-share-linkedin:hover { background: #0077b5; }    /* LinkedIn 蓝 */
 
 /* ==============================================
-   十二、归档页面布局
+   十二、归档页面布局（按年份分栏展示所有文章，手机1栏、平板2栏、桌面3栏）
    ============================================== */
 .archives-wrap { margin: 50px 0; }
 .archives:before, .archives:after { content: ""; display: table; }
 .archives:after { clear: both; }
 .archive-year-wrap { margin-bottom: 1em; }
 
-/* 年份标题 */
+/* 年份标题（归档页每个年份的大标题，如 2024）*/
 .archive-year {
   text-decoration: none; text-transform: uppercase;
   letter-spacing: 2px;
@@ -455,12 +478,12 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
   font-weight: bold;
 }
 
-/* 归档列表分栏 */
+/* 归档列表分栏（手机 1 栏、平板 2 栏、桌面 3 栏）*/
 .archives { column-gap: 10px; }
 @media screen and (min-width: 480px) and (max-width: 767px) { .archives { column-count: 2; } }
 @media screen and (min-width: 768px) { .archives { column-count: 3; } }
 
-/* 归档中每篇文章条目 */
+/* 归档中每篇文章条目（每个文章的小卡片，白色底 + 阴影 + 圆角）*/
 .archive-article { break-inside: avoid-column; overflow: hidden; }
 .archive-article-inner {
   padding: 10px; margin-bottom: 15px;
@@ -483,7 +506,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 }
 
 /* ==============================================
-   十三、分页导航（首页底部页码）
+   十三、分页导航（首页底部的翻页按钮，上一页/页码/下一页）
    ============================================== */
 #page-nav {
   margin: 50px auto; background: #fff;
@@ -504,7 +527,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 #page-nav .space { color: #ddd; }
 
 /* ==============================================
-   十四、评论区外观
+   十四、评论区外观（文章底部的评论框样式，白色卡片容器）
    ============================================== */
 #comments {
   background: #fff;                     /* 评论区背景 */
@@ -517,7 +540,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 #comments a { color: #258fb8; }
 
 /* ==============================================
-   十五、图片画廊（多图展示用）
+   十五、图片画廊（文章内多张图片的轮播展示，黑底）
    ============================================== */
 .article-gallery { background: #000; position: relative; }
 .article-gallery-photos { position: relative; overflow: hidden; }
