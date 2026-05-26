@@ -191,12 +191,23 @@ body:after { clear: both; }
    五、搜索框（导航栏右侧的放大镜图标，点击弹出搜索输入框）
    ============================================== */
 #sub-nav { float: right; margin-right: -15px; }
+/* 桌面端：240px 宽的搜索框 */
 #search-form-wrap {
   position: absolute; top: 12px; width: 240px; height: 38px;
   right: -240px; opacity: 0; transition: 0.2s ease-out;
 }
 #search-form-wrap.on { opacity: 1; right: 0; }
-@media screen and (max-width: 479px) { #search-form-wrap { width: 100%; right: -100%; } }
+/* 平板端：收窄到 200px */
+@media screen and (max-width: 768px) {
+  #search-form-wrap { width: 200px; right: -200px; }
+}
+/* 手机端：撑满整行 */
+@media screen and (max-width: 479px) {
+  #search-form-wrap { width: 100%; right: -100%; height: 36px; top: 14px; }
+  .search-form { padding: 5px 34px 5px 14px; border-radius: 18px; }
+  .search-form-input { font-size: 14px; }
+  .search-form-submit { right: 10px; margin-top: -8px; font-size: 15px; }
+}
 .search-form {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background: #fff; padding: 6px 38px 6px 16px; border-radius: 19px;
