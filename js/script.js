@@ -19,6 +19,8 @@
     if (isSearchAnim) return;
 
     startSearchAnim();
+    $('#search-results').remove();
+    $('.search-form-input').val('');
     $searchWrap.addClass('on');
     stopSearchAnim(function(){
       $('.search-form-input').focus();
@@ -26,9 +28,111 @@
   });
 
   $('.search-form-input').on('blur', function(){
-    startSearchAnim();
-    $searchWrap.removeClass('on');
-    stopSearchAnim();
+    setTimeout(function(){
+      if (!$('.search-result-item:hover').length) {
+        startSearchAnim();
+        $searchWrap.removeClass('on');
+        $('#search-results').remove();
+        stopSearchAnim();
+      }
+    }, 150);
+  });
+
+  // ---- 本地搜索 ----
+  var searchData = null;
+
+  function loadSearchData(callback) {
+    if (searchData) return callback(searchData);
+    $.getJSON('/zl.github.io/search.json', function(data) {
+      searchData = data;
+      callback(data);
+    });
+  }
+
+  function doSearch(query, data) {
+    var q = query.toLowerCase().trim();
+    if (!q) return [];
+    return data.filter(function(item) {
+      var fields = [item.title, item.tags.join(' '), item.content].join(' ').toLowerCase();
+      return fields.indexOf(q) !== -1;
+    });
+  }
+
+  function showResults(results) {
+    $('#search-results').remove();
+    var $form = $searchWrap.find('.search-form');
+    var offset = $form.offset();
+    var width = $form.outerWidth();
+    if (!results.length) {
+      var $noResult = $('<div id="search-results"><div class="search-no-result">没有找到相关文章</div></div>');
+      $('body').append($noResult);
+      $noResult.css({ position: 'absolute', top: offset.top + $form.outerHeight() + 5, left: offset.left, width: width });
+      return;
+    }
+    var html = ['<div id="search-results">'];
+    results.forEach(function(item) {
+      html.push(
+        '<a class="search-result-item" href="' + item.url + '">',
+          '<span class="search-result-title">' + item.title + '</span>',
+          '<span class="search-result-date">' + item.date + '</span>',
+        '</a>'
+      );
+    });
+    html.push('</div>');
+    var $results = $(html.join(''));
+    $('body').append($results);
+    $results.css({ position: 'absolute', top: offset.top + $form.outerHeight() + 5, left: offset.left, width: width });
+  }
+
+  var $searchInput = $('.search-form-input');
+
+  $searchInput.on('input', function() {
+    loadSearchData(function(data) {
+      var results = doSearch($searchInput.val(), data);
+      showResults(results);
+    });
+  });
+
+  $('.search-form').on('submit', function(e) {
+    e.preventDefault();
+    loadSearchData(function(data) {
+      var results = doSearch($searchInput.val(), data);
+      showResults(results);
+    });
+  });
+
+  $searchInput.on('keydown', function(e) {
+    var $items = $('.search-result-item');
+    if (!$items.length) return;
+
+    var $current = $items.filter('.active');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!$current.length) {
+        $items.first().addClass('active');
+      } else {
+        var idx = $items.index($current);
+        $current.removeClass('active');
+        $items.eq((idx + 1) % $items.length).addClass('active');
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!$current.length) {
+        $items.last().addClass('active');
+      } else {
+        var idx = $items.index($current);
+        $current.removeClass('active');
+        $items.eq((idx - 1 + $items.length) % $items.length).addClass('active');
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if ($current.length) {
+        window.location.href = $current.attr('href');
+      }
+    } else if (e.key === 'Escape') {
+      $('#search-results').remove();
+      $searchInput.blur();
+    }
   });
 
   // Share
