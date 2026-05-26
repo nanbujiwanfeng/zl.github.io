@@ -192,26 +192,26 @@ body:after { clear: both; }
    ============================================== */
 #sub-nav { float: right; margin-right: -15px; }
 #search-form-wrap {
-  position: absolute; top: 15px; width: 150px; height: 30px;
-  right: -150px; opacity: 0; transition: 0.2s ease-out;
+  position: absolute; top: 12px; width: 240px; height: 38px;
+  right: -240px; opacity: 0; transition: 0.2s ease-out;
 }
 #search-form-wrap.on { opacity: 1; right: 0; }
 @media screen and (max-width: 479px) { #search-form-wrap { width: 100%; right: -100%; } }
 .search-form {
-  position: absolute; top: 0; left: 0; right: 0;
-  background: #fff; padding: 5px 15px; border-radius: 15px;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff; padding: 6px 38px 6px 16px; border-radius: 19px;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 .search-form-input {
-  border: none; background: none; color: #555; width: 100%;
-  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  border: none; background: none; color: #555; width: 100%; height: 100%;
+  font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   outline: none;
 }
 .search-form-input::-webkit-search-results-decoration,
 .search-form-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .search-form-submit {
-  position: absolute; top: 50%; right: 10px; margin-top: -7px;
-  font: 13px ForkAwesome; border: none; background: none;
+  position: absolute; top: 50%; right: 12px; margin-top: -9px;
+  font: 16px ForkAwesome; border: none; background: none;
   color: #bbb; cursor: pointer;
 }
 .search-form-submit:hover, .search-form-submit:focus { color: #777; }
