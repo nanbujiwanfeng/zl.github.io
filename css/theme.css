@@ -4,36 +4,7 @@
    =================================== */
 
 /* ==============================================
-   一、浏览器默认样式重置（统一各浏览器默认差异）
-   ============================================== */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-weight: inherit;
-  font-style: inherit;
-  font-family: inherit;
-  font-size: 100%;
-  vertical-align: baseline;
-}
-body { line-height: 1; color: #000; background: #fff; }
-ol, ul { list-style: none; }
-table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
-caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
-a img { border: none; }
-input, button { margin: 0; padding: 0; }
-input::-moz-focus-inner, button::-moz-focus-inner { border: 0; padding: 0; }
-
-/* ==============================================
-   二、页面基础设置（整体背景色、字体、最大宽度等）
+   一、页面基础设置（整体背景色、字体、最大宽度等）
    ============================================== */
 html, body, #container { height: 100%; }
 body {
@@ -79,7 +50,7 @@ body:after { clear: both; }
 }
 
 /* ==============================================
-   三、顶部横幅区域（#banner，页面最上面的背景图区域，上面叠着博客标题和导航菜单）
+   二、顶部横幅区域（#banner，页面最上面的背景图区域，上面叠着博客标题和导航菜单）
    ============================================== */
 #header {
   height: 50vh;                         /* 手机：占半屏 */
@@ -158,7 +129,7 @@ body:after { clear: both; }
 #subtitle-wrap { margin-top: 16px; }
 
 /* ==============================================
-   四、导航栏（桌面端顶部菜单，如首页/归档/关于等链接）
+   三、导航栏（桌面端顶部菜单，如首页/归档/关于等链接）
    ============================================== */
 #main-nav {
   float: left;
@@ -188,7 +159,7 @@ body:after { clear: both; }
 @media screen and (max-width: 479px) { #main-nav-toggle { display: block; } }
 
 /* ==============================================
-   五、搜索框（导航栏右侧的放大镜图标，点击弹出搜索输入框）
+   四、搜索框（导航栏右侧的放大镜图标，点击弹出搜索输入框）
    ============================================== */
 #sub-nav { float: right; margin-right: -15px; }
 /* 桌面端：240px 宽的搜索框 */
@@ -247,7 +218,7 @@ body:after { clear: both; }
 .search-no-result { padding: 10px 15px; color: #999; font-size: 13px; text-align: center; }
 
 /* ==============================================
-   六、页脚（页面最底部的深色区域，放版权信息）
+   五、页脚（页面最底部的深色区域，放版权信息）
    ============================================== */
 #footer {
   background: #262a30;                  /* 页脚背景色 */
@@ -263,7 +234,7 @@ body:after { clear: both; }
 }
 
 /* ==============================================
-   七、侧边栏（桌面端右侧，放标签云/分类/归档等小部件）
+   六、侧边栏（桌面端右侧，放标签云/分类/归档等小部件）
    ============================================== */
 @media screen and (min-width: 768px) {
   #sidebar {
@@ -313,7 +284,7 @@ body:after { clear: both; }
 .tagcloud a { margin-right: 5px; display: inline-block; }
 
 /* ==============================================
-   八、手机端侧滑菜单（手机版从左侧滑出的导航面板）
+   七、手机端侧滑菜单（手机版从左侧滑出的导航面板）
    ============================================== */
 @media screen and (max-width: 479px) {
   #mobile-nav {
@@ -333,7 +304,7 @@ body:after { clear: both; }
 }
 
 /* ==============================================
-   九、文章卡片外观（首页和归档页每一篇文章的预览卡片，白色底+阴影+圆角）
+   八、文章卡片外观（首页和归档页每一篇文章的预览卡片，白色底+阴影+圆角）
    ============================================== */
 .article { margin: 50px 0; }            /* 卡片之间的间距 */
 
@@ -421,7 +392,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-share-link:before { padding-right: 6px; }
 
 /* ==============================================
-   十、文章内页的上一篇/下一篇导航（文章底部的翻页链接，中间有个小圆点）
+   九、文章内页的上一篇/下一篇导航（文章底部的翻页链接，中间有个小圆点）
    ============================================== */
 #article-nav { position: relative; }
 #article-nav:before, #article-nav:after { content: ""; display: table; }
@@ -457,7 +428,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-nav-title { font-size: 0.85em; line-height: 1.6em; margin-top: 0.5em; }
 
 /* ==============================================
-   十一、文章分享弹窗（点击分享按钮后弹出的窗口，可复制链接或分享到社交平台）
+   十、文章分享弹窗（点击分享按钮后弹出的窗口，可复制链接或分享到社交平台）
    ============================================== */
 .article-share-box {
   position: absolute; display: none; background: #fff;
@@ -496,7 +467,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 .article-share-linkedin:hover { background: #0077b5; }    /* LinkedIn 蓝 */
 
 /* ==============================================
-   十二、归档页面布局（按年份分栏展示所有文章，手机1栏、平板2栏、桌面3栏）
+   十一、归档页面布局（按年份分栏展示所有文章，手机1栏、平板2栏、桌面3栏）
    ============================================== */
 .archives-wrap { margin: 50px 0; }
 .archives:before, .archives:after { content: ""; display: table; }
@@ -534,7 +505,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 }
 
 /* ==============================================
-   十三、分页导航（首页底部的翻页按钮，上一页/页码/下一页）
+   十二、分页导航（首页底部的翻页按钮，上一页/页码/下一页）
    ============================================== */
 #page-nav {
   margin: 50px auto; background: #fff;
@@ -555,7 +526,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 #page-nav .space { color: #ddd; }
 
 /* ==============================================
-   十四、评论区外观（文章底部的评论框样式，白色卡片容器）
+   十三、评论区外观（文章底部的评论框样式，白色卡片容器）
    ============================================== */
 #comments {
   background: #fff;                     /* 评论区背景 */
@@ -568,7 +539,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 #comments a { color: #258fb8; }
 
 /* ==============================================
-   十五、图片画廊（文章内多张图片的轮播展示，黑底）
+   十四、图片画廊（文章内多张图片的轮播展示，黑底）
    ============================================== */
 .article-gallery { background: #000; position: relative; }
 .article-gallery-photos { position: relative; overflow: hidden; }
