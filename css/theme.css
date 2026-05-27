@@ -55,19 +55,18 @@ body:after { clear: both; }
 #header {
   height: 50vh;                         /* 手机：占半屏 */
   min-height: 200px;
-  max-height: 450px;
   position: relative;
   border-bottom: 1px solid #ddd;
   overflow: hidden;                     /* 防止内容溢出 */
 }
 
-/* 平板及以上：横幅稍矮 */
+/* 平板及以上 */
 @media screen and (min-width: 768px) {
-  #header { height: 35vh; }
+  #header { height: 42vh; }
 }
-/* 桌面大屏：横幅更矮 */
+/* 桌面大屏 */
 @media screen and (min-width: 1024px) {
-  #header { height: 28vh; }
+  #header { height: 36vh; }
 }
 
 /* 横幅顶部和底部的渐变遮罩 */
@@ -94,16 +93,8 @@ body:after { clear: both; }
 #banner {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  background: url("../images/banner.jpg") center / cover #000;  /* ← 改这里换横幅图片 */
+  background: url("../images/banner.jpg") center / contain no-repeat #000;
   z-index: 0;                           /* 最底层 */
-}
-
-/* 超宽屏：图片不放大超过原始分辨率，避免模糊
-   建议把 banner.jpg 换成 ≥2560px 宽的图可以去掉这个限制 */
-@media screen and (min-width: 1920px) {
-  #banner {
-    background-size: auto 100%;         /* 高度填满，宽度不拉伸 */
-  }
 }
 
 /* ---- 网站标题（叠在 banner 图上的白色大字：博客名 logo + 副标题 subtitle）---- */
