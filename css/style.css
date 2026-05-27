@@ -9,3 +9,7 @@
        # 把 banner 加高 →  #header { height: 60vh; }
        # 改链接颜色     →  a { color: #f00; }
    =================================== */
+#logo, #subtitle {
+  text-decoration: none; color: black;    /* 标题颜色：白色 */
+  font-weight: 300; text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
