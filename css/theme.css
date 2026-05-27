@@ -338,12 +338,17 @@ body:after { clear: both; }
 .article { margin: 50px 0; }            /* 卡片之间的间距 */
 
 /* ---- 卡片本身（白色背景 + 浅灰阴影 + 3px 圆角的卡片容器）---- */
-.article-inner {
-  overflow: hidden;
+.article-inner,
+.archive-article-inner {
   background: #fff;                     /* 卡片背景色 */
   box-shadow: 1px 2px 3px #ddd;         /* 卡片阴影 */
   border: 1px solid #ddd;               /* 卡片边框 */
   border-radius: 3px;                   /* 卡片圆角 */
+}
+.article-inner { overflow: hidden; }
+.archive-article-inner {
+  padding: 10px;
+  margin-bottom: 15px;
 }
 
 /* ---- 卡片顶部元信息（文章发布日期 + 所属分类，灰色小字）---- */
@@ -515,13 +520,6 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 
 /* 归档中每篇文章条目（每个文章的小卡片，白色底 + 阴影 + 圆角）*/
 .archive-article { break-inside: avoid-column; overflow: hidden; }
-.archive-article-inner {
-  padding: 10px; margin-bottom: 15px;
-  background: #fff;                     /* 条目背景色 */
-  box-shadow: 1px 2px 3px #ddd;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-}
 .archive-article-title {
   text-decoration: none; font-weight: bold;
   color: #555;                          /* 文章标题颜色 */
