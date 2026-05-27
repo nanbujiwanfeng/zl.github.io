@@ -46,22 +46,22 @@ body:before, body:after { content: ""; display: table; }
 body:after { clear: both; }
 
 /* ---- 页面整体宽度（网站内容区的最大宽度 1220px + 左右留白 20px）---- */
-.outer {
+.container {
   max-width: 1220px;                    /* 网站最大宽度 */
   margin: 0 auto;
   padding: 0 20px;                      /* 左右留白 */
 }
-.outer:before, .outer:after { content: ""; display: table; }
-.outer:after { clear: both; }
+.container:before, .container:after { content: ""; display: table; }
+.container:after { clear: both; }
 
 /* ---- 内部容器（用于分栏布局的内部包裹层，左右浮动工具类）---- */
-.inner { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; }
-.left, .alignleft { float: left; }
-.right, .alignright { float: right; }
-.clear { clear: both; }
+.row { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; }
+.float-left, .alignleft { float: left; }
+.float-right, .alignright { float: right; }
+.clearfix { clear: both; }
 
 #container { position: relative; }
-.mobile-nav-on { overflow: hidden; }
+.mobile-nav-open { overflow: hidden; }
 
 /* ---- 页面主体包装（#wrap，整个页面的最外层容器，手机菜单打开时会向右平移）---- */
 #wrap {
@@ -71,7 +71,7 @@ body:after { clear: both; }
   z-index: 1;
   background: #eee;
 }
-.mobile-nav-on #wrap { left: 280px; }
+.mobile-nav-open #wrap { left: 280px; }
 
 /* ---- 文章列表区宽度（桌面端，左侧主内容区占 73%） ---- */
 @media screen and (min-width: 768px) {
@@ -196,7 +196,7 @@ body:after { clear: both; }
   position: absolute; top: 12px; width: 240px; height: 38px;
   right: -240px; opacity: 0; transition: 0.2s ease-out;
 }
-#search-form-wrap.on { opacity: 1; right: 0; }
+#search-form-wrap.is-active { opacity: 1; right: 0; }
 /* 平板端：收窄到 200px */
 @media screen and (max-width: 768px) {
   #search-form-wrap { width: 200px; right: -200px; }
@@ -465,7 +465,7 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
   border-radius: 3px; margin-left: -145px;
   overflow: hidden; z-index: 1;
 }
-.article-share-box.on { display: block; }
+.article-share-box.is-active { display: block; }
 .article-share-input {
   width: 100%; background: none; box-sizing: border-box;
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;

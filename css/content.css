@@ -133,8 +133,8 @@
 
 /* 特殊的左右拉出引用 */
 .article-entry .pullquote { text-align: left; width: 45%; margin: 0; }
-.article-entry .pullquote.left { margin-left: 0.5em; margin-right: 1em; }
-.article-entry .pullquote.right { margin-right: 0.5em; margin-left: 1em; }
+.article-entry .pullquote.float-left { margin-left: 0.5em; margin-right: 1em; }
+.article-entry .pullquote.float-right { margin-right: 0.5em; margin-left: 1em; }
 
 /* 图片下方说明文字 */
 .article-entry .caption {
