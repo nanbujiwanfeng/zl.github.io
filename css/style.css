@@ -69,7 +69,7 @@
   display: flex;            /* 弹性布局，圆点横向排列 */
   gap: 8px;                 /* 圆点之间的间距 */
 }
-.banner-dot {
+.banner-dot { /* 每个圆点的样式 */
   width: 10px;              /* 圆点宽 */
   height: 10px;             /* 圆点高 */
   border-radius: 50%;       /* 正圆形 */
@@ -79,6 +79,7 @@
   padding: 0;               /* 去掉默认内边距 */
   transition: background 0.2s; /* 选中切换时的颜色过渡 */
 }
-.banner-dot.is-active {
+.banner-dot.is-active {/* 当前选中的圆点样式 */
   background: #fff;         /* 当前选中的圆点：纯白色 */
+  cursor: pointer;          /* 鼠标悬停变手型 */
 }
