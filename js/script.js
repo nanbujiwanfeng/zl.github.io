@@ -1,4 +1,49 @@
 (function($){
+  // ==================== 轮播图 ====================
+  var bannerSlides = [
+    '/zl.github.io/images/1.jpg',
+    '/zl.github.io/images/2.jpg',
+    '/zl.github.io/images/3.jpg'
+  ];
+
+  (function() {
+    var $banner = $('#banner');
+    if (!$banner.length || bannerSlides.length === 0) return;
+
+    var imgs = '', dots = '';
+    for (var i = 0; i < bannerSlides.length; i++) {
+      imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '" src="' + bannerSlides[i] + '" alt="">';
+      dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
+    }
+    $banner.append(
+      imgs +
+      '<button class="banner-arrow banner-prev">&#8249;</button>' +
+      '<button class="banner-arrow banner-next">&#8250;</button>' +
+      '<div class="banner-dots">' + dots + '</div>'
+    );
+
+    var idx = 0, timer;
+
+    function go(n) {
+      $banner.find('.banner-slide').eq(idx).removeClass('is-active');
+      $banner.find('.banner-dot').eq(idx).removeClass('is-active');
+      idx = (n + bannerSlides.length) % bannerSlides.length;
+      $banner.find('.banner-slide').eq(idx).addClass('is-active');
+      $banner.find('.banner-dot').eq(idx).addClass('is-active');
+    }
+
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+    function start() { timer = setInterval(next, 4000); }
+    function stop()  { clearInterval(timer); }
+
+    $banner.on('click', '.banner-next', function(e) { e.stopPropagation(); stop(); next(); start(); });
+    $banner.on('click', '.banner-prev', function(e) { e.stopPropagation(); stop(); prev(); start(); });
+    $banner.on('click', '.banner-dot',  function(e) { e.stopPropagation(); stop(); go($banner.find('.banner-dot').index(this)); start(); });
+
+    start();
+  })();
+
   // Search
   var $searchWrap = $('#search-form-wrap'),
     isSearchAnim = false,
