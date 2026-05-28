@@ -8,6 +8,7 @@
 
   (function() {
     var $banner = $('#banner');
+    var $header = $('#header');
     if (!$banner.length || bannerSlides.length === 0) return;
 
     var imgs = '', dots = '';
@@ -15,8 +16,8 @@
       imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '" src="' + bannerSlides[i] + '" alt="">';
       dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
     }
-    $banner.append(
-      imgs +
+    $banner.append(imgs);                    /* 图片放在 #banner 里 */
+    $header.append(                          /* 箭头+圆点放在 #header 里，z-index 才能生效 */
       '<button class="banner-arrow banner-prev">&#8249;</button>' +
       '<button class="banner-arrow banner-next">&#8250;</button>' +
       '<div class="banner-dots">' + dots + '</div>'
@@ -26,10 +27,10 @@
 
     function go(n) {
       $banner.find('.banner-slide').eq(idx).removeClass('is-active');
-      $banner.find('.banner-dot').eq(idx).removeClass('is-active');
+      $header.find('.banner-dot').eq(idx).removeClass('is-active');
       idx = (n + bannerSlides.length) % bannerSlides.length;
       $banner.find('.banner-slide').eq(idx).addClass('is-active');
-      $banner.find('.banner-dot').eq(idx).addClass('is-active');
+      $header.find('.banner-dot').eq(idx).addClass('is-active');
     }
 
     function next() { go(idx + 1); }
@@ -37,9 +38,9 @@
     function start() { timer = setInterval(next, 4000); }
     function stop()  { clearInterval(timer); }
 
-    $banner.on('click', '.banner-next', function(e) { e.stopPropagation(); stop(); next(); start(); });
-    $banner.on('click', '.banner-prev', function(e) { e.stopPropagation(); stop(); prev(); start(); });
-    $banner.on('click', '.banner-dot',  function(e) { e.stopPropagation(); stop(); go($banner.find('.banner-dot').index(this)); start(); });
+    $header.on('click', '.banner-next', function(e) { e.stopPropagation(); stop(); next(); start(); });
+    $header.on('click', '.banner-prev', function(e) { e.stopPropagation(); stop(); prev(); start(); });
+    $header.on('click', '.banner-dot',  function(e) { e.stopPropagation(); stop(); go($header.find('.banner-dot').index(this)); start(); });
 
     start();
   })();
