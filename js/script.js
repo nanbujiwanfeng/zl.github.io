@@ -11,6 +11,10 @@
     var $header = $('#header');
     if (!$banner.length || bannerSlides.length === 0) return;
 
+    /* 预加载第一张图片，提前发起请求 */
+    var preload = new Image();
+    preload.src = bannerSlides[0];
+
     var imgs = '', dots = '';
     for (var i = 0; i < bannerSlides.length; i++) {
       imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '" src="' + bannerSlides[i] + '" alt="">';
