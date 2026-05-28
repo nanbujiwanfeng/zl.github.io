@@ -51,7 +51,7 @@
 
   // ==================== 背景音乐 ====================
   (function() {
-    var $audio = $('<audio id="bgm" src="/zl.github.io/music/bg.mp3" autoplay muted loop></audio>');
+    var $audio = $('<audio id="bgm" src="/zl.github.io/audio/昔涟.flac" autoplay muted loop></audio>');
     $('body').append($audio);
     var audio = $audio[0];
     var $btn = $('<button id="music-btn" title="音乐">&#9834;</button>');
