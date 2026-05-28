@@ -31,523 +31,599 @@
 /* ==============================================
    一、页面基础设置（整体背景色、字体、最大宽度等）
    ============================================== */
-html, body, #container { height: 100%; }
+
+html, body, #container { height: 100%; } /* 撑满窗口高度，让页脚能沉底（sticky footer 基础） */
+
 body {
-  width: 100%;
-  background: #eee;                     /* 页面背景色 */
+  width: 100%;               /* 宽度占满窗口 */
+  background: #eee;          /* 页面背景色：浅灰 */
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-text-size-adjust: 100%;
+                              /* 全局字体：优先系统字体，14px */
+  -webkit-text-size-adjust: 100%; /* 禁止 iOS 横屏时自动放大文字 */
 }
-body:before, body:after { content: ""; display: table; }
+body:before, body:after { content: ""; display: table; } /* 清除浮动 */
 body:after { clear: both; }
 
-/* ---- 页面整体宽度（网站内容区的最大宽度 1220px + 左右留白 20px）---- */
+/* ---- 页面整体宽度 ---- */
 .container {
-  max-width: 1220px;                    /* 网站最大宽度 */
-  margin: 0 auto;
-  padding: 0 20px;                      /* 左右留白 */
+  max-width: 1220px;         /* 内容区最大宽度，大屏居中不无限拉伸 */
+  margin: 0 auto;            /* 上下0、左右auto=水平居中 */
+  padding: 0 20px;           /* 左右各留 20px 呼吸空间 */
 }
 .container:before, .container:after { content: ""; display: table; }
 .container:after { clear: both; }
 
-/* ---- 内部容器（用于分栏布局的内部包裹层，左右浮动工具类）---- */
-.row { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; }
-.float-left, .alignleft { float: left; }
-.float-right, .alignright { float: right; }
-.clearfix { clear: both; }
+/* ---- 内部容器工具类 ---- */
+.row { display: inline; float: left; width: 98.33333333333333%; margin: 0 0.833333333333333%; } /* 栅格行，用于#main和#sidebar分栏 */
+.float-left, .alignleft { float: left; }   /* 左浮动 */
+.float-right, .alignright { float: right; } /* 右浮动 */
+.clearfix { clear: both; }                 /* 清除浮动 */
 
-#container { position: relative; }
-.mobile-nav-open { overflow: hidden; }
+#container { position: relative; } /* 手机菜单的定位锚点 */
+.mobile-nav-open { overflow: hidden; } /* 手机菜单打开时禁止 body 滚动 */
 
-/* ---- 页面主体包装（#wrap，整个页面的最外层容器，手机菜单打开时会向右平移）---- */
+/* ---- #wrap：页面主体包装，手机菜单打开时右移 ---- */
 #wrap {
-  height: 100%; width: 100%;
-  position: absolute; top: 0; left: 0;
-  transition: 0.2s ease-out;
-  z-index: 1;
-  background: #eee;
+  height: 100%;              /* 撑满 #container */
+  width: 100%;
+  position: absolute;        /* 绝对定位，配合 left 做滑动动画 */
+  top: 0; left: 0;
+  transition: 0.2s ease-out; /* 菜单开关时的平滑滑动 */
+  z-index: 1;                /* 高于 #mobile-nav */
+  background: #eee;          /* 与 body 同色 */
 }
-.mobile-nav-open #wrap { left: 280px; }
+.mobile-nav-open #wrap { left: 280px; } /* 菜单打开，#wrap 右移露出菜单 */
 
-/* ---- 文章列表区宽度（桌面端，左侧主内容区占 73%） ---- */
+/* ---- 文章列表区宽度（桌面端 73%）---- */
 @media screen and (min-width: 768px) {
   #main { display: inline; float: left; width: 73.33333333333333%; margin: 0 0.833333333333333%; }
 }
 
 /* ==============================================
-   二、顶部横幅区域（#banner，页面最上面的背景图区域，上面叠着博客标题和导航菜单）
+   二、顶部横幅区域（#banner + 标题 + 导航，全屏宽）
    ============================================== */
+
 #header {
-  height: 50vh;                         /* 手机：占半屏 */
-  min-height: 200px;
-  position: relative;
-  border-bottom: 1px solid #ddd;
-  overflow: hidden;                     /* 防止内容溢出 */
+  height: 50vh;              /* 手机端：占半屏高度（vh=视口高度百分比） */
+  min-height: 200px;         /* 最低 200px，防止太窄 */
+  position: relative;        /* 作为内部绝对定位子元素的锚点 */
+  border-bottom: 1px solid #ddd; /* 底部浅灰分割线 */
+  overflow: hidden;          /* 裁剪超出部分（图片/轮播不会溢出） */
 }
-
-/* 平板及以上 */
 @media screen and (min-width: 768px) {
-  #header { height: 42vh; }
+  #header { height: 42vh; }  /* 平板：稍矮一点 */
 }
-/* 桌面大屏 */
 @media screen and (min-width: 1024px) {
-  #header { height: 36vh; }
+  #header { height: 36vh; }  /* 桌面大屏：再矮一点，比例更舒适 */
 }
 
-/* 横幅顶部和底部的渐变遮罩 */
+/* ---- 横幅顶部和底部的渐变遮罩（增强标题和导航的可读性）---- */
 #header:before, #header:after {
-  content: ""; position: absolute; left: 0; right: 0; height: 40px;
-  z-index: 2;                           /* 渐变在标题和导航上方 */
+  content: "";               /* 伪元素必需 */
+  position: absolute; left: 0; right: 0; height: 40px;
+  z-index: 2;                /* 叠在标题和导航上方 */
 }
 #header:before {
-  top: 0;
+  top: 0;                    /* 顶部：从上到下由黑→透明 */
   background: linear-gradient(rgba(0,0,0,0.2), transparent);
 }
 #header:after {
-  bottom: 0;
+  bottom: 0;                 /* 底部：从下到上由黑→透明 */
   background: linear-gradient(transparent, rgba(0,0,0,0.2));
 }
 
 #header-outer {
-  height: 100%; position: relative;
-  z-index: 1;                           /* 标题和导航在 banner 上方 */
+  height: 100%;              /* 撑满 header */
+  position: relative;
+  z-index: 1;                /* 在 #banner(z-index:0) 上方，在渐变(z-index:2) 下方 */
 }
 #header-inner { position: relative; overflow: hidden; }
 
-/* ---- banner 背景图片---- */
+/* ---- banner 背景图片 ---- */
 #banner {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;
+  position: absolute;        /* 绝对定位，脱离文档流 */
+  top: 0; left: 0;           /* 左上角对齐 #header */
+  width: 100%; height: 100%; /* 撑满 header */
   background: url("../images/1.jpg") top center / 100% auto no-repeat #000;
-  z-index: 0;                           /* 最底层 */
+                              /* 背景图：顶部对齐+水平居中 / 宽100%高自动 / 不重复 / 黑色底色 */
+  z-index: 0;                /* 最底层，标题/导航叠在上面 */
 }
 
-/* ---- 网站标题（叠在 banner 图上的白色大字：博客名 logo + 副标题 subtitle）---- */
+/* ---- 网站标题（叠在 banner 图上的白色大字）---- */
 #header-title {
-  text-align: center;
-  position: absolute; top: 50%; left: 0; right: 0;
-  transform: translateY(-50%);           /* 垂直居中，不依赖固定高度 */
+  text-align: center;        /* 文字水平居中 */
+  position: absolute;        /* 绝对定位 */
+  top: 50%; left: 0; right: 0; /* 从 50% 开始，左右撑满 */
+  transform: translateY(-50%); /* 上移自身高度一半，完美垂直居中（不依赖固定高度） */
 }
 #logo, #subtitle {
-  text-decoration: none; color: #fff;    /* 标题颜色：白色 */
-  font-weight: 300; text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  text-decoration: none;     /* 去掉下划线（logo 是 a 标签） */
+  color: #fff;               /* 白色文字 */
+  font-weight: 300;          /* 细体，轻盈 */
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3); /* 黑色阴影，图片上也能看清 */
 }
 #logo {
-  font-size: clamp(24px, 5vw, 40px);     /* 网站名 字号（自适应） */
-  line-height: 1.2;
-  letter-spacing: 2px;                  /* 字间距 */
+  font-size: clamp(24px, 5vw, 40px); /* 自适应字号：最小24px，理想5vw，最大40px */
+  line-height: 1.2;          /* 行高 1.2 倍字号 */
+  letter-spacing: 2px;       /* 字间距加宽 */
 }
 #subtitle {
-  font-size: clamp(12px, 2vw, 16px);     /* 副标题 字号（自适应） */
+  font-size: clamp(12px, 2vw, 16px); /* 副标题略小 */
   line-height: 1.2;
   letter-spacing: 1px;
 }
-#subtitle-wrap { margin-top: 16px; }
+#subtitle-wrap { margin-top: 16px; } /* 副标题距 logo 的间距 */
 
 /* ==============================================
-   三、导航栏（桌面端顶部菜单，如首页/归档/关于等链接）
+   三、导航栏（桌面端顶部菜单：首页/归档）
    ============================================== */
+
 #main-nav {
-  float: left;
-  margin-left: -15px;
+  float: left;               /* 左浮动，与右侧搜索框分居两端 */
+  margin-left: -15px;        /* 负边距抵消按钮内边距，视觉上左对齐 */
 }
 /* 导航按钮通用样式 */
 .nav-icon, .main-nav-link {
-  float: left; color: #fff;            /* 导航文字颜色 */
-  opacity: 0.6;                         /* 默认半透明 */
-  text-decoration: none; text-shadow: 0 1px rgba(0,0,0,0.2);
-  transition: opacity 0.2s;
-  display: block; padding: 20px 15px;   /* 导航按钮内边距 */
+  float: left;               /* 横向排列 */
+  color: #fff;               /* 白色文字 */
+  opacity: 0.6;              /* 默认半透明 */
+  text-decoration: none;     /* 去掉下划线 */
+  text-shadow: 0 1px rgba(0,0,0,0.2); /* 轻微阴影 */
+  transition: opacity 0.2s;  /* 悬停透明度过渡 */
+  display: block;            /* 块级，方便设宽高 */
+  padding: 20px 15px;        /* 内边距，扩大点击区域 */
 }
 .nav-icon:hover, .main-nav-link:hover {
-  opacity: 1;                           /* 鼠标悬停时变为完全不透明 */
+  opacity: 1;                /* 悬停时完全不透明 */
 }
 .nav-icon {
   text-align: center; font-size: 14px;
-  width: 14px; height: 14px; padding: 20px 15px;
+  width: 14px; height: 14px; /* 图标尺寸 */
+  padding: 20px 15px;
   position: relative; cursor: pointer;
 }
-.main-nav-link { font-weight: 300; letter-spacing: 1px; }
+.main-nav-link { font-weight: 300; letter-spacing: 1px; } /* 细体+字间距 */
 
-/* 手机端隐藏导航文字 */
+/* 手机端隐藏导航文字，只显示汉堡菜单图标 */
 @media screen and (max-width: 479px) { .main-nav-link { display: none; } }
-#main-nav-toggle { display: none; }
-@media screen and (max-width: 479px) { #main-nav-toggle { display: block; } }
+#main-nav-toggle { display: none; } /* 桌面端隐藏汉堡菜单 */
+@media screen and (max-width: 479px) { #main-nav-toggle { display: block; } } /* 手机端显示 */
 
 /* ==============================================
-   四、搜索框（导航栏右侧的放大镜图标，点击弹出搜索输入框）
+   四、搜索框（导航右侧放大镜图标 + 弹出搜索框）
    ============================================== */
-#sub-nav { float: right; margin-right: -15px; }
-/* 桌面端：240px 宽的搜索框 */
+
+#sub-nav { float: right; margin-right: -15px; } /* 右浮动，负边距对齐右侧 */
+
+/* 搜索框：默认隐藏在屏幕右侧外 */
 #search-form-wrap {
-  position: absolute; top: 12px; width: 240px; height: 38px;
-  right: -240px; opacity: 0; transition: 0.2s ease-out;
+  position: absolute;        /* 绝对定位在 header 内 */
+  top: 12px;                 /* 距顶部 12px */
+  width: 240px; height: 38px;
+  right: -240px;             /* 隐藏在右侧屏幕外 */
+  opacity: 0;                /* 默认透明 */
+  transition: 0.2s ease-out; /* 滑入动画 */
 }
-#search-form-wrap.is-active { opacity: 1; right: 0; }
-/* 平板端：收窄到 200px */
+#search-form-wrap.is-active { opacity: 1; right: 0; } /* JS 添加 .is-active 后滑入 */
 @media screen and (max-width: 768px) {
-  #search-form-wrap { width: 200px; right: -200px; }
+  #search-form-wrap { width: 200px; right: -200px; } /* 平板端稍窄 */
 }
-/* 手机端：撑满整行 */
 @media screen and (max-width: 479px) {
-  #search-form-wrap { width: 100%; right: -100%; height: 36px; top: 14px; }
+  #search-form-wrap { width: 100%; right: -100%; height: 36px; top: 14px; } /* 手机端撑满整行 */
   .search-form { padding: 5px 34px 5px 14px; border-radius: 18px; }
   .search-form-input { font-size: 14px; }
   .search-form-submit { right: 10px; margin-top: -8px; font-size: 15px; }
 }
 .search-form {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: #fff; padding: 6px 38px 6px 16px; border-radius: 19px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  position: absolute;        /* 填充父容器 */
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff;          /* 白色背景 */
+  padding: 6px 38px 6px 16px; /* 右侧留空给搜索图标按钮 */
+  border-radius: 19px;       /* 两端半圆（胶囊形） */
+  box-shadow: 0 0 10px rgba(0,0,0,0.3); /* 周围阴影，突出 */
 }
 .search-form-input {
-  border: none; background: none; color: #555; width: 100%; height: 100%;
+  border: none; background: none; /* 去掉输入框默认样式 */
+  color: #555;               /* 灰色文字 */
+  width: 100%; height: 100%; /* 撑满 */
   font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  outline: none;
+  outline: none;             /* 去掉聚焦蓝色外框 */
 }
+/* 隐藏 WebKit 浏览器搜索框的默认图标和清除按钮 */
 .search-form-input::-webkit-search-results-decoration,
 .search-form-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .search-form-submit {
-  position: absolute; top: 50%; right: 12px; margin-top: -9px;
-  font: 16px ForkAwesome; border: none; background: none;
-  color: #bbb; cursor: pointer;
+  position: absolute;        /* 绝对定位在右侧 */
+  top: 50%;                  /* 垂直居中定位 */
+  right: 12px;               /* 距右边 12px */
+  margin-top: -9px;          /* 配合 top:50% 完成垂直居中 */
+  font: 16px ForkAwesome;    /* 用图标字体 ForkAwesome 显示搜索图标 */
+  border: none; background: none;
+  color: #bbb;               /* 浅灰色 */
+  cursor: pointer;           /* 鼠标变手型 */
 }
-.search-form-submit:hover, .search-form-submit:focus { color: #777; }
+.search-form-submit:hover, .search-form-submit:focus { color: #777; } /* 悬停加深 */
 
-/* ---- 搜索结果下拉框（JS 动态定位到 body，避免被 header overflow 裁剪）---- */
+/* ---- 搜索结果下拉框 ---- */
 #search-results {
-  background: #fff; border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  overflow: hidden; z-index: 100;
+  background: #fff;          /* 白底 */
+  border-radius: 0 0 8px 8px; /* 仅底部圆角 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 向下阴影 */
+  overflow: hidden;          /* 裁剪超出圆角的内容 */
+  z-index: 100;              /* 最高层级，不被遮挡 */
 }
 .search-result-item {
-  display: block; padding: 10px 15px;
-  text-decoration: none; color: #555;
-  border-bottom: 1px solid #eee;
-  transition: background 0.15s;
+  display: block;            /* 整行可点击 */
+  padding: 10px 15px;
+  text-decoration: none;     /* 去掉链接下划线 */
+  color: #555;
+  border-bottom: 1px solid #eee; /* 条目间浅灰分割线 */
+  transition: background 0.15s;  /* 悬停背景色过渡 */
 }
-.search-result-item:last-child { border-bottom: none; }
+.search-result-item:last-child { border-bottom: none; } /* 最后一条无分割线 */
 .search-result-item:hover,
-.search-result-item.active { background: #f0f7ff; }
+.search-result-item.active { background: #f0f7ff; } /* 悬停/键盘选中：浅蓝背景 */
 .search-result-title { display: block; font-weight: bold; font-size: 13px; }
 .search-result-date  { display: block; font-size: 11px; color: #999; margin-top: 2px; }
 .search-no-result { padding: 10px 15px; color: #999; font-size: 13px; text-align: center; }
 
 /* ==============================================
-   五、页脚（页面最底部的深色区域，放版权信息）
+   五、页脚（页面底部深色区域，版权信息）
    ============================================== */
+
 #footer {
-  background: #262a30;                  /* 页脚背景色 */
-  padding: 50px 0;                      /* 页脚上下内边距 */
-  border-top: 1px solid #ddd;
-  color: #999;                          /* 页脚文字颜色 */
+  background: #262a30;       /* 深灰黑色背景 */
+  padding: 50px 0;           /* 上下 50px 内边距 */
+  border-top: 1px solid #ddd; /* 顶部分割线 */
+  color: #999;               /* 文字浅灰色 */
 }
-#footer a { color: #258fb8; text-decoration: none; }
+#footer a { color: #258fb8; text-decoration: none; } /* 页脚链接蓝色 */
 #footer a:hover { text-decoration: underline; }
 #footer-info {
-  line-height: 1.6em;
-  font-size: 0.85em;                    /* 版权信息字号 */
+  line-height: 1.6em;        /* 行高 */
+  font-size: 0.85em;         /* 比正文略小 */
 }
 
 /* ==============================================
-   六、侧边栏（桌面端右侧，放标签云/分类/归档等小部件）
+   六、侧边栏（桌面端右侧，标签云/归档/最新文章）
    ============================================== */
+
 @media screen and (min-width: 768px) {
   #sidebar {
     display: inline; float: left;
-    width: 23.333333333333332%;          /* 侧边栏宽度 */
+    width: 23.333333333333332%; /* 约 23%，配合 #main 73% 凑满 100% */
     margin: 0 0.833333333333333%;
   }
 }
-/* 侧边栏每个小部件的间距 */
-.widget-wrap { margin: 50px 0; }
+.widget-wrap { margin: 50px 0; } /* 侧边栏每个小部件之间的间距 */
 
-/* 侧边栏卡片 */
+/* 侧边栏卡片外观 */
 .widget {
-  color: #777;                          /* 卡片内文字颜色 */
-  text-shadow: 0 1px #fff;
-  background: #ddd;                     /* 卡片背景色 */
-  box-shadow: 0 -1px 4px #ccc inset;
-  border: 1px solid #ccc;
-  padding: 15px;                        /* 卡片内边距 */
-  border-radius: 3px;                   /* 圆角 */
+  color: #777;               /* 卡片内文字灰色 */
+  text-shadow: 0 1px #fff;   /* 白色文字阴影，增加立体感 */
+  background: #ddd;          /* 浅灰卡片背景 */
+  box-shadow: 0 -1px 4px #ccc inset; /* 内阴影压在顶部，凹陷效果 */
+  border: 1px solid #ccc;    /* 边框 */
+  padding: 15px;             /* 内边距 */
+  border-radius: 3px;        /* 轻微圆角 */
   line-height: 1.6em;
-  word-wrap: break-word;
-  font-size: 0.9em;
+  word-wrap: break-word;     /* 长单词/长链接自动换行 */
+  font-size: 0.9em;          /* 略小于正文 */
 }
 .widget a { color: #258fb8; text-decoration: none; }
 .widget a:hover { text-decoration: underline; }
-.widget ul, .widget ol { list-style: none; margin: 0; }
-.widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; }
-.widget ul ul, .widget ol ul { list-style: disc; }
-.widget ul ol, .widget ol ol { list-style: decimal; }
+.widget ul, .widget ol { list-style: none; margin: 0; } /* 去掉列表默认圆点/数字 */
+.widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; } /* 嵌套列表缩进 */
+.widget ul ul, .widget ol ul { list-style: disc; }  /* 二级无序列表：实心圆点 */
+.widget ul ol, .widget ol ol { list-style: decimal; } /* 二级有序列表：数字 */
 
-/* 侧边栏小标题（如"标签"、"归档"） */
+/* 侧边栏小标题（"标签"、"归档"、"最新文章"） */
 .widget-title {
-  text-decoration: none; text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #999;                          /* 小标题颜色 */
-  margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff;
+  text-decoration: none;
+  text-transform: uppercase; /* 全大写 */
+  letter-spacing: 2px;       /* 字间距加宽 */
+  color: #999;               /* 浅灰色 */
+  margin-bottom: 1em;        /* 下方间距 */
+  margin-left: 5px;
+  line-height: 1em;
+  text-shadow: 0 1px #fff;   /* 白色阴影 */
   font-weight: bold;
 }
-/* 标签/分类后面的数字（如 "前端 (1)"） */
+/* 标签/分类后面的文章数量，如 "前端 (1)" */
 .category-list-count, .tag-list-count, .archive-list-count {
   padding-left: 5px; color: #999; font-size: 0.85em;
 }
-.category-list-count:before, .tag-list-count:before, .archive-list-count:before { content: "("; }
-.category-list-count:after, .tag-list-count:after, .archive-list-count:after { content: ")"; }
-.tagcloud a { margin-right: 5px; display: inline-block; }
+.category-list-count:before, .tag-list-count:before, .archive-list-count:before { content: "("; } /* 自动加左括号 */
+.category-list-count:after, .tag-list-count:after, .archive-list-count:after { content: ")"; }   /* 自动加右括号 */
+.tagcloud a { margin-right: 5px; display: inline-block; } /* 标签云每个标签间距 */
 
 /* ==============================================
-   七、手机端侧滑菜单（手机版从左侧滑出的导航面板）
+   七、手机端侧滑菜单（从左侧滑出的导航面板）
    ============================================== */
+
 @media screen and (max-width: 479px) {
   #mobile-nav {
-    position: absolute; top: 0; left: 0;
-    width: 280px;                       /* 菜单宽度 */
-    height: 100%;
-    background: #191919;                /* 菜单背景色 */
-    border-right: 1px solid #fff;
+    position: absolute;      /* 绝对定位 */
+    top: 0; left: 0;         /* 左上角 */
+    width: 280px;            /* 菜单宽度 */
+    height: 100%;            /* 全屏高度 */
+    background: #191919;     /* 深黑背景 */
+    border-right: 1px solid #fff; /* 右侧白边分割 */
   }
   .mobile-nav-link {
-    display: block; color: #999;
+    display: block;          /* 每项占满一整行 */
+    color: #999;             /* 灰色文字 */
     text-decoration: none;
-    padding: 15px 20px;
+    padding: 15px 20px;      /* 内边距扩大点击区 */
     font-weight: bold;
   }
-  .mobile-nav-link:hover { color: #fff; }
+  .mobile-nav-link:hover { color: #fff; } /* 悬停变白 */
 }
 
 /* ==============================================
-   八、文章卡片外观（首页和归档页每一篇文章的预览卡片，白色底+阴影+圆角）
+   八、文章卡片外观（首页每篇文章的预览卡片）
    ============================================== */
-.article { margin: 50px 0; }            /* 卡片之间的间距 */
 
-/* ---- 卡片本身（白色背景 + 浅灰阴影 + 3px 圆角的卡片容器）---- */
+.article { margin: 50px 0; } /* 卡片之间的上下间距 */
+
+/* ---- 卡片本身：白底 + 阴影 + 圆角 ---- */
 .article-inner,
 .archive-article-inner {
-  background: #fff;                     /* 卡片背景色 */
-  box-shadow: 1px 2px 3px #ddd;         /* 卡片阴影 */
-  border: 1px solid #ddd;               /* 卡片边框 */
-  border-radius: 3px;                   /* 卡片圆角 */
+  background: #fff;          /* 纯白卡片背景 */
+  box-shadow: 1px 2px 3px #ddd; /* 右下方浅阴影 */
+  border: 1px solid #ddd;    /* 浅灰边框 */
+  border-radius: 3px;        /* 轻微圆角 */
 }
-.article-inner { overflow: hidden; }
+.article-inner { overflow: hidden; } /* 裁剪超出圆角的内容（如全宽代码块） */
 .archive-article-inner {
-  padding: 10px;
+  padding: 10px;             /* 归档卡片稍紧凑 */
   margin-bottom: 15px;
 }
 
-/* ---- 卡片顶部元信息（文章发布日期 + 所属分类，灰色小字）---- */
+/* ---- 卡片顶部元信息：日期 ---- */
 .article-meta:before, .article-meta:after { content: ""; display: table; }
 .article-meta:after { clear: both; }
 .article-date {
-  float: left; text-decoration: none; text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #999;                          /* 日期文字颜色 */
+  float: left;               /* 左浮动，与分类标签同行 */
+  text-decoration: none;
+  text-transform: uppercase; /* 日期大写 */
+  letter-spacing: 2px;       /* 字间距 */
+  color: #999;               /* 灰色 */
   margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff;
+  line-height: 1em;
+  text-shadow: 0 1px #fff;
   font-weight: bold;
 }
 .article-category {
-  float: left; line-height: 1em;
-  color: #ccc;
-  text-shadow: 0 1px #fff; margin-left: 8px;
+  float: left;               /* 紧跟在日期后面 */
+  line-height: 1em;
+  color: #ccc;               /* 很淡的灰色 */
+  text-shadow: 0 1px #fff;
+  margin-left: 8px;
 }
-.article-category:before { content: "\2022"; }
+.article-category:before { content: "\2022"; } /* 日期和分类之间的圆点分隔符 */
 .article-category-link {
   text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
   color: #999; margin: 0 12px 1em;
   line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
 }
 
-/* ---- 卡片头部（文章大标题，2em 字号，hover 时变蓝色）---- */
-.article-header { padding: 20px 20px 0; }
+/* ---- 卡片头部：文章大标题 ---- */
+.article-header { padding: 20px 20px 0; } /* 上左右有内边距，底部无（紧接正文） */
 .article-title {
   text-decoration: none;
-  font-size: 2em;                       /* 文章标题字号 */
+  font-size: 2em;            /* 标题大字号 */
   font-weight: bold;
-  color: #555;                          /* 文章标题颜色 */
+  color: #555;               /* 深灰色 */
   line-height: 1.1em;
-  transition: color 0.2s;
+  transition: color 0.2s;    /* 悬停变色过渡 */
 }
-a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
+a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 
-/* ---- "阅读全文"按钮（椭圆形灰色按钮，鼠标悬停变蓝）---- */
+/* ---- "阅读全文"按钮 ---- */
 .article-more-link a {
-  display: inline-block; line-height: 1em;
-  padding: 6px 15px;
-  border-radius: 15px;
-  background: #eee;                     /* 按钮背景色 */
-  color: #999;                          /* 按钮文字色 */
+  display: inline-block;     /* 行内块，可设宽高 */
+  line-height: 1em;
+  padding: 6px 15px;         /* 按钮内边距 */
+  border-radius: 15px;       /* 两端半圆（胶囊形按钮） */
+  background: #eee;          /* 浅灰背景 */
+  color: #999;               /* 灰色文字 */
   text-shadow: 0 1px #fff;
   text-decoration: none;
 }
 .article-more-link a:hover {
-  background: #258fb8;                  /* 鼠标悬停时按钮变色 */
-  color: #fff;
+  background: #258fb8;       /* 悬停变蓝色背景 */
+  color: #fff;               /* 悬停白色文字 */
   text-shadow: 0 1px #1e7293;
 }
 
-/* ---- 卡片底部（文章标签 #tag + 分享/评论链接，有顶部分割线）---- */
+/* ---- 卡片底部：标签 #tag + 分享链接 ---- */
 .article-footer {
   font-size: 0.85em; line-height: 1.6em;
-  border-top: 1px solid #ddd;           /* 分割线 */
+  border-top: 1px solid #ddd; /* 顶部分割线，与正文分隔 */
   padding-top: 1.6em;
-  margin: 0 20px 20px;
+  margin: 0 20px 20px;       /* 左右下边距 */
 }
 .article-footer:before, .article-footer:after { content: ""; display: table; }
 .article-footer:after { clear: both; }
 .article-footer a { color: #999; text-decoration: none; }
 .article-footer a:hover { color: #555; }
-.article-tag-list-item { float: left; margin-right: 10px; }
-.article-tag-list-link:before { content: "#"; }
+.article-tag-list-item { float: left; margin-right: 10px; } /* 标签横向排列 */
+.article-tag-list-link:before { content: "#"; } /* 每个标签前自动加 # 号 */
 .article-comment-link { float: right; }
 .article-comment-link:before { padding-right: 8px; }
 .article-share-link { cursor: pointer; float: right; margin-left: 20px; }
 .article-share-link:before { padding-right: 6px; }
 
 /* ==============================================
-   九、文章内页的上一篇/下一篇导航（文章底部的翻页链接，中间有个小圆点）
+   九、文章内页上下篇导航（文章底部翻页，中间有个小圆点）
    ============================================== */
+
 #article-nav { position: relative; }
 #article-nav:before, #article-nav:after { content: ""; display: table; }
 #article-nav:after { clear: both; }
 @media screen and (min-width: 768px) {
   #article-nav { margin: 50px 0; }
   #article-nav:before {
-    width: 8px; height: 8px; position: absolute;
-    top: 50%; left: 50%; margin-top: -4px; margin-left: -4px;
-    content: ""; border-radius: 50%;
-    background: #ddd;                   /* 中间圆点颜色 */
+    width: 8px; height: 8px;  /* 中间小圆点尺寸 */
+    position: absolute;
+    top: 50%; left: 50%;      /* 居中定位 */
+    margin-top: -4px; margin-left: -4px; /* 配合50%精确居中 */
+    content: "";
+    border-radius: 50%;       /* 正圆形 */
+    background: #ddd;         /* 浅灰圆点 */
     box-shadow: 0 1px 2px #fff;
   }
 }
 .article-nav-link-wrap {
   text-decoration: none; text-shadow: 0 1px #fff;
-  color: #999;                          /* 链接文字色 */
-  box-sizing: border-box; margin-top: 50px;
+  color: #999;               /* 灰色链接文字 */
+  box-sizing: border-box;    /* 边框和内边距计入总宽度 */
+  margin-top: 50px;
   text-align: center; display: block;
 }
 .article-nav-link-wrap:hover { color: #555; }
 @media screen and (min-width: 768px) {
-  .article-nav-link-wrap { width: 50%; margin-top: 0; }
-  #article-nav-newer { float: left; text-align: right; padding-right: 20px; }
-  #article-nav-older { float: right; text-align: left; padding-left: 20px; }
+  .article-nav-link-wrap { width: 50%; margin-top: 0; } /* 桌面端左右各一半 */
+  #article-nav-newer { float: left; text-align: right; padding-right: 20px; }  /* 较新文章在左 */
+  #article-nav-older { float: right; text-align: left; padding-left: 20px; }  /* 较旧文章在右 */
 }
 .article-nav-caption {
   text-transform: uppercase; letter-spacing: 2px;
-  color: #ddd;                          /* "上一篇"/"下一篇" 标签色 */
+  color: #ddd;               /* "上一篇"/"下一篇" 标签很淡 */
   line-height: 1em; font-weight: bold;
 }
 #article-nav-newer .article-nav-caption { margin-right: -2px; }
 .article-nav-title { font-size: 0.85em; line-height: 1.6em; margin-top: 0.5em; }
 
 /* ==============================================
-   十、文章分享弹窗（点击分享按钮后弹出的窗口，可复制链接或分享到社交平台）
+   十、文章分享弹窗（点击分享按钮后弹出，可复制链接或分享到社交平台）
    ============================================== */
+
 .article-share-box {
-  position: absolute; display: none; background: #fff;
-  box-shadow: 1px 2px 10px rgba(0,0,0,0.2);
-  border-radius: 3px; margin-left: -145px;
-  overflow: hidden; z-index: 1;
+  position: absolute;        /* 相对于分享按钮定位 */
+  display: none;             /* 默认隐藏 */
+  background: #fff;
+  box-shadow: 1px 2px 10px rgba(0,0,0,0.2); /* 较大阴影，弹窗感 */
+  border-radius: 3px;
+  margin-left: -145px;       /* 向左偏移，居中在按钮上方 */
+  overflow: hidden;
+  z-index: 1;
 }
-.article-share-box.is-active { display: block; }
+.article-share-box.is-active { display: block; } /* JS 触发显示 */
 .article-share-input {
-  width: 100%; background: none; box-sizing: border-box;
+  width: 100%;               /* 撑满 */
+  background: none;
+  box-sizing: border-box;    /* 边框计入宽度 */
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  padding: 0 15px; color: #555; outline: none;
-  border: 1px solid #ddd; border-radius: 3px 3px 0 0;
+  padding: 0 15px; color: #555;
+  outline: none;             /* 去掉聚焦外框 */
+  border: 1px solid #ddd;
+  border-radius: 3px 3px 0 0; /* 仅顶部圆角，与下方按钮无缝衔接 */
   height: 36px; line-height: 36px;
 }
-.article-share-links { background: #eee; }
+.article-share-links { background: #eee; } /* 社交按钮区域底色 */
 .article-share-links:before, .article-share-links:after { content: ""; display: table; }
 .article-share-links:after { clear: both; }
 
-/* 社交媒体分享按钮颜色 */
+/* 各社交平台分享按钮（横向排列，每个 50×36） */
 .article-share-twitter, .article-share-facebook, .article-share-pinterest, .article-share-linkedin {
-  width: 50px; height: 36px; display: block; float: left;
+  width: 50px; height: 36px; /* 固定尺寸 */
+  display: block; float: left; /* 横向排列 */
   position: relative; color: #999; text-shadow: 0 1px #fff;
 }
 .article-share-twitter .fa, .article-share-facebook .fa,
 .article-share-pinterest .fa, .article-share-linkedin .fa {
-  font-size: 20px; width: 20px; height: 20px;
-  position: absolute; top: 50%; left: 50%;
-  margin-top: -10px; margin-left: -10px; text-align: center;
+  font-size: 20px;           /* 图标大小 */
+  width: 20px; height: 20px;
+  position: absolute;
+  top: 50%; left: 50%;       /* 图标居中 */
+  margin-top: -10px; margin-left: -10px; /* 配合 50% 精确居中 */
+  text-align: center;
 }
 .article-share-twitter:hover, .article-share-facebook:hover,
-.article-share-pinterest:hover, .article-share-linkedin:hover { color: #fff; }
-.article-share-twitter:hover { background: #00aced; }     /* Twitter 蓝 */
-.article-share-facebook:hover { background: #3b5998; }    /* Facebook 蓝 */
-.article-share-pinterest:hover { background: #cb2027; }   /* Pinterest 红 */
-.article-share-linkedin:hover { background: #0077b5; }    /* LinkedIn 蓝 */
+.article-share-pinterest:hover, .article-share-linkedin:hover { color: #fff; } /* 悬停图标变白 */
+
+/* 悬停时各平台显示品牌色 */
+.article-share-twitter:hover  { background: #00aced; }  /* Twitter 蓝 */
+.article-share-facebook:hover { background: #3b5998; }  /* Facebook 蓝 */
+.article-share-pinterest:hover { background: #cb2027; } /* Pinterest 红 */
+.article-share-linkedin:hover  { background: #0077b5; } /* LinkedIn 蓝 */
 
 /* ==============================================
-   十一、归档页面布局（按年份分栏展示所有文章，手机1栏、平板2栏、桌面3栏）
+   十一、归档页面布局（按年份分栏：手机1栏、平板2栏、桌面3栏）
    ============================================== */
+
 .archives-wrap { margin: 50px 0; }
 .archives:before, .archives:after { content: ""; display: table; }
 .archives:after { clear: both; }
 .archive-year-wrap { margin-bottom: 1em; }
 
-/* 年份标题（归档页每个年份的大标题，如 2024）*/
+/* 年份标题（归档页每个年份的大标题，如 "2026"） */
 .archive-year {
   text-decoration: none; text-transform: uppercase;
   letter-spacing: 2px;
-  color: #999;                          /* 年份文字颜色 */
+  color: #999;               /* 年份颜色 */
   margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff;
-  font-weight: bold;
+  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
 }
 
-/* 归档列表分栏（手机 1 栏、平板 2 栏、桌面 3 栏）*/
-.archives { column-gap: 10px; }
-@media screen and (min-width: 480px) and (max-width: 767px) { .archives { column-count: 2; } }
-@media screen and (min-width: 768px) { .archives { column-count: 3; } }
+/* CSS 多列布局实现分栏（不需要 JS） */
+.archives { column-gap: 10px; } /* 列间距 10px */
+@media screen and (min-width: 480px) and (max-width: 767px) { .archives { column-count: 2; } } /* 平板：2栏 */
+@media screen and (min-width: 768px) { .archives { column-count: 3; } } /* 桌面：3栏 */
 
-/* 归档中每篇文章条目（每个文章的小卡片，白色底 + 阴影 + 圆角）*/
-.archive-article { break-inside: avoid-column; overflow: hidden; }
+/* 归档中每篇文章条目 */
+.archive-article { break-inside: avoid-column; overflow: hidden; } /* 禁止条目在栏间断裂 */
 .archive-article-title {
   text-decoration: none; font-weight: bold;
-  color: #555;                          /* 文章标题颜色 */
+  color: #555;               /* 文章标题颜色 */
   transition: color 0.2s; line-height: 1.6em;
 }
 .archive-article-title:hover { color: #258fb8; }
 .archive-article-footer { margin-top: 1em; }
 .archive-article-date {
-  color: #999;                          /* 归档日期颜色 */
+  color: #999;               /* 日期浅灰色 */
   text-decoration: none; font-size: 0.85em;
   line-height: 1em; margin-bottom: 0.5em; display: block;
 }
 
 /* ==============================================
-   十二、分页导航（首页底部的翻页按钮，上一页/页码/下一页）
+   十二、分页导航（首页底部：上一页 / 页码 / 下一页）
    ============================================== */
+
 #page-nav {
-  margin: 50px auto; background: #fff;
+  margin: 50px auto;         /* 上下50px，左右auto居中 */
+  background: #fff;
   box-shadow: 1px 2px 3px #ddd; border: 1px solid #ddd;
-  border-radius: 3px; text-align: center;
+  border-radius: 3px;
+  text-align: center;        /* 内容居中 */
   color: #999; overflow: hidden;
 }
 #page-nav:before, #page-nav:after { content: ""; display: table; }
 #page-nav:after { clear: both; }
-#page-nav a, #page-nav span { padding: 10px 20px; line-height: 1; height: 2ex; }
+#page-nav a, #page-nav span {
+  padding: 10px 20px;        /* 按钮内边距 */
+  line-height: 1;
+  height: 2ex;               /* ex = x字母高度，大致等于文字高度 */
+}
 #page-nav a { color: #999; text-decoration: none; }
-#page-nav a:hover { background: #999; color: #fff; }
-#page-nav .prev { float: left; }
-#page-nav .next { float: right; }
-#page-nav .page-number { display: inline-block; }
-@media screen and (max-width: 479px) { #page-nav .page-number { display: none; } }
-#page-nav .current { color: #555; font-weight: bold; }
-#page-nav .space { color: #ddd; }
+#page-nav a:hover { background: #999; color: #fff; } /* 悬停反色 */
+#page-nav .prev { float: left; }    /* "上一页"靠左 */
+#page-nav .next { float: right; }   /* "下一页"靠右 */
+#page-nav .page-number { display: inline-block; } /* 页码居中排列 */
+@media screen and (max-width: 479px) { #page-nav .page-number { display: none; } } /* 手机端隐藏页码数字 */
+#page-nav .current { color: #555; font-weight: bold; } /* 当前页码加粗 */
+#page-nav .space { color: #ddd; }   /* 省略号(...)的颜色 */
 
 /* ==============================================
-   十三、评论区外观（文章底部的评论框样式，白色卡片容器）
+   十三、评论区外观
    ============================================== */
+
 #comments {
-  background: #fff;                     /* 评论区背景 */
+  background: #fff;          /* 白色背景 */
   box-shadow: 1px 2px 3px #ddd;
-  padding: 20px;
+  padding: 20px;             /* 内边距 */
   border: 1px solid #ddd;
   border-radius: 3px;
   margin: 50px 0;
@@ -555,11 +631,12 @@ a.article-title:hover { color: #258fb8; }  /* 鼠标悬停时标题变色 */
 #comments a { color: #258fb8; }
 
 /* ==============================================
-   十四、图片画廊（文章内多张图片的轮播展示，黑底）
+   十四、文章内图片画廊（多张图片的轮播展示，黑底）
    ============================================== */
-.article-gallery { background: #000; position: relative; }
-.article-gallery-photos { position: relative; overflow: hidden; }
-.article-gallery-img { display: none; max-width: 100%; }
-.article-gallery-img:first-child { display: block; }
-.article-gallery-img.loaded { position: absolute; display: block; }
-.article-gallery-img img { display: block; max-width: 100%; margin: 0 auto; }
+
+.article-gallery { background: #000; position: relative; } /* 黑底容器 */
+.article-gallery-photos { position: relative; overflow: hidden; } /* 图片区域 */
+.article-gallery-img { display: none; max-width: 100%; } /* 默认隐藏所有图片 */
+.article-gallery-img:first-child { display: block; } /* 第一张默认显示 */
+.article-gallery-img.loaded { position: absolute; display: block; } /* JS 加载后绝对定位叠放 */
+.article-gallery-img img { display: block; max-width: 100%; margin: 0 auto; } /* 图片居中 */
