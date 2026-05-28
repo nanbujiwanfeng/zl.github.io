@@ -12,7 +12,7 @@
 
 /* ---- 轮播图 ---- */
 #banner {
-  background: none;
+  background-color: #000;  /* 图片加载期间的黑色底色 */
   overflow: hidden;
 }
 .banner-slide {
