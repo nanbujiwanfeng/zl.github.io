@@ -49,6 +49,31 @@
     start();
   })();
 
+  // ==================== 背景音乐 ====================
+  (function() {
+    var $audio = $('<audio id="bgm" src="/zl.github.io/music/bg.mp3" autoplay muted loop></audio>');
+    $('body').append($audio);
+    var audio = $audio[0];
+    var $btn = $('<button id="music-btn" title="音乐">&#9834;</button>');
+    $('body').append($btn);
+
+    var playing = false; /* muted不算真正播放 */
+    $btn.on('click', function(e) {
+      e.stopPropagation();
+      if (!playing) {
+        audio.muted = false;     /* 取消静音 */
+        audio.play().then(function() {
+          $btn.addClass('is-playing');
+          playing = true;
+        });
+      } else {
+        audio.muted = true;      /* 静音 */
+        $btn.removeClass('is-playing');
+        playing = false;
+      }
+    });
+  })();
+
   // Search
   var $searchWrap = $('#search-form-wrap'),
     isSearchAnim = false,

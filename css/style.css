@@ -97,3 +97,30 @@
 .banner-dot.is-active { /* 当前选中的圆点样式 */
   background: #fff;         /* 当前选中的圆点：纯白色 */
 }
+
+/* ==============================================
+   音乐播放按钮 — 页面右下角悬浮，默认静音循环播
+   ============================================== */
+#music-btn {
+  position: fixed;           /* 固定定位，不随滚动 */
+  bottom: 30px; right: 30px; /* 右下角位置 */
+  z-index: 999;              /* 最顶层 */
+  width: 44px; height: 44px; /* 按钮尺寸 */
+  border-radius: 50%;        /* 圆形按钮 */
+  border: none;
+  background: rgba(0,0,0,0.5); /* 半透明黑底 */
+  color: #fff;               /* 音符白色 */
+  font-size: 22px;           /* 音符大小 */
+  cursor: pointer;           /* 手型光标 */
+  line-height: 44px;         /* 垂直居中 */
+  text-align: center;        /* 水平居中 */
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+#music-btn:hover {
+  background: rgba(0,0,0,0.7); /* 悬停加深 */
+  transform: scale(1.1);       /* 悬停微微放大 */
+}
+#music-btn.is-playing {
+  background: rgba(37,143,184,0.7); /* 播放中：蓝色背景 */
+}
