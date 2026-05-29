@@ -115,7 +115,7 @@
   line-height: 44px;         /* 垂直居中 */
   text-align: center;        /* 水平居中 */
   padding: 0;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.2s;/* 背景色和缩放的过渡动画 */
 }
 #music-btn:hover {
   background: rgba(0,0,0,0.7); /* 悬停加深 */
