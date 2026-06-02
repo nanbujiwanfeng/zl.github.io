@@ -198,7 +198,7 @@ body:after { clear: both; }
 /* 搜索框：默认隐藏在屏幕右侧外 */
 #search-form-wrap {
   position: absolute;        /* 绝对定位在 header 内 */
-  top: 10px;                 /* 距顶部 12px */
+  top: 10px;                 /* 距顶部 10px */
   width: 240px; height: 38px;
   right: -240px;             /* 隐藏在右侧屏幕外 */
   opacity: 0;                /* 默认透明 */
