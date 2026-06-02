@@ -1,6 +1,6 @@
 [
   {
-    "title": "三子棋游戏",
+    "title": "三子棋",
     "url": "/zl.github.io/posts/tic-tac-toe/",
     "date": "2026-04-07",
     "tags": ["C语言"],
@@ -25,6 +25,6 @@
     "url": "/zl.github.io/posts/hello-world/",
     "date": "2026-03-20",
     "tags": [],
-    "content": "Welcome to Hexo This is your very first post Quick Start Create a new post Run server Generate static files Deploy to remote sites hexo new hexo server hexo generate hexo deploy"
+    "content": "这是我的第一篇博客文章，标志着这个博客的诞生。从这里开始，我将记录学习编程的点点滴滴。"
   }
 ]
