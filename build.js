@@ -139,33 +139,9 @@ function buildRecentPosts() {
   return searchData.slice(0, 5).map(p => ({ url: p.url, title: p.title }));
 }
 
+const tokenize = require('./js/tokenize').tokenize; // 分词逻辑（与浏览器端共享 js/tokenize.js）
+
 // ==================== 构建倒排索引 ====================
-// 将文本拆分为搜索 token：
-//   - 中文单字 + 相邻二字组合（bigram），兼顾单字查询和精确匹配
-//   - 英文/数字连续串（2 字符以上），转小写
-// 返回去重后的 token 数组
-// 示例："C语言游戏" → ["c","语","言","游","戏","语言","言游","游戏","c语","语言"]
-function tokenize(text) {
-  const tokens = new Set();               // Set 自动去重：同一个 token 只存一份
-  const lower  = text.toLowerCase();      // 统一转小写：英文不区分大小写
-
-  // 提取所有 CJK 字符，生成单字 token + 相邻 bigram
-  const cjkChars = [];                    // 按原文顺序收集所有中文字符
-  const cjkRe    = /[一-鿿㐀-䶿]/g;       // 匹配基本汉字块 + 扩展A区
-  let m;
-  while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]); // 逐个提取
-  cjkChars.forEach(c => tokens.add(c));   // 单字 token：支持单字查询
-  for (let i = 0; i < cjkChars.length - 1; i++) {
-    tokens.add(cjkChars[i] + cjkChars[i + 1]); // 相邻二字 bigram：提高精确度
-  }
-
-  // 提取英文/数字 token（2 字符以上，如 "html" "malloc" "2026"）
-  const words = lower.match(/[a-z0-9]{2,}/g);  // 全局匹配连续字母数字
-  if (words) words.forEach(w => tokens.add(w));
-
-  return Array.from(tokens);              // Set → Array
-}
-
 // 遍历所有文章，生成倒排索引结构：
 // { articles: { slug: {title, date, tags} }, index: { token: [slug1, slug2] } }
 //   ↑ 文章元数据表                           ↑ 倒排索引：词 → 匹配文章列表
@@ -318,6 +294,13 @@ function stampVersion(filePath) {
     /((?:href|src)="\/zl\.github\.io\/(?:css|js|audio)\/[^"?]+\.(?:css|js|flac|png|jpg|jpeg|svg|woff2?))(?:\?v=[^"]*)?"/g,
     '$1?v=' + VERSION + '"'                               // $1 = 资源路径，追加 ?v=时间戳
   );
+  // 确保 tokenize.js 在 script.js 之前加载（非 EJS 生成的页面也需要）
+  if (html.indexOf('tokenize.js') === -1) {
+    html = html.replace(
+      '<script src="/zl.github.io/js/script.js',
+      '<script src="/zl.github.io/js/tokenize.js?v=' + VERSION + '"></script>\n<script src="/zl.github.io/js/script.js'
+    );
+  }
   fs.writeFileSync(filePath, html);                       // 写回文件
 }
 

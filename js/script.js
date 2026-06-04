@@ -189,37 +189,14 @@
       .then(function(data) { searchIndex = data; cb(data); }); // 缓存后回调
   }
 
-  // 对查询字符串执行与 build.js 相同的 tokenize 逻辑
-  // 中文 → 单字 + bigram  英文/数字 → 2+ 字符串
-  function tokenizeQuery(q) {
-    const tokens = new Set();             // Set 自动去重
-    const lower  = q.toLowerCase();       // 统一小写
-
-    // CJK 字符提取 →
-    const cjkChars = [];                  // 按顺序收集所有中文字符
-    const cjkRe    = /[一-鿿㐀-䶿]/g;     // 匹配基本汉字 + 扩展A区
-    let m;
-    while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]);
-    cjkChars.forEach(function(c) { tokens.add(c); });      // 单字 token
-    for (let i = 0; i < cjkChars.length - 1; i++) {
-      tokens.add(cjkChars[i] + cjkChars[i + 1]);           // 相邻二字 bigram
-    }
-
-    // 英文/数字 token（2 字符以上）
-    const words = lower.match(/[a-z0-9]{2,}/g);
-    if (words) words.forEach(function(w) { tokens.add(w); });
-
-    return Array.from(tokens);            // Set → Array
-  }
-
-  // 倒排索引搜索：每个 token 在 idx 中查找匹配的文章 ID，按命中数降序排列
+  // 倒排索引搜索：每个 token 在索引中查找匹配的文章，按命中数降序排列
   function doSearch(query, data) {
-    const tokens = tokenizeQuery(query);  // 查询分词
+    const tokens = tokenize(query);       // 查询分词（全局 tokenize，来自 tokenize.js）
     if (!tokens.length) return [];        // 空查询 → 空结果
 
     const scores = {};                    // { slug: 命中次数 }
     tokens.forEach(function(token) {
-      const ids = data.i[token];          // 在倒排索引中查找
+      const ids = data.index[token];          // 在倒排索引中查找
       if (!ids) return;                   // 该 token 无匹配
       ids.forEach(function(id) { scores[id] = (scores[id] || 0) + 1; }); // 累加命中数
     });
