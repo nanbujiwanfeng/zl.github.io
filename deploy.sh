@@ -4,6 +4,7 @@ set -e
 
 MSG="${1:-更新网站}"
 
+npm install --no-audit --no-fund 2>/dev/null
 node build.js
 git add -A
 git commit -m "$MSG" || echo "没有新变更，跳过提交"
