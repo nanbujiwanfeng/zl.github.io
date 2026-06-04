@@ -1,23 +1,25 @@
 {
   "name": "my-blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "南不及晚风的博客 — 基于 EJS 的静态博客生成器",
   "main": "build.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js",
+    "deploy": "bash deploy.sh",
+    "dev": "npx serve ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nanbujiwanfeng/zl.github.io.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["blog", "static-site", "ejs"],
+  "author": "张良",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/nanbujiwanfeng/zl.github.io/issues"
   },
-  "homepage": "https://github.com/nanbujiwanfeng/zl.github.io#readme",
+  "homepage": "https://nanbujiwanfeng.github.io/zl.github.io",
   "dependencies": {
     "ejs": "^6.0.1"
   }
