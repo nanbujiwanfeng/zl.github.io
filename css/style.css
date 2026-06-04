@@ -14,27 +14,50 @@
    音乐播放按钮 — 页面右下角悬浮，默认静音循环播
    ============================================== */
 #music-btn {
-  position: fixed;           /* 固定定位，不随滚动 */
-  bottom: 30px; right: 30px; /* 右下角位置 */
-  z-index: 999;              /* 最顶层 */
-  width: 44px; height: 44px; /* 按钮尺寸 */
-  border-radius: 50%;        /* 圆形按钮 */
+  position: fixed;
+  bottom: 30px; right: 30px;
+  z-index: 999;
+  width: 44px; height: 44px;
+  border-radius: 50%;
   border: none;
-  background: rgba(0,0,0,0.5); /* 半透明黑底 */
-  color: #fff;               /* 音符白色 */
-  font-size: 22px;           /* 音符大小 */
-  cursor: pointer;           /* 手型光标 */
-  line-height: 44px;         /* 垂直居中 */
-  text-align: center;        /* 水平居中 */
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 44px;
+  text-align: center;
   padding: 0;
-  transition: background 0.2s, transform 0.2s;/* 背景色和缩放的过渡动画 */
+  transition: background 0.2s, transform 0.2s;
 }
 #music-btn:hover {
-  background: rgba(0,0,0,0.7); /* 悬停加深 */
-  transform: scale(1.1);       /* 悬停微微放大 */
+  background: rgba(0,0,0,0.7);
+  transform: scale(1.1);
 }
+
+/* ---- 静音状态：橙色呼吸指示灯，告诉用户"正在运行但静音" ---- */
+#music-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; right: 8px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #f39c12;                  /* 橙色 = 注意/中间态 */
+  opacity: 0.8;
+  animation: music-dot-pulse 2s ease-in-out infinite;
+}
+@keyframes music-dot-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1);   }
+}
+
+/* ---- 有声播放：蓝色背景 + 绿色指示灯 ---- */
 #music-btn.is-playing {
-  background: rgba(37,143,184,0.7); /* 播放中：蓝色背景 */
+  background: rgba(37,143,184,0.7);
+}
+#music-btn.is-playing::after {
+  background: #2ecc71;                  /* 绿色 = 活跃/播放中 */
+  animation: none;
+  opacity: 1;
 }
 
 /* ==============================================

@@ -107,7 +107,7 @@
 
     const btn = document.createElement('button');
     btn.id = 'music-btn';
-    btn.title = '音乐';
+    btn.title = '音乐已静音 — 点击播放';
     btn.innerHTML = '&#9834;';
     document.body.appendChild(btn);
 
@@ -118,11 +118,13 @@
         audio.muted = false;
         audio.play().then(function() {
           btn.classList.add('is-playing');
+          btn.title = '音乐播放中 — 点击静音';
           playing = true;
         });
       } else {
         audio.muted = true;
         btn.classList.remove('is-playing');
+        btn.title = '音乐已静音 — 点击播放';
         playing = false;
       }
     });
