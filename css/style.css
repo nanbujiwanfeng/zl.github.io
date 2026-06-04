@@ -126,6 +126,7 @@
 .lightbox-caption {
   position: absolute;
   bottom: 30px;
+  left: 50%; transform: translateX(-50%);  /* 水平居中 */
   z-index: 2;
   color: #ccc;
   font-size: 14px;
