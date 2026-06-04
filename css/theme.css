@@ -139,6 +139,8 @@ body:after { clear: both; }
   animation: banner-loading 1.5s ease-in-out infinite; /* 循环播放闪烁 */
   z-index: 0;                 /* 最低层，图片加载后盖住它 */
 }
+/* 首图加载完成后移除骨架屏，停止动画 */
+#banner.is-loaded::before { content: none; }
 @keyframes banner-loading {
   0%   { background-position: 200% 0; }    /* 渐变条从右侧开始 */
   100% { background-position: -200% 0; }   /* 移动到左侧，产生扫光效果 */

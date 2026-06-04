@@ -48,6 +48,14 @@
     const slideEls = banner.querySelectorAll('.banner-slide');
     const dotEls  = header.querySelectorAll('.banner-dot');
 
+    // 首张图片加载完成后移除骨架屏动画，停止无意义的 GPU 合成
+    const firstSlide = slideEls[0];
+    if (firstSlide.complete) {
+      banner.classList.add('is-loaded');
+    } else {
+      firstSlide.addEventListener('load', function() { banner.classList.add('is-loaded'); });
+    }
+
     let idx = 0;
     let timer;
 
