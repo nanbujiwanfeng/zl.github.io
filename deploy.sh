@@ -4,6 +4,7 @@ set -e
 
 MSG="${1:-更新网站}"
 
+node build.js
 git add -A
 git commit -m "$MSG" || echo "没有新变更，跳过提交"
 git push origin source
