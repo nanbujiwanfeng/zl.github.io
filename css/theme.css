@@ -606,9 +606,9 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 .article-share-links:after { clear: both; }
 
 /* 各社交平台分享按钮（横向排列，中文文字标签） */
-.article-share-weibo,
+.article-share-qq,
+.article-share-wechat,
 .article-share-qzone,
-.article-share-douban,
 .article-share-copy {
   min-width: 50px; height: 36px;
   display: block; float: left;
@@ -619,17 +619,18 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
   padding: 0 10px;
   cursor: pointer; border: none; background: none;
 }
+.article-share-wechat,
 .article-share-copy { font-family: inherit; } /* button 需要显式继承 */
 
-.article-share-weibo:hover,
+.article-share-qq:hover,
+.article-share-wechat:hover,
 .article-share-qzone:hover,
-.article-share-douban:hover,
 .article-share-copy:hover { color: #fff; }
 
-.article-share-weibo:hover  { background: #e6162d; }  /* 微博红 */
-.article-share-qzone:hover  { background: #12b7f5; }  /* QQ蓝   */
-.article-share-douban:hover { background: #00b51d; }  /* 豆瓣绿 */
-.article-share-copy:hover   { background: #555; }     /* 灰色   */
+.article-share-qq:hover      { background: #12b7f5; }  /* QQ蓝       */
+.article-share-wechat:hover  { background: #07c160; }  /* 微信绿     */
+.article-share-qzone:hover   { background: #fca130; }  /* QQ空间橙   */
+.article-share-copy:hover    { background: #555; }     /* 灰色       */
 
 /* ==============================================
    十一、归档页面布局（按年份分栏：手机1栏、平板2栏、桌面3栏）

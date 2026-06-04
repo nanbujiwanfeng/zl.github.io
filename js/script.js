@@ -317,9 +317,9 @@
       const offset     = getOffset(link);
 
       function buildShareHtml() {
-        return '<a href="https://service.weibo.com/share/share.php?url=' + encodedUrl + '&title=' + encodeURIComponent(title) + '" class="article-share-weibo" target="_blank" rel="noopener noreferrer" title="分享到微博">微博</a>' +
+        return '<a href="https://connect.qq.com/widget/shareqq/index.html?url=' + encodedUrl + '&title=' + encodeURIComponent(title) + '&source=南不及晚风的博客" class="article-share-qq" target="_blank" rel="noopener noreferrer" title="分享到QQ">QQ</a>' +
+               '<button class="article-share-wechat" title="复制链接，打开微信粘贴即可分享">微信</button>' +
                '<a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + encodedUrl + '&title=' + encodeURIComponent(title) + '" class="article-share-qzone" target="_blank" rel="noopener noreferrer" title="分享到QQ空间">QQ空间</a>' +
-               '<a href="https://www.douban.com/share/service?href=' + encodedUrl + '&name=' + encodeURIComponent(title) + '" class="article-share-douban" target="_blank" rel="noopener noreferrer" title="分享到豆瓣">豆瓣</a>' +
                '<button class="article-share-copy" title="复制链接到剪贴板">复制</button>';
       }
 
@@ -345,11 +345,12 @@
     if (e.target.closest('.article-share-box')) {
       e.stopPropagation();
       if (e.target.classList.contains('article-share-box-input')) e.target.select();
-      if (e.target.classList.contains('article-share-copy')) {
+      if (e.target.classList.contains('article-share-copy') || e.target.classList.contains('article-share-wechat')) {
         const input = shareBox.querySelector('.article-share-input');
         navigator.clipboard.writeText(input.value).then(function() {
-          e.target.textContent = '已复制';
-          setTimeout(function() { e.target.textContent = '复制'; }, 1500);
+          var orig = e.target.textContent;
+          e.target.textContent = e.target.classList.contains('article-share-wechat') ? '已复制，去微信粘贴' : '已复制';
+          setTimeout(function() { e.target.textContent = orig; }, 2000);
         });
       }
       return;
