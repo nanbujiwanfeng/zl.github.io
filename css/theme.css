@@ -605,29 +605,31 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 .article-share-links:before, .article-share-links:after { content: ""; display: table; }
 .article-share-links:after { clear: both; }
 
-/* 各社交平台分享按钮（横向排列，每个 50×36） */
-.article-share-twitter, .article-share-facebook, .article-share-pinterest, .article-share-linkedin {
-  width: 50px; height: 36px; /* 固定尺寸 */
-  display: block; float: left; /* 横向排列 */
-  position: relative; color: #999; text-shadow: 0 1px #fff;
+/* 各社交平台分享按钮（横向排列，中文文字标签） */
+.article-share-weibo,
+.article-share-qzone,
+.article-share-douban,
+.article-share-copy {
+  min-width: 50px; height: 36px;
+  display: block; float: left;
+  position: relative;
+  color: #999; text-shadow: 0 1px #fff;
+  text-align: center; line-height: 36px;
+  font-size: 13px; text-decoration: none;
+  padding: 0 10px;
+  cursor: pointer; border: none; background: none;
 }
-.article-share-twitter .fa, .article-share-facebook .fa,
-.article-share-pinterest .fa, .article-share-linkedin .fa {
-  font-size: 20px;           /* 图标大小 */
-  width: 20px; height: 20px;
-  position: absolute;
-  top: 50%; left: 50%;       /* 图标居中 */
-  margin-top: -10px; margin-left: -10px; /* 配合 50% 精确居中 */
-  text-align: center;
-}
-.article-share-twitter:hover, .article-share-facebook:hover,
-.article-share-pinterest:hover, .article-share-linkedin:hover { color: #fff; } /* 悬停图标变白 */
+.article-share-copy { font-family: inherit; } /* button 需要显式继承 */
 
-/* 悬停时各平台显示品牌色 */
-.article-share-twitter:hover  { background: #00aced; }  /* Twitter 蓝 */
-.article-share-facebook:hover { background: #3b5998; }  /* Facebook 蓝 */
-.article-share-pinterest:hover { background: #cb2027; } /* Pinterest 红 */
-.article-share-linkedin:hover  { background: #0077b5; } /* LinkedIn 蓝 */
+.article-share-weibo:hover,
+.article-share-qzone:hover,
+.article-share-douban:hover,
+.article-share-copy:hover { color: #fff; }
+
+.article-share-weibo:hover  { background: #e6162d; }  /* 微博红 */
+.article-share-qzone:hover  { background: #12b7f5; }  /* QQ蓝   */
+.article-share-douban:hover { background: #00b51d; }  /* 豆瓣绿 */
+.article-share-copy:hover   { background: #555; }     /* 灰色   */
 
 /* ==============================================
    十一、归档页面布局（按年份分栏：手机1栏、平板2栏、桌面3栏）

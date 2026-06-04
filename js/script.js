@@ -316,26 +316,23 @@
       const title      = link.getAttribute('data-title');
       const offset     = getOffset(link);
 
+      function buildShareHtml() {
+        return '<a href="https://service.weibo.com/share/share.php?url=' + encodedUrl + '&title=' + encodeURIComponent(title) + '" class="article-share-weibo" target="_blank" rel="noopener noreferrer" title="分享到微博">微博</a>' +
+               '<a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + encodedUrl + '&title=' + encodeURIComponent(title) + '" class="article-share-qzone" target="_blank" rel="noopener noreferrer" title="分享到QQ空间">QQ空间</a>' +
+               '<a href="https://www.douban.com/share/service?href=' + encodedUrl + '&name=' + encodeURIComponent(title) + '" class="article-share-douban" target="_blank" rel="noopener noreferrer" title="分享到豆瓣">豆瓣</a>' +
+               '<button class="article-share-copy" title="复制链接到剪贴板">复制</button>';
+      }
+
       if (!shareBox) {
         shareBox = document.createElement('div');
         shareBox.className = 'article-share-box';
         shareBox.innerHTML =
           '<input class="article-share-input" value="' + url + '">' +
-          '<div class="article-share-links">' +
-            '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodedUrl + '" class="article-share-twitter" target="_blank" rel="noopener noreferrer" title="Twitter"><span class="fa fa-twitter"></span></a>' +
-            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>' +
-            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>' +
-            '<a href="https://www.linkedin.com/shareArticle?mini=true&url=' + encodedUrl + '" class="article-share-linkedin" target="_blank" title="LinkedIn"><span class="fa fa-linkedin"></span></a>' +
-          '</div>';
+          '<div class="article-share-links">' + buildShareHtml() + '</div>';
         document.body.appendChild(shareBox);
       } else {
         shareBox.querySelector('.article-share-input').value = url;
-        const links = shareBox.querySelector('.article-share-links');
-        links.innerHTML =
-          '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodedUrl + '" class="article-share-twitter" target="_blank" rel="noopener noreferrer" title="Twitter"><span class="fa fa-twitter"></span></a>' +
-          '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>' +
-          '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>' +
-          '<a href="https://www.linkedin.com/shareArticle?mini=true&url=' + encodedUrl + '" class="article-share-linkedin" target="_blank" title="LinkedIn"><span class="fa fa-linkedin"></span></a>';
+        shareBox.querySelector('.article-share-links').innerHTML = buildShareHtml();
       }
 
       shareBox.style.top  = (offset.top + 25) + 'px';
@@ -348,6 +345,13 @@
     if (e.target.closest('.article-share-box')) {
       e.stopPropagation();
       if (e.target.classList.contains('article-share-box-input')) e.target.select();
+      if (e.target.classList.contains('article-share-copy')) {
+        const input = shareBox.querySelector('.article-share-input');
+        navigator.clipboard.writeText(input.value).then(function() {
+          e.target.textContent = '已复制';
+          setTimeout(function() { e.target.textContent = '复制'; }, 1500);
+        });
+      }
       return;
     }
 
