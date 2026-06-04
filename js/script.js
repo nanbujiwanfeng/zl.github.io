@@ -228,11 +228,11 @@
       .sort(function(a, b) {              // 排序：命中数降序 → 日期降序
         var diff = scores[b] - scores[a]; // 命中数差
         if (diff !== 0) return diff;      // 命中数不同：高的在前
-        return data.a[b].d.localeCompare(data.a[a].d); // 命中数相同：日期新的在前
+        return data.articles[b].date.localeCompare(data.articles[a].date); // 命中数相同：日期新的在前
       })
       .map(function(id) {                 // slug → 结果对象
-        var doc = data.a[id];             // 从文章元数据表取值
-        return { title: doc.t, url: '/zl.github.io/posts/' + id + '/', date: doc.d };
+        var doc = data.articles[id];      // 从文章元数据表取值
+        return { title: doc.title, url: '/zl.github.io/posts/' + id + '/', date: doc.date };
       });
   }
 

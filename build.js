@@ -167,16 +167,16 @@ function tokenize(text) {
 }
 
 // 遍历所有文章，生成倒排索引结构：
-// { a: { slug: {t:标题, d:日期, g:[标签]} }, i: { token: [slug1, slug2] } }
-//   ↑ 文章元数据表                    ↑ 倒排索引：词 → 匹配文章列表
+// { articles: { slug: {title, date, tags} }, index: { token: [slug1, slug2] } }
+//   ↑ 文章元数据表                           ↑ 倒排索引：词 → 匹配文章列表
 function buildSearchIndex(posts) {
-  const articles = {};                    // { slug: {t, d, g} }
+  const articles = {};                    // { slug: {title, date, tags} }
   const index    = {};                    // { token: [slug1, slug2, ...] }
 
   posts.forEach(post => {                 // 遍历每篇文章
     const slug = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, ''); // 提取 URL slug：/posts/xxx/ → xxx
-    articles[slug] = { t: post.title, d: post.date }; // 存储元数据（短键名省体积）
-    if (post.tags && post.tags.length > 0) articles[slug].g = post.tags; // 有标签才存 g 字段
+    articles[slug] = { title: post.title, date: post.date }; // 存储文章元数据
+    if (post.tags && post.tags.length > 0) articles[slug].tags = post.tags; // 有标签才存 tags 字段
 
     const text   = post.title + ' ' + post.tags.join(' ') + ' ' + post.content; // 合并所有可搜索文本
     const tokens = tokenize(text);        // 分词
@@ -186,7 +186,7 @@ function buildSearchIndex(posts) {
     });
   });
 
-  return { a: articles, i: index };       // 一份 JSON 同时包含元数据和索引
+  return { articles, index };             // 一份 JSON 同时包含元数据和索引
 }
 
 // ==================== 生成所有分页 ====================
