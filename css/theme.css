@@ -323,13 +323,17 @@ body:after { clear: both; }
 }
 .search-form-submit:hover, .search-form-submit:focus { color: #777; } /* 悬停加深 */
 
-/* ---- 搜索结果下拉框 ---- */
+/* ---- 搜索结果下拉框（挂在 #search-form-wrap 内部，自然跟随搜索框） ---- */
 #search-results {
-  background: #fff;          /* 白底 */
-  border-radius: 0 0 8px 8px; /* 仅底部圆角 */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 向下阴影 */
-  overflow: hidden;          /* 裁剪超出圆角的内容 */
-  z-index: 100;              /* 最高层级，不被遮挡 */
+  position: absolute;        /* 相对 #search-form-wrap 定位 */
+  top: 100%;                 /* 紧贴搜索框下方 */
+  left: 0; width: 100%;      /* 与搜索框等宽 */
+  margin-top: 4px;           /* 与搜索框之间留一点空隙 */
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;
+  z-index: 100;
 }
 .search-result-item {
   display: block;            /* 整行可点击 */

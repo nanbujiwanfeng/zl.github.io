@@ -148,11 +148,6 @@
     setTimeout(function() { isSearchAnim = false; if (cb) cb(); }, searchAnimDuration);
   }
 
-  function getOffset(el) {
-    const r = el.getBoundingClientRect();
-    return { top: r.top + window.scrollY, left: r.left + window.scrollX };
-  }
-
   document.querySelector('.nav-search-btn').addEventListener('click', function() {
     if (isSearchAnim) return;
 
@@ -234,14 +229,8 @@
     const old = document.getElementById('search-results');
     if (old) old.remove();
 
-    const offset = getOffset(searchForm);
-    const width  = searchForm.offsetWidth;
-    const top    = offset.top + searchForm.offsetHeight + 5;
-    const left   = offset.left;
-
     const div = document.createElement('div');
     div.id = 'search-results';
-    div.style.cssText = 'position:absolute;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px';
 
     if (!results.length) {
       div.innerHTML = '<div class="search-no-result">没有找到相关文章</div>';
@@ -255,7 +244,7 @@
       });
       div.innerHTML = h;
     }
-    document.body.appendChild(div);
+    searchWrap.appendChild(div);
   }
 
   searchInput.addEventListener('input', function() {
