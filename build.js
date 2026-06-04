@@ -144,46 +144,49 @@ function buildRecentPosts() {
 //   - 中文单字 + 相邻二字组合（bigram），兼顾单字查询和精确匹配
 //   - 英文/数字连续串（2 字符以上），转小写
 // 返回去重后的 token 数组
+// 示例："C语言游戏" → ["c","语","言","游","戏","语言","言游","游戏","c语","语言"]
 function tokenize(text) {
-  const tokens = new Set();
-  const lower  = text.toLowerCase();
+  const tokens = new Set();               // Set 自动去重：同一个 token 只存一份
+  const lower  = text.toLowerCase();      // 统一转小写：英文不区分大小写
 
   // 提取所有 CJK 字符，生成单字 token + 相邻 bigram
-  const cjkChars = [];
-  const cjkRe    = /[一-鿿㐀-䶿]/g;
+  const cjkChars = [];                    // 按原文顺序收集所有中文字符
+  const cjkRe    = /[一-鿿㐀-䶿]/g;       // 匹配基本汉字块 + 扩展A区
   let m;
-  while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]);
-  cjkChars.forEach(c => tokens.add(c));
+  while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]); // 逐个提取
+  cjkChars.forEach(c => tokens.add(c));   // 单字 token：支持单字查询
   for (let i = 0; i < cjkChars.length - 1; i++) {
-    tokens.add(cjkChars[i] + cjkChars[i + 1]);
+    tokens.add(cjkChars[i] + cjkChars[i + 1]); // 相邻二字 bigram：提高精确度
   }
 
-  // 提取英文/数字 token（2+ 字符）
-  const words = lower.match(/[a-z0-9]{2,}/g);
+  // 提取英文/数字 token（2 字符以上，如 "html" "malloc" "2026"）
+  const words = lower.match(/[a-z0-9]{2,}/g);  // 全局匹配连续字母数字
   if (words) words.forEach(w => tokens.add(w));
 
-  return Array.from(tokens);
+  return Array.from(tokens);              // Set → Array
 }
 
-// 遍历所有文章，生成 { a: { slug: {t, d, g} }, i: { token: [slugs] } }
+// 遍历所有文章，生成倒排索引结构：
+// { a: { slug: {t:标题, d:日期, g:[标签]} }, i: { token: [slug1, slug2] } }
+//   ↑ 文章元数据表                    ↑ 倒排索引：词 → 匹配文章列表
 function buildSearchIndex(posts) {
-  const articles = {};
-  const index    = {};
+  const articles = {};                    // { slug: {t, d, g} }
+  const index    = {};                    // { token: [slug1, slug2, ...] }
 
-  posts.forEach(post => {
-    const slug = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, '');
-    articles[slug] = { t: post.title, d: post.date };
-    if (post.tags && post.tags.length > 0) articles[slug].g = post.tags;
+  posts.forEach(post => {                 // 遍历每篇文章
+    const slug = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, ''); // 提取 URL slug：/posts/xxx/ → xxx
+    articles[slug] = { t: post.title, d: post.date }; // 存储元数据（短键名省体积）
+    if (post.tags && post.tags.length > 0) articles[slug].g = post.tags; // 有标签才存 g 字段
 
-    const text   = post.title + ' ' + post.tags.join(' ') + ' ' + post.content;
-    const tokens = tokenize(text);
-    tokens.forEach(token => {
-      if (!index[token]) index[token] = [];
-      if (index[token].indexOf(slug) === -1) index[token].push(slug);
+    const text   = post.title + ' ' + post.tags.join(' ') + ' ' + post.content; // 合并所有可搜索文本
+    const tokens = tokenize(text);        // 分词
+    tokens.forEach(token => {             // 每个 token 映射到当前文章
+      if (!index[token]) index[token] = [];         // 首次出现的 token，初始化数组
+      if (index[token].indexOf(slug) === -1) index[token].push(slug); // 去重追加
     });
   });
 
-  return { a: articles, i: index };
+  return { a: articles, i: index };       // 一份 JSON 同时包含元数据和索引
 }
 
 // ==================== 生成所有分页 ====================
@@ -215,38 +218,43 @@ for (let page = 1; page <= totalPages; page++) {
   }
 }
 
-const searchIndex = buildSearchIndex(searchData);
-fs.writeFileSync(path.join(BASE_DIR, 'search-index.json'), JSON.stringify(searchIndex));
+// ==================== 生成倒排索引文件 ====================
+const searchIndex = buildSearchIndex(searchData);         // 从所有文章构建倒排索引
+fs.writeFileSync(                                         // 写入 JSON 文件
+  path.join(BASE_DIR, 'search-index.json'),
+  JSON.stringify(searchIndex)                             // 紧凑格式（无缩进，省体积）
+);
 
 // ==================== 更新非生成 HTML 文件的版本号 ====================
-// 文章、标签、归档这些页面不经过 EJS，需要手动替换版本参数
+// 文章、标签、归档这些页面不经过 EJS，需要手动替换 ?v= 参数
+// 每次构建生成新版本号，浏览器视为新文件重新请求
 function stampVersion(filePath) {
-  let html = fs.readFileSync(filePath, 'utf8');
-  // 匹配 /zl.github.io/ 下的 .css .js .flac 等静态资源，去掉旧 ?v= 再追加新版本
+  let html = fs.readFileSync(filePath, 'utf8');           // 读取 HTML
+  // 匹配 /zl.github.io/ 下的静态资源（css/js/audio/图片等），去掉旧 ?v= 再追加新版本
   html = html.replace(
     /((?:href|src)="\/zl\.github\.io\/(?:css|js|audio)\/[^"?]+\.(?:css|js|flac|png|jpg|jpeg|svg|woff2?))(?:\?v=[^"]*)?"/g,
-    '$1?v=' + VERSION + '"'
+    '$1?v=' + VERSION + '"'                               // $1 = 资源路径，追加 ?v=时间戳
   );
-  fs.writeFileSync(filePath, html);
+  fs.writeFileSync(filePath, html);                       // 写回文件
 }
 
-// 扫描所有非生成的 HTML 文件（文章、标签、归档）
+// 递归扫描目录下的所有 HTML 文件
 function walkDir(dir) {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const entries = fs.readdirSync(dir, { withFileTypes: true }); // 读取目录（含文件类型信息）
   entries.forEach(e => {
-    const full = path.join(dir, e.name);
+    const full = path.join(dir, e.name);                  // 完整路径
     if (e.isDirectory()) {
-      if (e.name !== 'page') walkDir(full);  // page/ 由 build 生成，跳过
+      if (e.name !== 'page') walkDir(full);               // page/ 由 EJS 生成，跳过避免重复处理
     } else if (e.name.endsWith('.html')) {
-      stampVersion(full);
+      stampVersion(full);                                 // HTML 文件 → 更新版本号
     }
   });
 }
 
-// 从根目录开始扫描（index.html 由模板生成也会包含版本号，这里也覆盖一次确保一致）
-stampVersion(path.join(BASE_DIR, 'index.html'));
-walkDir(path.join(BASE_DIR, 'posts'));
-walkDir(path.join(BASE_DIR, 'tags'));
-walkDir(path.join(BASE_DIR, 'archives'));
+// 为根目录 index.html 和所有子目录的 HTML 统一打版本号
+stampVersion(path.join(BASE_DIR, 'index.html'));         // 首页（虽由 EJS 生成，再覆盖一次确保一致）
+walkDir(path.join(BASE_DIR, 'posts'));                    // 文章详情页（posts/xxx/index.html）
+walkDir(path.join(BASE_DIR, 'tags'));                     // 标签页（tags/xxx/index.html）
+walkDir(path.join(BASE_DIR, 'archives'));                 // 归档页（archives/.../index.html）
 
 console.log('Built ' + totalPages + ' page(s) + inverted search index.  Version: ' + VERSION);
