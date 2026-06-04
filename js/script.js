@@ -1,36 +1,32 @@
 /* ===================================
-   博客前端脚本 — 页面交互逻辑
-
-   依赖：
-     jQuery 3.6.4（必须先加载）
-     fancybox（可选，图片灯箱）
+   博客前端脚本 — 页面交互逻辑（原生 JS，零外部依赖）
 
    功能模块：
      一、Banner 轮播图 — 三图自动切换 + 箭头 + 圆点
      二、背景音乐   — 右下角悬浮按钮，默认静音
      三、搜索       — 本地 JSON 搜索 + 键盘导航
      四、分享       — 文章链接复制 + 社交平台分享
-     五、图片灯箱   — fancybox 自动包裹
+     五、图片灯箱   — 原生灯箱自动包裹
      六、移动端菜单 — 汉堡菜单侧滑
    =================================== */
 
-(function($) {
+(function() {
 
   // ==============================================
   // 一、Banner 轮播图
   // 三张图片自动循环，支持左右箭头和底部圆点切换
   // ==============================================
 
-  const bannerSlides = [                          // 轮播图片路径数组
-    '/zl.github.io/images/1.jpg',                 // 第1张
-    '/zl.github.io/images/2.jpg',                 // 第2张
-    '/zl.github.io/images/3.jpg'                  // 第3张
+  const bannerSlides = [
+    '/zl.github.io/images/1.jpg',
+    '/zl.github.io/images/2.jpg',
+    '/zl.github.io/images/3.jpg'
   ];
 
   (function() {
-    const $banner = $('#banner');                  // 轮播容器
-    const $header = $('#header');                  // header（箭头和圆点挂在这里，z-index 才能生效）
-    if (!$banner.length || bannerSlides.length === 0) return; // 没有 banner 或没配置图片则退出
+    const banner = document.getElementById('banner');
+    const header = document.getElementById('header');
+    if (!banner || bannerSlides.length === 0) return;
 
     /* 预加载第一张图片，减少首屏等待时间 */
     const preload = new Image();
@@ -42,38 +38,48 @@
       imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '" src="' + bannerSlides[i] + '" alt="">';
       dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
     }
-    $banner.append(imgs);                          // 图片放入 #banner
-    $header.append(                                // 箭头和圆点放入 #header（z-index 高于 #banner）
-      '<button class="banner-arrow banner-prev">&#8249;</button>' +  // 左箭头
-      '<button class="banner-arrow banner-next">&#8250;</button>' +  // 右箭头
-      '<div class="banner-dots">' + dots + '</div>'                  // 圆点容器
+    banner.insertAdjacentHTML('beforeend', imgs);
+    header.insertAdjacentHTML('beforeend',
+      '<button class="banner-arrow banner-prev">&#8249;</button>' +
+      '<button class="banner-arrow banner-next">&#8250;</button>' +
+      '<div class="banner-dots">' + dots + '</div>'
     );
 
-    let idx = 0;                                   // 当前显示的图片索引
-    let timer;                                     // 自动播放定时器
+    const slideEls = banner.querySelectorAll('.banner-slide');
+    const dotEls  = header.querySelectorAll('.banner-dot');
+
+    let idx = 0;
+    let timer;
 
     // 切换到第 n 张
     function go(n) {
-      $banner.find('.banner-slide').eq(idx).removeClass('is-active'); // 隐藏当前
-      $header.find('.banner-dot').eq(idx).removeClass('is-active');   // 取消当前圆点
-      idx = (n + bannerSlides.length) % bannerSlides.length;          // 循环索引（支持负值）
-      $banner.find('.banner-slide').eq(idx).addClass('is-active');    // 显示新图
-      $header.find('.banner-dot').eq(idx).addClass('is-active');      // 高亮新圆点
+      slideEls[idx].classList.remove('is-active');
+      dotEls[idx].classList.remove('is-active');
+      idx = (n + bannerSlides.length) % bannerSlides.length;
+      slideEls[idx].classList.add('is-active');
+      dotEls[idx].classList.add('is-active');
     }
 
-    function next()  { go(idx + 1); }              // 下一张
-    function prev()  { go(idx - 1); }              // 上一张
-    function start() { timer = setInterval(next, 4000); } // 开始自动播放：4秒切换
-    function stop()  { clearInterval(timer); }             // 停止自动播放
+    function next()  { go(idx + 1); }
+    function prev()  { go(idx - 1); }
+    function start() { timer = setInterval(next, 4000); }
+    function stop()  { clearInterval(timer); }
 
-    // 点击右箭头：停止自动播放 → 切下一张 → 重新计时（防止手动切换后立即被自动切走）
-    $header.on('click', '.banner-next', function(e) { e.stopPropagation(); stop(); next(); start(); });
-    // 点击左箭头
-    $header.on('click', '.banner-prev', function(e) { e.stopPropagation(); stop(); prev(); start(); });
-    // 点击圆点：跳到对应图片
-    $header.on('click', '.banner-dot',  function(e) { e.stopPropagation(); stop(); go($header.find('.banner-dot').index(this)); start(); });
+    header.addEventListener('click', function(e) {
+      if (e.target.classList.contains('banner-next')) {
+        e.stopPropagation(); stop(); next(); start();
+      } else if (e.target.classList.contains('banner-prev')) {
+        e.stopPropagation(); stop(); prev(); start();
+      } else if (e.target.classList.contains('banner-dot')) {
+        e.stopPropagation(); stop();
+        for (let i = 0; i < dotEls.length; i++) {
+          if (dotEls[i] === e.target) { go(i); break; }
+        }
+        start();
+      }
+    });
 
-    start();                                       // 启动自动播放
+    start();
   })();
 
   // ==============================================
@@ -83,25 +89,32 @@
   // ==============================================
 
   (function() {
-    const $audio = $('<audio id="bgm" src="/zl.github.io/audio/昔涟.flac" autoplay muted loop></audio>');
-    $('body').append($audio);                      // 将 <audio> 追加到页面
-    const audio = $audio[0];                       // 原生 DOM 元素，用于调用 .play() 和 .muted
+    const audio = document.createElement('audio');
+    audio.id = 'bgm';
+    audio.src = '/zl.github.io/audio/昔涟.flac';
+    audio.autoplay = true;
+    audio.muted = true;
+    audio.loop = true;
+    document.body.appendChild(audio);
 
-    const $btn = $('<button id="music-btn" title="音乐">&#9834;</button>');
-    $('body').append($btn);                        // 将按钮追加到页面（CSS 固定定位在右下角）
+    const btn = document.createElement('button');
+    btn.id = 'music-btn';
+    btn.title = '音乐';
+    btn.innerHTML = '&#9834;';
+    document.body.appendChild(btn);
 
-    let playing = false;                           // 标记是否真正播放（muted 不算 playing）
-    $btn.on('click', function(e) {
+    let playing = false;
+    btn.addEventListener('click', function(e) {
       e.stopPropagation();
       if (!playing) {
-        audio.muted = false;                       // 取消静音
-        audio.play().then(function() {             // 开始播放（返回 Promise）
-          $btn.addClass('is-playing');             // 按钮变蓝色
+        audio.muted = false;
+        audio.play().then(function() {
+          btn.classList.add('is-playing');
           playing = true;
         });
       } else {
-        audio.muted = true;                        // 恢复静音
-        $btn.removeClass('is-playing');            // 按钮恢复默认色
+        audio.muted = true;
+        btn.classList.remove('is-playing');
         playing = false;
       }
     });
@@ -110,277 +123,302 @@
   // ==============================================
   // 三、搜索功能
   // 点击放大镜图标 → 滑出搜索框
-  // 输入时实时搜索 search.json（本地 JSON 索引）
+  // 输入时实时搜索 search.json
   // 支持上下箭头选择 + Enter 跳转 + Escape 关闭
   // ==============================================
 
-  const $searchWrap = $('#search-form-wrap');      // 搜索框容器
-  const $searchInput = $('.search-form-input');    // 搜索输入框
-  let isSearchAnim = false;                        // 防止动画期间重复点击
-  const searchAnimDuration = 200;                  // 动画时长（毫秒，与 CSS transition 一致）
+  const searchWrap   = document.getElementById('search-form-wrap');
+  const searchInput  = document.querySelector('.search-form-input');
+  const searchForm   = document.querySelector('.search-form');
+  let isSearchAnim   = false;
+  const searchAnimDuration = 200;
 
-  // 搜索框滑入
   function startSearchAnim() { isSearchAnim = true; }
-
-  // 搜索框滑出后执行回调（延时 = 动画时长）
-  function stopSearchAnim(callback) {
-    setTimeout(function() {
-      isSearchAnim = false;
-      callback && callback();
-    }, searchAnimDuration);
+  function stopSearchAnim(cb) {
+    setTimeout(function() { isSearchAnim = false; if (cb) cb(); }, searchAnimDuration);
   }
 
-  // 点击放大镜图标：滑入搜索框
-  $('.nav-search-btn').on('click', function() {
-    if (isSearchAnim) return;                      // 动画进行中，忽略重复点击
+  function getOffset(el) {
+    const r = el.getBoundingClientRect();
+    return { top: r.top + window.scrollY, left: r.left + window.scrollX };
+  }
+
+  document.querySelector('.nav-search-btn').addEventListener('click', function() {
+    if (isSearchAnim) return;
 
     startSearchAnim();
-    $('#search-results').remove();                 // 清除上次的搜索结果
-    $searchInput.val('');                          // 清空输入框
-    $searchWrap.addClass('is-active');             // 触发 CSS 滑入动画
-    stopSearchAnim(function() {
-      $searchInput.focus();                        // 动画完成后聚焦输入框
-    });
+    const old = document.getElementById('search-results');
+    if (old) old.remove();
+    searchInput.value = '';
+    searchWrap.classList.add('is-active');
+    stopSearchAnim(function() { searchInput.focus(); });
   });
 
-  // 搜索框失去焦点 → 延迟关闭（让搜索结果点击事件有机会触发）
-  $searchInput.on('blur', function() {
+  searchInput.addEventListener('blur', function() {
     setTimeout(function() {
-      if (!$('.search-result-item:hover').length) { // 鼠标没有悬停在结果项上才关闭
+      if (!document.querySelector('.search-result-item:hover')) {
         startSearchAnim();
-        $searchWrap.removeClass('is-active');       // 触发 CSS 滑出动画
-        $('#search-results').remove();              // 清除搜索结果
+        searchWrap.classList.remove('is-active');
+        const r = document.getElementById('search-results');
+        if (r) r.remove();
         stopSearchAnim();
       }
-    }, 150);                                       // 150ms 延迟，等待搜索结果点击
+    }, 150);
   });
 
   // ---- 本地搜索（从 search.json 加载索引） ----
-  let searchData = null;                           // 缓存已加载的搜索数据
+  let searchData = null;
 
-  // 加载搜索数据（仅首次请求网络，之后走缓存）
-  function loadSearchData(callback) {
-    if (searchData) return callback(searchData);    // 已缓存，直接回调
-    $.getJSON('/zl.github.io/search.json', function(data) {
-      searchData = data;                           // 缓存数据
-      callback(data);
-    });
+  function loadSearchData(cb) {
+    if (searchData) return cb(searchData);
+    fetch('/zl.github.io/search.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) { searchData = data; cb(data); });
   }
 
-  // 执行搜索：在标题、标签、正文中匹配关键词（不区分大小写）
   function doSearch(query, data) {
-    const q = query.toLowerCase().trim();           // 转小写 + 去首尾空格
-    if (!q) return [];                              // 空查询 → 返回空数组
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
     return data.filter(function(item) {
-      const fields = [item.title, item.tags.join(' '), item.content].join(' ').toLowerCase();
-      return fields.indexOf(q) !== -1;              // 子字符串匹配
+      return [item.title, item.tags.join(' '), item.content].join(' ').toLowerCase().indexOf(q) !== -1;
     });
   }
 
-  // 显示搜索结果列表
   function showResults(results) {
-    $('#search-results').remove();                  // 清除旧结果
+    const old = document.getElementById('search-results');
+    if (old) old.remove();
 
-    const $form = $searchWrap.find('.search-form');
-    const offset = $form.offset();                  // 搜索框在页面中的位置
-    const width  = $form.outerWidth();              // 搜索框宽度（结果面板等宽）
+    const offset = getOffset(searchForm);
+    const width  = searchForm.offsetWidth;
+    const top    = offset.top + searchForm.offsetHeight + 5;
+    const left   = offset.left;
 
-    // 无结果提示
+    const div = document.createElement('div');
+    div.id = 'search-results';
+    div.style.cssText = 'position:absolute;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px';
+
     if (!results.length) {
-      const $noResult = $('<div id="search-results"><div class="search-no-result">没有找到相关文章</div></div>');
-      $('body').append($noResult);
-      $noResult.css({ position: 'absolute', top: offset.top + $form.outerHeight() + 5, left: offset.left, width: width });
-      return;
+      div.innerHTML = '<div class="search-no-result">没有找到相关文章</div>';
+    } else {
+      let h = '';
+      results.forEach(function(item) {
+        h += '<a class="search-result-item" href="' + item.url + '">'
+           + '<span class="search-result-title">' + item.title + '</span>'
+           + '<span class="search-result-date">' + item.date + '</span>'
+           + '</a>';
+      });
+      div.innerHTML = h;
     }
-
-    // 构建结果列表 HTML
-    const html = ['<div id="search-results">'];
-    results.forEach(function(item) {
-      html.push(
-        '<a class="search-result-item" href="' + item.url + '">',
-          '<span class="search-result-title">' + item.title + '</span>',
-          '<span class="search-result-date">' + item.date + '</span>',
-        '</a>'
-      );
-    });
-    html.push('</div>');
-
-    const $results = $(html.join(''));
-    $('body').append($results);                     // 挂到 body，用绝对定位对齐搜索框
-    $results.css({ position: 'absolute', top: offset.top + $form.outerHeight() + 5, left: offset.left, width: width });
+    document.body.appendChild(div);
   }
 
-  // 输入事件：实时搜索
-  $searchInput.on('input', function() {
-    loadSearchData(function(data) {
-      const results = doSearch($searchInput.val(), data);
-      showResults(results);
-    });
+  searchInput.addEventListener('input', function() {
+    loadSearchData(function(data) { showResults(doSearch(searchInput.value, data)); });
   });
 
-  // 回车提交：也触发搜索（防止表单默认提交跳转到 Google）
-  $('.search-form').on('submit', function(e) {
-    e.preventDefault();                              // 阻止表单默认提交行为
-    loadSearchData(function(data) {
-      const results = doSearch($searchInput.val(), data);
-      showResults(results);
-    });
+  searchForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    loadSearchData(function(data) { showResults(doSearch(searchInput.value, data)); });
   });
 
-  // 键盘导航：上下箭头选结果 + Enter 跳转 + Escape 关闭
-  $searchInput.on('keydown', function(e) {
-    const $items = $('.search-result-item');
-    if (!$items.length) return;                     // 没有搜索结果时不处理
+  searchInput.addEventListener('keydown', function(e) {
+    const items = document.querySelectorAll('.search-result-item');
+    if (!items.length) return;
 
-    const $current = $items.filter('.active');       // 当前高亮项
+    const cur = document.querySelector('.search-result-item.active');
 
-    if (e.key === 'ArrowDown') {                    // 下箭头：选中下一项
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (!$current.length) {
-        $items.first().addClass('active');           // 没选中任何项 → 选第一项
-      } else {
-        const idx = $items.index($current);
-        $current.removeClass('active');
-        $items.eq((idx + 1) % $items.length).addClass('active'); // 循环到下一项
+      if (!cur) { items[0].classList.add('active'); }
+      else {
+        const idx = Array.prototype.indexOf.call(items, cur);
+        cur.classList.remove('active');
+        items[(idx + 1) % items.length].classList.add('active');
       }
-    } else if (e.key === 'ArrowUp') {               // 上箭头：选中上一项
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!$current.length) {
-        $items.last().addClass('active');            // 没选中任何项 → 选最后一项
-      } else {
-        const idx = $items.index($current);
-        $current.removeClass('active');
-        $items.eq((idx - 1 + $items.length) % $items.length).addClass('active'); // 循环到上一项
+      if (!cur) { items[items.length - 1].classList.add('active'); }
+      else {
+        const idx = Array.prototype.indexOf.call(items, cur);
+        cur.classList.remove('active');
+        items[(idx - 1 + items.length) % items.length].classList.add('active');
       }
-    } else if (e.key === 'Enter') {                 // 回车：跳转到选中文章
+    } else if (e.key === 'Enter') {
       e.preventDefault();
-      if ($current.length) {
-        window.location.href = $current.attr('href');
-      }
-    } else if (e.key === 'Escape') {                // Escape：关闭搜索结果
-      $('#search-results').remove();
-      $searchInput.blur();                           // 同时让搜索框失焦（触发关闭动画）
+      if (cur) window.location.href = cur.getAttribute('href');
+    } else if (e.key === 'Escape') {
+      const r = document.getElementById('search-results');
+      if (r) r.remove();
+      searchInput.blur();
     }
   });
 
   // ==============================================
   // 四、分享功能
   // 点击"分享"链接 → 弹出分享面板
-  // 可复制文章链接，或分享到 Twitter / Facebook 等平台
   // ==============================================
 
-  // 点击页面任意位置关闭所有分享弹窗
-  $('body').on('click', function() {
-    $('.article-share-box.is-active').removeClass('is-active');
-  }).on('click', '.article-share-link', function(e) {
-    e.stopPropagation();                            // 阻止冒泡到 body（否则立即关闭）
+  let shareBox = null;  // 单例分享弹窗，复用
 
-    const $this = $(this);
-    const url       = $this.attr('data-url');        // 文章完整 URL
-    const encodedUrl = encodeURIComponent(url);       // URL 编码后的版本（用于社交平台分享链接）
-    const id        = 'article-share-box-' + $this.attr('data-id'); // 唯一弹窗 ID
-    const title     = $this.attr('data-title');      // 文章标题
-    const offset    = $this.offset();                // 分享按钮位置
+  document.addEventListener('click', function(e) {
+    // 点击分享链接
+    if (e.target.closest('.article-share-link')) {
+      e.stopPropagation();
+      const link = e.target.closest('.article-share-link');
+      const url        = link.getAttribute('data-url');
+      const encodedUrl = encodeURIComponent(url);
+      const title      = link.getAttribute('data-title');
+      const offset     = getOffset(link);
 
-    // 如果弹窗已存在
-    if ($('#' + id).length) {
-      const box = $('#' + id);
-      if (box.hasClass('is-active')) {
-        box.removeClass('is-active');                // 已打开 → 关闭
-        return;
+      if (!shareBox) {
+        shareBox = document.createElement('div');
+        shareBox.className = 'article-share-box';
+        shareBox.innerHTML =
+          '<input class="article-share-input" value="' + url + '">' +
+          '<div class="article-share-links">' +
+            '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodedUrl + '" class="article-share-twitter" target="_blank" rel="noopener noreferrer" title="Twitter"><span class="fa fa-twitter"></span></a>' +
+            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>' +
+            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>' +
+            '<a href="https://www.linkedin.com/shareArticle?mini=true&url=' + encodedUrl + '" class="article-share-linkedin" target="_blank" title="LinkedIn"><span class="fa fa-linkedin"></span></a>' +
+          '</div>';
+        document.body.appendChild(shareBox);
+      } else {
+        shareBox.querySelector('.article-share-input').value = url;
+        const links = shareBox.querySelector('.article-share-links');
+        links.innerHTML =
+          '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodedUrl + '" class="article-share-twitter" target="_blank" rel="noopener noreferrer" title="Twitter"><span class="fa fa-twitter"></span></a>' +
+          '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>' +
+          '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>' +
+          '<a href="https://www.linkedin.com/shareArticle?mini=true&url=' + encodedUrl + '" class="article-share-linkedin" target="_blank" title="LinkedIn"><span class="fa fa-linkedin"></span></a>';
       }
-    } else {
-      // 弹窗不存在 → 创建新弹窗
-      const html = [
-        '<div id="' + id + '" class="article-share-box">',
-          '<input class="article-share-input" value="' + url + '">',  // 可复制的链接输入框
-          '<div class="article-share-links">',
-            '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodedUrl + '" class="article-share-twitter" target="_blank" rel="noopener noreferrer" title="Twitter"><span class="fa fa-twitter"></span></a>',
-            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>',
-            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>',
-            '<a href="https://www.linkedin.com/shareArticle?mini=true&url=' + encodedUrl + '" class="article-share-linkedin" target="_blank" title="LinkedIn"><span class="fa fa-linkedin"></span></a>',
-          '</div>',
-        '</div>'
-      ].join('');
 
-      const box = $(html);
-      $('body').append(box);                         // 挂到 body
+      shareBox.style.top  = (offset.top + 25) + 'px';
+      shareBox.style.left = offset.left + 'px';
+      shareBox.classList.add('is-active');
+      return;
     }
 
-    // 关闭其他已打开的分享弹窗
-    $('.article-share-box.is-active').hide();
+    // 点击弹窗内
+    if (e.target.closest('.article-share-box')) {
+      e.stopPropagation();
+      if (e.target.classList.contains('article-share-box-input')) e.target.select();
+      return;
+    }
 
-    // 定位并显示弹窗
-    box.css({ top: offset.top + 25, left: offset.left }).addClass('is-active');
-  }).on('click', '.article-share-box', function(e) {
-    e.stopPropagation();                            // 点击弹窗内部不关闭
-  }).on('click', '.article-share-box-input', function() {
-    $(this).select();                               // 点击输入框 → 全选链接方便复制
-  }).on('click', '.article-share-box-link', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450'); // 新窗口打开分享链接
+    // 其他地方 — 关闭所有弹窗
+    if (shareBox) shareBox.classList.remove('is-active');
   });
 
   // ==============================================
-  // 五、图片灯箱
-  // 自动为文章正文中的图片包裹 fancybox 链接
-  // 点击图片 → 灯箱放大查看
+  // 五、图片灯箱（原生实现，替代 fancybox）
+  // 自动为文章正文中的图片包裹点击放大链接
   // ==============================================
 
-  $('.article-entry').each(function(i) {
-    $(this).find('img').each(function() {
-      // 已经包裹过的跳过（父元素是 fancybox 或 a 标签）
-      if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+  let lbOverlay, lbImg, lbCaption;
+  let lbGroup = [];
+  let lbIndex = 0;
 
-      const alt = this.alt;
+  function ensureLightbox() {
+    if (lbOverlay) return;
+    lbOverlay = document.createElement('div');
+    lbOverlay.id = 'lightbox-overlay';
+    lbOverlay.innerHTML =
+      '<div class="lightbox-bg"></div>' +
+      '<button class="lightbox-close">&times;</button>' +
+      '<button class="lightbox-prev">&#8249;</button>' +
+      '<button class="lightbox-next">&#8250;</button>' +
+      '<img class="lightbox-img" src="">' +
+      '<div class="lightbox-caption"></div>';
+    document.body.appendChild(lbOverlay);
+    lbImg     = lbOverlay.querySelector('.lightbox-img');
+    lbCaption = lbOverlay.querySelector('.lightbox-caption');
 
-      // 有 alt 文字 → 在图片下方添加说明
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+    function close() {
+      lbOverlay.classList.remove('is-active');
+      document.body.style.overflow = '';
+    }
 
-      // 包裹 fancybox 链接
-      $(this).wrap('<a href="' + this.src + '" data-fancybox="gallery" data-caption="' + alt + '"></a>');
+    function show(n) {
+      lbIndex = (n + lbGroup.length) % lbGroup.length;
+      lbImg.src = lbGroup[lbIndex].href;
+      lbCaption.textContent = lbGroup[lbIndex].getAttribute('data-caption') || '';
+    }
+
+    lbOverlay.querySelector('.lightbox-bg').addEventListener('click', close);
+    lbOverlay.querySelector('.lightbox-close').addEventListener('click', close);
+    lbOverlay.querySelector('.lightbox-prev').addEventListener('click', function() { show(lbIndex - 1); });
+    lbOverlay.querySelector('.lightbox-next').addEventListener('click', function() { show(lbIndex + 1); });
+
+    document.addEventListener('keydown', function(e) {
+      if (!lbOverlay.classList.contains('is-active')) return;
+      if (e.key === 'Escape')    close();
+      if (e.key === 'ArrowLeft')  show(lbIndex - 1);
+      if (e.key === 'ArrowRight') show(lbIndex + 1);
     });
-
-    // 关联同一篇文章的图片为一组（左右切换浏览）
-    $(this).find('.fancybox').each(function() {
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-
-  // 初始化 fancybox 灯箱（如果已加载）
-  if ($.fancybox) {
-    $('.fancybox').fancybox();
   }
+
+  function initLightbox() {
+    ensureLightbox();
+
+    document.querySelectorAll('.article-entry').forEach(function(entry, i) {
+      entry.querySelectorAll('img').forEach(function(img) {
+        if (img.closest('a[data-lightbox]')) return;
+
+        if (img.alt) {
+          img.insertAdjacentHTML('afterend', '<span class="caption">' + img.alt + '</span>');
+        }
+
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.setAttribute('data-lightbox', 'gallery');
+        a.setAttribute('data-caption', img.alt || '');
+        a.setAttribute('data-group', 'article' + i);
+        img.parentElement.insertBefore(a, img);
+        a.appendChild(img);
+      });
+    });
+  }
+
+  document.body.addEventListener('click', function(e) {
+    const link = e.target.closest('a[data-lightbox="gallery"]');
+    if (!link) return;
+    e.preventDefault();
+
+    ensureLightbox();
+    const group = link.getAttribute('data-group');
+    lbGroup = Array.from(document.querySelectorAll('a[data-lightbox="gallery"][data-group="' + group + '"]'));
+    lbIndex = lbGroup.indexOf(link);
+    lbImg.src = link.href;
+    lbCaption.textContent = link.getAttribute('data-caption') || '';
+    lbOverlay.classList.add('is-active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  initLightbox();
 
   // ==============================================
   // 六、移动端菜单
   // 点击汉堡图标 → #wrap 右移，露出左侧菜单
-  // 点击页面内容区 → 关闭菜单
   // ==============================================
 
-  const $container = $('#container');               // 最外层容器
-  let isMobileNavAnim = false;                      // 防止动画期间重复点击
-  const mobileNavAnimDuration = 200;                // 动画时长（毫秒）
+  const container = document.getElementById('container');
+  const wrap      = document.getElementById('wrap');
+  let isMobileNavAnim = false;
+  const mobileNavAnimDuration = 200;
 
-  function startMobileNavAnim() { isMobileNavAnim = true; }
-  function stopMobileNavAnim() {
-    setTimeout(function() { isMobileNavAnim = false; }, mobileNavAnimDuration);
-  }
+  function startMobileAnim()  { isMobileNavAnim = true; }
+  function stopMobileAnim()   { setTimeout(function() { isMobileNavAnim = false; }, mobileNavAnimDuration); }
 
-  // 点击汉堡图标：开关菜单
-  $('#main-nav-toggle').on('click', function() {
-    if (isMobileNavAnim) return;                    // 动画进行中，忽略
-
-    startMobileNavAnim();
-    $container.toggleClass('mobile-nav-open');       // 添加/移除 CSS class（触发滑动动画）
-    stopMobileNavAnim();
+  document.getElementById('main-nav-toggle').addEventListener('click', function() {
+    if (isMobileNavAnim) return;
+    startMobileAnim();
+    container.classList.toggle('mobile-nav-open');
+    stopMobileAnim();
   });
 
-  // 点击内容区（#wrap）：如果菜单打开中则关闭
-  $('#wrap').on('click', function() {
-    if (isMobileNavAnim || !$container.hasClass('mobile-nav-open')) return;
-    $container.removeClass('mobile-nav-open');       // 关闭菜单
+  wrap.addEventListener('click', function() {
+    if (isMobileNavAnim || !container.classList.contains('mobile-nav-open')) return;
+    container.classList.remove('mobile-nav-open');
   });
 
-})(jQuery);
+})();

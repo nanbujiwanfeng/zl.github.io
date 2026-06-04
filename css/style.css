@@ -36,3 +36,76 @@
 #music-btn.is-playing {
   background: rgba(37,143,184,0.7); /* 播放中：蓝色背景 */
 }
+
+/* ==============================================
+   图片灯箱（原生实现，替代 fancybox）
+   ============================================== */
+#lightbox-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+#lightbox-overlay.is-active {
+  display: flex;
+}
+.lightbox-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+}
+.lightbox-img {
+  position: relative;
+  z-index: 1;
+  max-width: 85vw;
+  max-height: 85vh;
+  object-fit: contain;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px; right: 30px;
+  z-index: 2;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  opacity: 0.8;
+  line-height: 1;
+}
+.lightbox-close:hover { opacity: 1; }
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font-size: 48px;
+  cursor: pointer;
+  width: 50px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.lightbox-prev:hover,
+.lightbox-next:hover { opacity: 1; }
+.lightbox-prev { left: 20px;  border-radius: 0 4px 4px 0; }
+.lightbox-next { right: 20px; border-radius: 4px 0 0 4px; }
+.lightbox-caption {
+  position: absolute;
+  bottom: 30px;
+  z-index: 2;
+  color: #ccc;
+  font-size: 14px;
+  text-align: center;
+  max-width: 85vw;
+}
