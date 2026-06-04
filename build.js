@@ -28,6 +28,7 @@ const SITE_URL       = 'https://nanbujiwanfeng.github.io'; // 站点完整域名
 const BASE_DIR       = __dirname;                         // 项目根目录
 const BLOG_TITLE     = '南不及晚风的博客';                  // 博客名称
 const TEMPLATE_FILE  = path.join(BASE_DIR, 'templates', 'page.ejs'); // EJS 模板路径
+const VERSION        = String(Date.now());                // 每次构建生成唯一版本号，用于缓存失效
 
 // ==================== 读取数据 ====================
 const templateStr = fs.readFileSync(TEMPLATE_FILE, 'utf8');       // 读取 EJS 模板文件
@@ -194,6 +195,7 @@ for (let page = 1; page <= totalPages; page++) {
 
   // EJS 模板变量
   const vars = {
+    version:      VERSION,                                                       // 缓存破坏版本号
     title:        page === 1 ? BLOG_TITLE : '第' + page + '页 | ' + BLOG_TITLE, // 页面标题
     ogUrlFile:    page === 1 ? 'index.html' : 'page/' + page + '/index.html',   // OG URL 文件名
     articlesHtml: pagePosts.map(buildArticle).join('\n\n'),                      // 当前页文章卡片 HTML
@@ -216,4 +218,35 @@ for (let page = 1; page <= totalPages; page++) {
 const searchIndex = buildSearchIndex(searchData);
 fs.writeFileSync(path.join(BASE_DIR, 'search-index.json'), JSON.stringify(searchIndex));
 
-console.log('Built ' + totalPages + ' page(s), ' + searchData.length + ' article(s) + inverted search index.');
+// ==================== 更新非生成 HTML 文件的版本号 ====================
+// 文章、标签、归档这些页面不经过 EJS，需要手动替换版本参数
+function stampVersion(filePath) {
+  let html = fs.readFileSync(filePath, 'utf8');
+  // 匹配 /zl.github.io/ 下的 .css .js .flac 等静态资源，去掉旧 ?v= 再追加新版本
+  html = html.replace(
+    /((?:href|src)="\/zl\.github\.io\/(?:css|js|audio)\/[^"?]+\.(?:css|js|flac|png|jpg|jpeg|svg|woff2?))(?:\?v=[^"]*)?"/g,
+    '$1?v=' + VERSION + '"'
+  );
+  fs.writeFileSync(filePath, html);
+}
+
+// 扫描所有非生成的 HTML 文件（文章、标签、归档）
+function walkDir(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  entries.forEach(e => {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      if (e.name !== 'page') walkDir(full);  // page/ 由 build 生成，跳过
+    } else if (e.name.endsWith('.html')) {
+      stampVersion(full);
+    }
+  });
+}
+
+// 从根目录开始扫描（index.html 由模板生成也会包含版本号，这里也覆盖一次确保一致）
+stampVersion(path.join(BASE_DIR, 'index.html'));
+walkDir(path.join(BASE_DIR, 'posts'));
+walkDir(path.join(BASE_DIR, 'tags'));
+walkDir(path.join(BASE_DIR, 'archives'));
+
+console.log('Built ' + totalPages + ' page(s) + inverted search index.  Version: ' + VERSION);
