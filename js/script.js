@@ -166,22 +166,58 @@
     }, 150);
   });
 
-  // ---- 本地搜索（从 search.json 加载索引） ----
-  let searchData = null;
+  // ---- 本地搜索（倒排索引，O(1) 查词 → O(n) 交集排序） ----
+  let searchIndex = null;
 
   function loadSearchData(cb) {
-    if (searchData) return cb(searchData);
-    fetch('/zl.github.io/search.json')
+    if (searchIndex) return cb(searchIndex);
+    fetch('/zl.github.io/search-index.json')
       .then(function(r) { return r.json(); })
-      .then(function(data) { searchData = data; cb(data); });
+      .then(function(data) { searchIndex = data; cb(data); });
   }
 
+  // 对查询字符串执行与 build.js 相同的 tokenize 逻辑
+  function tokenizeQuery(q) {
+    const tokens = new Set();
+    const lower  = q.toLowerCase();
+
+    const cjkChars = [];
+    const cjkRe    = /[一-鿿㐀-䶿]/g;
+    let m;
+    while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]);
+    cjkChars.forEach(function(c) { tokens.add(c); });
+    for (let i = 0; i < cjkChars.length - 1; i++) {
+      tokens.add(cjkChars[i] + cjkChars[i + 1]);
+    }
+
+    const words = lower.match(/[a-z0-9]{2,}/g);
+    if (words) words.forEach(function(w) { tokens.add(w); });
+
+    return Array.from(tokens);
+  }
+
+  // 倒排索引搜索：每个 token 在 idx 中查找匹配的文章 ID，按命中数降序排列
   function doSearch(query, data) {
-    const q = query.toLowerCase().trim();
-    if (!q) return [];
-    return data.filter(function(item) {
-      return [item.title, item.tags.join(' '), item.content].join(' ').toLowerCase().indexOf(q) !== -1;
+    const tokens = tokenizeQuery(query);
+    if (!tokens.length) return [];
+
+    const scores = {};
+    tokens.forEach(function(token) {
+      const ids = data.i[token];
+      if (!ids) return;
+      ids.forEach(function(id) { scores[id] = (scores[id] || 0) + 1; });
     });
+
+    return Object.keys(scores)
+      .sort(function(a, b) {
+        var diff = scores[b] - scores[a];
+        if (diff !== 0) return diff;
+        return data.a[b].d.localeCompare(data.a[a].d);
+      })
+      .map(function(id) {
+        var doc = data.a[id];
+        return { title: doc.t, url: '/zl.github.io/posts/' + id + '/', date: doc.d };
+      });
   }
 
   function showResults(results) {

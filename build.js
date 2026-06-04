@@ -138,6 +138,53 @@ function buildRecentPosts() {
   return searchData.slice(0, 5).map(p => ({ url: p.url, title: p.title }));
 }
 
+// ==================== 构建倒排索引 ====================
+// 将文本拆分为搜索 token：
+//   - 中文单字 + 相邻二字组合（bigram），兼顾单字查询和精确匹配
+//   - 英文/数字连续串（2 字符以上），转小写
+// 返回去重后的 token 数组
+function tokenize(text) {
+  const tokens = new Set();
+  const lower  = text.toLowerCase();
+
+  // 提取所有 CJK 字符，生成单字 token + 相邻 bigram
+  const cjkChars = [];
+  const cjkRe    = /[一-鿿㐀-䶿]/g;
+  let m;
+  while ((m = cjkRe.exec(lower)) !== null) cjkChars.push(m[0]);
+  cjkChars.forEach(c => tokens.add(c));
+  for (let i = 0; i < cjkChars.length - 1; i++) {
+    tokens.add(cjkChars[i] + cjkChars[i + 1]);
+  }
+
+  // 提取英文/数字 token（2+ 字符）
+  const words = lower.match(/[a-z0-9]{2,}/g);
+  if (words) words.forEach(w => tokens.add(w));
+
+  return Array.from(tokens);
+}
+
+// 遍历所有文章，生成 { a: { slug: {t, d, g} }, i: { token: [slugs] } }
+function buildSearchIndex(posts) {
+  const articles = {};
+  const index    = {};
+
+  posts.forEach(post => {
+    const slug = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, '');
+    articles[slug] = { t: post.title, d: post.date };
+    if (post.tags && post.tags.length > 0) articles[slug].g = post.tags;
+
+    const text   = post.title + ' ' + post.tags.join(' ') + ' ' + post.content;
+    const tokens = tokenize(text);
+    tokens.forEach(token => {
+      if (!index[token]) index[token] = [];
+      if (index[token].indexOf(slug) === -1) index[token].push(slug);
+    });
+  });
+
+  return { a: articles, i: index };
+}
+
 // ==================== 生成所有分页 ====================
 const totalPages = Math.ceil(searchData.length / POSTS_PER_PAGE);
 
@@ -166,4 +213,7 @@ for (let page = 1; page <= totalPages; page++) {
   }
 }
 
-console.log('Built ' + totalPages + ' page(s), ' + searchData.length + ' article(s).');
+const searchIndex = buildSearchIndex(searchData);
+fs.writeFileSync(path.join(BASE_DIR, 'search-index.json'), JSON.stringify(searchIndex));
+
+console.log('Built ' + totalPages + ' page(s), ' + searchData.length + ' article(s) + inverted search index.');
