@@ -5,98 +5,10 @@
      这个文件最后加载，会覆盖 theme.css 和 content.css 中的同名规则。
      想改什么样式，直接在这里写，不用动源文件。
 
-     示例：
-       # 把 banner 加高 →  #header { height: 60vh; }
-       # 改链接颜色     →  a { color: #f00; }
+   注意：
+     banner 轮播图相关的 CSS 已移至 theme.css（与 #header 同属页面框架）
+     本文件仅保留页面级特殊覆盖（如音乐按钮）
    =================================== */
-
-/* ==============================================
-   轮播图 — 用 JS 动态注入图片，替换原来的静态背景图
-   对应 HTML：<div id="banner"></div>（在 #header 里）
-   ============================================== */
-
-/* ---- banner 容器 ---- */
-#banner {
-  background-color: #000;  /* 图片加载前显示黑色底色，避免白屏 */
-  overflow: hidden;         /* 防止图片超出圆角或边界 */
-}
-
-/* ---- 图片加载前的骨架屏闪烁动画 ---- */
-#banner::before {
-  content: "";
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%); /* 深灰渐变条 */
-  background-size: 200% 100%;  /* 扩大背景，动画时左右移动 */
-  animation: banner-loading 1.5s ease-in-out infinite; /* 循环播放闪烁 */
-  z-index: 0;                 /* 最低层，图片加载后盖住它 */
-}
-@keyframes banner-loading {
-  0%   { background-position: 200% 0; }    /* 渐变条从右侧开始 */
-  100% { background-position: -200% 0; }   /* 移动到左侧，产生扫光效果 */
-}
-
-/* ---- 每张轮播图片 ---- */
-.banner-slide {
-  position: absolute;       /* 绝对定位，脱离文档流 */
-  top: 0; left: 0;          /* 左上角对齐父容器 #banner */
-  width: 100%;              /* 宽度撑满 #banner */
-  height: 100%;             /* 高度撑满 #banner */
-  object-fit: cover;        /* 图片填满区域，超出部分裁剪，保持比例 */
-  opacity: 0;               /* 默认透明（隐藏） */
-  z-index: 0;               /* 堆叠在底层 */
-  transition: opacity 0.6s; /* 显隐切换的淡入淡出动画，0.6秒 */
-}
-/* 当前显示的那一张 */
-.banner-slide.is-active {
-  opacity: 1;               /* 完全不透明（可见） */
-  z-index: 1;               /* 堆叠在其他图片和骨架屏上方 */
-}
-
-/* ---- 左右切换箭头 ---- */
-.banner-arrow {
-  position: absolute;       /* 绝对定位在 header 内部（JS 注入到 #header） */
-  top: 50%;                 /* 垂直方向：距顶部 50% */
-  transform: translateY(-50%); /* 配合 top:50% 实现垂直居中 */
-  z-index: 3;               /* 堆叠在图片和渐变遮罩上方 */
-  background: rgba(0,0,0,0.3); /* 半透明黑色背景 */
-  color: #fff;              /* 箭头白色 */
-  border: none;             /* 去掉默认边框 */
-  font-size: 28px;          /* 箭头大小 */
-  padding: 10px 14px;       /* 按钮内边距，扩大点击区域 */
-  cursor: pointer;          /* 鼠标悬停变手型 */
-  border-radius: 4px;       /* 轻微圆角 */
-  transition: background 0.2s; /* 悬停时背景色过渡动画 */
-}
-.banner-arrow:hover {
-  background: rgba(0,0,0,0.6); /* 鼠标悬停时背景变深 */
-}
-.banner-prev { left: 20px; }   /* 左箭头：距左边20px */
-.banner-next { right: 20px; }  /* 右箭头：距右边20px */
-
-/* ---- 底部圆点指示器 ---- */
-.banner-dots {
-  position: absolute;       /* 绝对定位在 header 底部 */
-  bottom: 16px;             /* 距底部 16px */
-  left: 50%;                /* 水平方向：左侧从 50% 开始 */
-  transform: translateX(-50%); /* 配合 left:50% 实现水平居中 */
-  z-index: 3;               /* 堆叠在图片上方 */
-  display: flex;            /* 弹性布局，圆点横向排列 */
-  gap: 8px;                 /* 圆点之间的间距 */
-}
-.banner-dot { /* 每个圆点的样式 */
-  width: 10px;              /* 圆点宽 */
-  height: 10px;             /* 圆点高 */
-  border-radius: 50%;       /* 正圆形 */
-  background: rgba(255,255,255,0.5); /* 半透明白色，未选中状态 */
-  border: none;             /* 去掉默认边框 */
-  cursor: pointer;          /* 鼠标悬停变手型 */
-  padding: 0;               /* 去掉默认内边距 */
-  transition: background 0.2s; /* 选中切换时的颜色过渡 */
-}
-.banner-dot.is-active { /* 当前选中的圆点样式 */
-  background: #fff;         /* 当前选中的圆点：纯白色 */
-}
 
 /* ==============================================
    音乐播放按钮 — 页面右下角悬浮，默认静音循环播
