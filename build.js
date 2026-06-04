@@ -289,6 +289,15 @@ fs.writeFileSync(                                         // 写入 JSON 文件
 // 每次构建生成新版本号，浏览器视为新文件重新请求
 function stampVersion(filePath) {
   let html = fs.readFileSync(filePath, 'utf8');           // 读取 HTML
+
+  // 保护 <code> 和 <pre> 块：以防文章正文中的示例代码被正则命中
+  // 用占位符替换，版本号打完后再还原
+  const codeBlocks = [];                                  // 暂存被保护的内容
+  html = html.replace(/<(code|pre)[^>]*>[\s\S]*?<\/\1>/gi, function(match) {
+    codeBlocks.push(match);                               // 存入数组
+    return '\x00CODE' + (codeBlocks.length - 1) + '\x00'; // 占位符（\x00 不会出现在正常 HTML 中）
+  });
+
   // 匹配 /zl.github.io/ 下的静态资源（css/js/audio/图片等），去掉旧 ?v= 再追加新版本
   html = html.replace(
     /((?:href|src)="\/zl\.github\.io\/(?:css|js|audio)\/[^"?]+\.(?:css|js|flac|png|jpg|jpeg|svg|woff2?))(?:\?v=[^"]*)?"/g,
@@ -301,6 +310,10 @@ function stampVersion(filePath) {
       '<script src="/zl.github.io/js/tokenize.js?v=' + VERSION + '"></script>\n<script src="/zl.github.io/js/script.js'
     );
   }
+
+  // 还原被保护的代码块
+  html = html.replace(/\x00CODE(\d+)\x00/g, function(_, i) { return codeBlocks[+i]; });
+
   fs.writeFileSync(filePath, html);                       // 写回文件
 }
 

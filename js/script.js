@@ -376,10 +376,12 @@
     lbImg     = lbOverlay.querySelector('.lightbox-img');     // 缓存图片元素引用
     lbCaption = lbOverlay.querySelector('.lightbox-caption'); // 缓存说明文字元素引用
 
+      var savedOverflow;                            // 打开灯箱前 body 的 overflow 值
+
     // 关闭灯箱
     function close() {
       lbOverlay.classList.remove('is-active'); // 隐藏遮罩
-      document.body.style.overflow = '';       // 恢复页面滚动
+      document.body.style.overflow = savedOverflow; // 恢复之前的滚动状态（不盲清，避免覆盖其他组件的设置）
     }
 
     // 显示组内第 n 张（n 支持负值，自动循环）
@@ -441,6 +443,7 @@
     lbImg.src = link.href;                // 设置大图
     lbCaption.textContent = link.getAttribute('data-caption') || ''; // 设置说明
     lbOverlay.classList.add('is-active'); // 显示灯箱
+    savedOverflow = document.body.style.overflow; // 保存打开灯箱前的 overflow 值
     document.body.style.overflow = 'hidden'; // 禁止页面滚动
   });
 
