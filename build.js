@@ -218,6 +218,89 @@ for (let page = 1; page <= totalPages; page++) {
   }
 }
 
+// ==================== 构建文章详情页（非卡片，全文展示） ====================
+// 与 buildArticle（卡片版）不同：标题是纯文本不是链接，正文不截断
+function buildFullArticle(post) {
+  const slug    = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, '');  // URL slug
+  const content = extractContent(post.url);                                       // 从现有文件提取正文
+
+  // 构建标签列表（与卡片版相同）
+  let tagsHtml = '';
+  if (post.tags && post.tags.length > 0) {
+    tagsHtml = '\n  <ul class="article-tag-list" itemprop="keywords">' +
+      post.tags.map(t => '<li class="article-tag-list-item"><a class="article-tag-list-link" href="' +
+        SITE_ROOT + '/tags/' + t + '/" rel="tag">' + t + '</a></li>').join('') +
+      '</ul>\n';
+  }
+
+  return [
+    '<article id="post-' + slug + '" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">',
+    '  <div class="article-meta">',
+    '    <a href="' + post.url + '" class="article-date">',
+    '      <time class="dt-published" datetime="' + post.date + '" itemprop="datePublished">' + post.date + '</time>',
+    '    </a>',
+    '  </div>',
+    '  <div class="article-inner">',
+    '    <header class="article-header">',
+    '      <h1 itemprop="name">',
+    '        <span class="p-name article-title">' + post.title + '</span>',          // 详情页标题不是链接
+    '      </h1>',
+    '    </header>',
+    '    <div class="e-content article-entry" itemprop="articleBody">',
+    '      ' + content,                                                              // 全文，不做截断
+    '    </div>',
+    '    <footer class="article-footer">',
+    '      <a data-url="' + SITE_URL + post.url + '" data-title="' + post.title + '" class="article-share-link"><span class="fa fa-share">分享</span></a>',
+    tagsHtml,
+    '    </footer>',
+    '  </div>',
+    '</article>'
+  ].join('\n');
+}
+
+// 构建文章详情页的上下篇导航（上一篇 = 较新的 / 下一篇 = 较旧的）
+function buildPostNav(idx, total) {
+  if (total <= 1) return '';                                                       // 只有一篇时不显示导航
+
+  let html = '<nav id="article-nav">\n';
+  if (idx > 0) {                                                                   // 不是最新一篇 → 有"上一篇"
+    const prev = searchData[idx - 1];
+    html += '  <a href="' + prev.url + '" id="article-nav-newer" class="article-nav-link-wrap">\n';
+    html += '    <div class="article-nav-caption">上一篇</div>\n';
+    html += '    <div class="article-nav-title">' + prev.title + '</div>\n';
+    html += '  </a>\n';
+  }
+  if (idx < total - 1) {                                                           // 不是最旧一篇 → 有"下一篇"
+    const next = searchData[idx + 1];
+    html += '  <a href="' + next.url + '" id="article-nav-older" class="article-nav-link-wrap">\n';
+    html += '    <div class="article-nav-caption">下一篇</div>\n';
+    html += '    <div class="article-nav-title">' + next.title + '</div>\n';
+    html += '  </a>\n';
+  }
+  html += '</nav>';
+  return html;
+}
+
+// ==================== 生成所有文章详情页（经过 EJS 模板，chrome 保持一致） ====================
+const totalPosts = searchData.length;                                               // 文章总数
+searchData.forEach(function(post, idx) {                                           // 遍历每篇文章
+  const slug      = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, ''); // 提取 slug
+  const fullArticle = buildFullArticle(post);                                      // 构建完整文章 HTML
+  const postNav     = buildPostNav(idx, totalPosts);                               // 上下篇导航
+
+  const postVars = {
+    version:      VERSION,                                                         // 缓存破坏版本号
+    title:        post.title + ' | ' + BLOG_TITLE,                                  // 页面标题
+    ogUrlFile:    'posts/' + slug + '/index.html',                                  // OG URL 文件名
+    articlesHtml: fullArticle,                                                     // 完整文章 HTML
+    pageNavHtml:  postNav,                                                         // 上下篇导航
+    recentPosts:  buildRecentPosts()                                               // 侧边栏最新文章
+  };
+
+  const postHtml = templateFn(postVars);                                           // EJS 渲染
+  fs.writeFileSync(path.join(BASE_DIR, 'posts', slug, 'index.html'), postHtml);    // 写回文章目录
+});
+
 // ==================== 生成倒排索引文件 ====================
 const searchIndex = buildSearchIndex(searchData);         // 从所有文章构建倒排索引
 fs.writeFileSync(                                         // 写入 JSON 文件
