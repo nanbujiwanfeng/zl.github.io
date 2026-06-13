@@ -450,7 +450,40 @@
   initLightbox();                         // 页面加载时初始化灯箱包裹
 
   // ==============================================
-  // 六、移动端菜单
+  // 六、滚动渐入动画
+  // 文章卡片在滚动进入视口时带淡入上移效果
+  // ==============================================
+
+  (function() {
+    if (typeof window === 'undefined') return;
+
+    // 为首页文章卡片和侧边栏部件添加动画初始状态
+    const cards = document.querySelectorAll('.article, .widget-wrap');
+    if (!cards.length) return;
+
+    // 使用 IntersectionObserver 做高性能滚动检测
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+      cards.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(el);
+      });
+    }
+  })();
+
+  // ==============================================
+  // 七、移动端菜单
   // 点击汉堡图标 → #wrap 右移，露出左侧菜单
   // 点击页面内容区 → 关闭菜单
   // ==============================================

@@ -15,23 +15,26 @@
    ============================================== */
 #music-btn {
   position: fixed;
-  bottom: 30px; right: 30px;
+  bottom: 28px; right: 28px;
   z-index: 999;
-  width: 44px; height: 44px;
+  width: 46px; height: 46px;
   border-radius: 50%;
   border: none;
-  background: rgba(0,0,0,0.5);
+  background: rgba(30,41,59,0.85);
+  backdrop-filter: blur(8px);
   color: #fff;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
-  line-height: 44px;
+  line-height: 46px;
   text-align: center;
   padding: 0;
-  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 #music-btn:hover {
-  background: rgba(0,0,0,0.7);
-  transform: scale(1.1);
+  background: rgba(30,41,59,0.95);
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 /* ---- 静音状态：橙色呼吸指示灯，告诉用户"正在运行但静音" ---- */
@@ -52,7 +55,7 @@
 
 /* ---- 有声播放：蓝色背景 + 绿色指示灯 ---- */
 #music-btn.is-playing {
-  background: rgba(37,143,184,0.7);
+  background: rgba(59,130,246,0.85);
 }
 #music-btn.is-playing::after {
   background: #2ecc71;                  /* 绿色 = 活跃/播放中 */
@@ -77,59 +80,94 @@
 .lightbox-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.92);
   cursor: pointer;
+  backdrop-filter: blur(4px);
 }
 .lightbox-img {
   position: relative;
   z-index: 1;
-  max-width: 85vw;
-  max-height: 85vh;
+  max-width: 88vw;
+  max-height: 88vh;
   object-fit: contain;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
 }
 .lightbox-close {
   position: absolute;
-  top: 20px; right: 30px;
+  top: 20px; right: 28px;
   z-index: 2;
-  background: none;
+  background: rgba(255,255,255,0.1);
   border: none;
   color: #fff;
-  font-size: 40px;
+  font-size: 32px;
   cursor: pointer;
   opacity: 0.8;
   line-height: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, background 0.2s;
 }
-.lightbox-close:hover { opacity: 1; }
+.lightbox-close:hover { opacity: 1; background: rgba(255,255,255,0.2); }
 .lightbox-prev,
 .lightbox-next {
   position: absolute;
   top: 50%;
   z-index: 2;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: #fff;
-  font-size: 48px;
+  font-size: 36px;
   cursor: pointer;
-  width: 50px;
-  height: 80px;
-  line-height: 80px;
+  width: 48px;
+  height: 72px;
+  line-height: 72px;
   text-align: center;
   opacity: 0.7;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, background 0.2s;
+  border-radius: 6px;
 }
 .lightbox-prev:hover,
-.lightbox-next:hover { opacity: 1; }
-.lightbox-prev { left: 20px;  border-radius: 0 4px 4px 0; }
-.lightbox-next { right: 20px; border-radius: 4px 0 0 4px; }
+.lightbox-next:hover { opacity: 1; background: rgba(255,255,255,0.2); }
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
 .lightbox-caption {
   position: absolute;
-  bottom: 30px;
-  left: 50%; transform: translateX(-50%);  /* 水平居中 */
+  bottom: 28px;
+  left: 50%; transform: translateX(-50%);
   z-index: 2;
-  color: #ccc;
+  color: rgba(255,255,255,0.8);
   font-size: 14px;
   text-align: center;
   max-width: 85vw;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* ==============================================
+   全局体验优化
+   ============================================== */
+
+html { scroll-behavior: smooth; }
+
+::selection {
+  background: rgba(59,130,246,0.2);
+  color: #1e293b;
+}
+
+/* 自定义滚动条（WebKit 浏览器） */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f0ed; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* 链接焦点可见 */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 2px;
 }

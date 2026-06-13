@@ -18,8 +18,8 @@
    一、文章正文区容器
    ============================================== */
 .article-entry {
-  color: #555;               /* 正文默认文字颜色：深灰 */
-  padding: 0 20px;           /* 正文左右留白，不贴边 */
+  color: #334155;
+  padding: 0 24px;
 }
 .article-entry:before, .article-entry:after { content: ""; display: table; }
 .article-entry:after { clear: both; }
@@ -44,12 +44,12 @@
 .article-entry h3 { font-size: 1.3em; }   /* 三级 1.3em */
 .article-entry h4 { font-size: 1.2em; }   /* 四级 1.2em */
 .article-entry h5 { font-size: 1em; }     /* 五级 = 正文大小 */
-.article-entry h6 { font-size: 1em; color: #999; } /* 六级 = 正文大小、灰色 */
+.article-entry h6 { font-size: 1em; color: #94a3b8; }
 
 /* ==============================================
    三、文本样式（加粗、斜体、上下标、水平线）
    ============================================== */
-.article-entry hr { border: 1px dashed #ddd; } /* 水平分割线：灰色虚线 */
+.article-entry hr { border: 1px dashed #e2e8f0; }
 .article-entry strong { font-weight: bold; }   /* 加粗 */
 .article-entry em, .article-entry cite { font-style: italic; } /* 斜体 */
 .article-entry sup, .article-entry sub {
@@ -85,10 +85,10 @@
    五、链接样式
    ============================================== */
 .article-entry a {
-  color: #258fb8;            /* 链接蓝色 */
-  text-decoration: none;     /* 去掉下划线，页面更干净 */
+  color: #3b82f6;
+  text-decoration: none;
 }
-.article-entry a:hover { text-decoration: underline; } /* 悬停时显示下划线 */
+.article-entry a:hover { text-decoration: underline; }
 
 /* ==============================================
    六、图片和视频（响应式，自动缩放）
@@ -110,22 +110,28 @@
   border-spacing: 0;         /* 单元格间距清零 */
 }
 .article-entry th {
-  font-weight: bold;         /* 表头加粗 */
-  border-bottom: 3px solid #ddd; /* 表头下粗线 */
-  padding-bottom: 0.5em;     /* 表头下方内边距 */
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 0.5em;
+  color: #1e293b;
 }
 .article-entry td {
-  border-bottom: 1px solid #ddd; /* 单元格底部细线 */
-  padding: 10px 0;           /* 单元格上下内边距 */
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 0;
 }
 
 /* ==============================================
    八、引用块 blockquote（"> 引用"效果：居中衬线字体）
    ============================================== */
 .article-entry blockquote {
-  font-family: Georgia, "Times New Roman", serif; /* 衬线字体，引用感 */
-  margin: 1.6em 20px;        /* 上下间距+左右缩进 */
-  text-align: center;        /* 引用内容居中 */
+  font-family: Georgia, "Times New Roman", serif;
+  margin: 1.6em 0;
+  padding: 0.8em 20px;
+  text-align: left;
+  border-left: 4px solid #3b82f6;
+  background: #f8fafc;
+  border-radius: 0 8px 8px 0;
+  color: #475569;
 }
 .article-entry blockquote footer {
   font-size: 14px; margin: 1.6em 0;
@@ -141,10 +147,10 @@
 
 /* 图片下方说明文字 */
 .article-entry .caption {
-  color: #999;               /* 浅灰色 */
-  display: block; font-size: 0.9em;
+  color: #94a3b8;
+  display: block; font-size: 0.85em;
   margin-top: 0.5em; position: relative;
-  text-align: center;        /* 居中 */
+  text-align: center;
 }
 
 /* 响应式视频容器（16:9 比例） */
@@ -172,26 +178,27 @@
    九、行内代码（`code` 嵌在段落里的灰色小段代码）
    ============================================== */
 .article-entry code {
-  background: #eee;          /* 浅灰背景 */
-  text-shadow: 0 1px #fff;   /* 白色阴影 */
-  padding: 0 0.3em;          /* 左右微小内边距 */
+  background: #f1f5f9;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
-                              /* 等宽字体栈 */
+  font-size: 0.9em;
+  color: #e11d48;
 }
 
 /* ==============================================
    十、代码块（``` 包裹的多行代码，深色背景 #2d2d2d）
    ============================================== */
 .article-entry pre, .article-entry .highlight {
-  background: #2d2d2d;       /* 代码块深色背景（接近 VS Code 暗色主题） */
-  margin: 0 -20px;           /* 负边距撑满卡片宽度（抵消 .article-entry 的 padding） */
-  padding: 15px 20px;        /* 内边距 */
-  border-style: solid; border-color: #ddd;
-  border-width: 1px 0;       /* 仅上下边框 */
-  overflow: auto;            /* 代码太长时出现滚动条 */
-  color: #ccc;               /* 代码默认文字色：浅灰 */
-  line-height: 22.4px;       /* 行距 */
+  background: #1e293b;
+  margin: 0 -24px;
+  padding: 18px 24px;
+  border: none;
+  overflow: auto;
+  color: #e2e8f0;
+  line-height: 1.6;
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
+  font-size: 0.9em;
 }
 .article-entry pre code {
   background: none;          /* 代码块内的行内代码去掉背景 */
@@ -203,7 +210,7 @@
 .article-entry .highlight td { border: none; padding: 0; }
 /* 代码块标题栏（语言名称） */
 .article-entry .highlight figcaption {
-  font-size: 0.85em; color: #999;
+  font-size: 0.85em; color: #94a3b8;
   line-height: 1em; margin-bottom: 1em;
 }
 .article-entry .highlight figcaption:before, .article-entry .highlight figcaption:after { content: ""; display: table; }
@@ -213,22 +220,22 @@
 /* 行号区域 */
 .article-entry .highlight .gutter pre,
 .article-entry .gist .gist-file .gist-data .line-numbers {
-  color: #666;               /* 行号灰色 */
-  font-size: 0.85em;         /* 略小 */
+  color: #64748b;
+  font-size: 0.85em;
 }
 .article-entry .highlight .gutter { user-select: none; } /* 行号不可选中 */
 .article-entry .highlight .gutter pre { text-align: right; padding-right: 20px; } /* 行号右对齐 */
 .article-entry .highlight .line { height: 22.4px; } /* 每行高度=行距 */
-.article-entry .highlight .line.marked { background: #515151; } /* 高亮行背景 */
+.article-entry .highlight .line.marked { background: rgba(59,130,246,0.15); }
 
 /* ==============================================
    十一、GitHub Gist 嵌入样式（第三方代码片段）
    ============================================== */
 .article-entry .gist {
-  margin: 0 -20px;           /* 负边距撑满卡片 */
-  border-style: solid; border-color: #ddd; border-width: 1px 0;
-  background: #2d2d2d;       /* 与代码块统一背景 */
-  padding: 15px 20px 15px 0;
+  margin: 0 -24px;
+  border: none;
+  background: #1e293b;
+  padding: 15px 24px 15px 0;
 }
 .article-entry .gist .gist-file {
   border: none;              /* 去边框 */
@@ -240,18 +247,18 @@
 .article-entry .gist .gist-file .gist-data .line-data { padding: 0 !important; }
 .article-entry .gist .gist-file .highlight { margin: 0; padding: 0; border: none; }
 .article-entry .gist .gist-file .gist-meta {
-  background: #2d2d2d;       /* 与代码块统一 */
-  color: #999;
+  background: #1e293b;
+  color: #94a3b8;
   font: 0.85em -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   text-shadow: 0 0; padding: 0; margin-top: 1em; margin-left: 20px;
 }
-.article-entry .gist .gist-file .gist-meta a { color: #258fb8; font-weight: normal; }
+.article-entry .gist .gist-file .gist-meta a { color: #60a5fa; font-weight: normal; }
 .article-entry .gist .gist-file .gist-meta a:hover { text-decoration: underline; }
 
 /* ==============================================
    十二、语法高亮配色（不同 Token 的颜色）
    ============================================== */
-pre .comment, pre .title { color: #999; }                                           /* 注释 — 灰色 */
+pre .comment, pre .title { color: #94a3b8; }
 
 pre .variable, pre .attribute, pre .tag, pre .regexp,                               /* 变量/属性/标签/正则 — 红色 */
 pre .ruby .constant, pre .xml .tag .title, pre .xml .pi,

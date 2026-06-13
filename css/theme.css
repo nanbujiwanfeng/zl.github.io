@@ -35,11 +35,13 @@
 html, body, #container { height: 100%; } /* 撑满窗口高度，让页脚能沉底（sticky footer 基础） */
 
 body {
-  width: 100%;               /* 宽度占满窗口 */
-  background: #eee;          /* 页面背景色：浅灰 */
-  font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-                              /* 全局字体：优先系统字体，14px */
-  -webkit-text-size-adjust: 100%; /* 禁止 iOS 横屏时自动放大文字 */
+  width: 100%;
+  background: #f7f6f3;
+  font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-text-size-adjust: 100%;
+  color: #334155;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 body:before, body:after { content: ""; display: table; } /* 清除浮动 */
 body:after { clear: both; }
@@ -70,7 +72,7 @@ body:after { clear: both; }
   top: 0; left: 0;
   transition: 0.2s ease-out; /* 菜单开关时的平滑滑动 */
   z-index: 1;                /* 高于 #mobile-nav */
-  background: #eee;          /* 与 body 同色 */
+  background: #f7f6f3;
 }
 .mobile-nav-open #wrap { left: 280px; } /* 菜单打开，#wrap 右移露出菜单 */
 
@@ -84,11 +86,10 @@ body:after { clear: both; }
    ============================================== */
 
 #header {
-  height: 50vh;              /* 手机端：占半屏高度（vh=视口高度百分比） */
-  min-height: 200px;         /* 最低 200px，防止太窄 */
-  position: relative;        /* 作为内部绝对定位子元素的锚点 */
-  border-bottom: 1px solid #ddd; /* 底部浅灰分割线 */
-  overflow: hidden;          /* 裁剪超出部分（图片/轮播不会溢出） */
+  height: 50vh;
+  min-height: 200px;
+  position: relative;
+  overflow: hidden;
 }
 @media screen and (min-width: 768px) {
   #header { height: 42vh; }  /* 平板：稍矮一点 */
@@ -99,17 +100,18 @@ body:after { clear: both; }
 
 /* ---- 横幅顶部和底部的渐变遮罩（增强标题和导航的可读性）---- */
 #header:before, #header:after {
-  content: "";               /* 伪元素必需 */
-  position: absolute; left: 0; right: 0; height: 40px;
-  z-index: 2;                /* 叠在标题和导航上方 */
+  content: "";
+  position: absolute; left: 0; right: 0;
+  z-index: 2;
+  pointer-events: none;
 }
 #header:before {
-  top: 0;                    /* 顶部：从上到下由黑→透明 */
-  background: linear-gradient(rgba(0,0,0,0.2), transparent);
+  top: 0; height: 120px;
+  background: linear-gradient(rgba(0,0,0,0.45), transparent);
 }
 #header:after {
-  bottom: 0;                 /* 底部：从下到上由黑→透明 */
-  background: linear-gradient(transparent, rgba(0,0,0,0.2));
+  bottom: 0; height: 120px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.45));
 }
 
 #header-outer {
@@ -124,7 +126,7 @@ body:after { clear: both; }
   position: absolute;        /* 绝对定位，脱离文档流 */
   top: 0; left: 0;           /* 左上角对齐 #header */
   width: 100%; height: 100%; /* 撑满 header */
-  background-color: #000;    /* 图片加载前显示黑色底色，避免白屏 */
+  background-color: #1e293b;
   overflow: hidden;          /* 防止图片超出圆角或边界 */
   z-index: 0;                /* 最底层，标题/导航叠在上面 */
 }
@@ -134,16 +136,15 @@ body:after { clear: both; }
   content: "";
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%); /* 深灰渐变条 */
-  background-size: 200% 100%;  /* 扩大背景，动画时左右移动 */
-  animation: banner-loading 1.5s ease-in-out infinite; /* 循环播放闪烁 */
-  z-index: 0;                 /* 最低层，图片加载后盖住它 */
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: banner-loading 1.8s ease-in-out infinite;
+  z-index: 0;
 }
-/* 首图加载完成后移除骨架屏，停止动画 */
 #banner.is-loaded::before { content: none; }
 @keyframes banner-loading {
-  0%   { background-position: 200% 0; }    /* 渐变条从右侧开始 */
-  100% { background-position: -200% 0; }   /* 移动到左侧，产生扫光效果 */
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ---- 每张轮播图片 ---- */
@@ -165,21 +166,28 @@ body:after { clear: both; }
 
 /* ---- 左右切换箭头 ---- */
 .banner-arrow {
-  position: absolute;       /* 绝对定位在 header 内部（JS 注入到 #header） */
-  top: 50%;                 /* 垂直方向：距顶部 50% */
-  transform: translateY(-50%); /* 配合 top:50% 实现垂直居中 */
-  z-index: 3;               /* 堆叠在图片和渐变遮罩上方 */
-  background: rgba(0,0,0,0.3); /* 半透明黑色背景 */
-  color: #fff;              /* 箭头白色 */
-  border: none;             /* 去掉默认边框 */
-  font-size: 28px;          /* 箭头大小 */
-  padding: 10px 14px;       /* 按钮内边距，扩大点击区域 */
-  cursor: pointer;          /* 鼠标悬停变手型 */
-  border-radius: 4px;       /* 轻微圆角 */
-  transition: background 0.2s; /* 悬停时背景色过渡动画 */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
 }
 .banner-arrow:hover {
-  background: rgba(0,0,0,0.6); /* 鼠标悬停时背景变深 */
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-50%) scale(1.05);
 }
 .banner-prev { left: 20px; }   /* 左箭头：距左边20px */
 .banner-next { right: 20px; }  /* 右箭头：距右边20px */
@@ -194,18 +202,20 @@ body:after { clear: both; }
   display: flex;            /* 弹性布局，圆点横向排列 */
   gap: 8px;                 /* 圆点之间的间距 */
 }
-.banner-dot { /* 每个圆点的样式 */
-  width: 10px;              /* 圆点宽 */
-  height: 10px;             /* 圆点高 */
-  border-radius: 50%;       /* 正圆形 */
-  background: rgba(255,255,255,0.5); /* 半透明白色，未选中状态 */
-  border: none;             /* 去掉默认边框 */
-  cursor: pointer;          /* 鼠标悬停变手型 */
-  padding: 0;               /* 去掉默认内边距 */
-  transition: background 0.2s; /* 选中切换时的颜色过渡 */
+.banner-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.25s, transform 0.25s;
 }
-.banner-dot.is-active { /* 当前选中的圆点样式 */
-  background: #fff;         /* 当前选中的圆点：纯白色 */
+.banner-dot:hover { transform: scale(1.3); }
+.banner-dot.is-active {
+  background: #fff;
+  transform: scale(1.2);
 }
 
 /* ---- 网站标题（叠在 banner 图上的白色大字）---- */
@@ -216,20 +226,21 @@ body:after { clear: both; }
   transform: translateY(-50%); /* 上移自身高度一半，完美垂直居中（不依赖固定高度） */
 }
 #logo, #subtitle {
-  text-decoration: none;     /* 去掉下划线（logo 是 a 标签） */
-  color: #fff;               /* 白色文字 */
-  font-weight: 300;          /* 细体，轻盈 */
-  text-shadow: 0 1px 4px rgba(0,0,0,0.3); /* 黑色阴影，图片上也能看清 */
+  text-decoration: none;
+  color: #fff;
+  font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  letter-spacing: 0.04em;
 }
 #logo {
-  font-size: clamp(24px, 5vw, 40px); /* 自适应字号：最小24px，理想5vw，最大40px */
-  line-height: 1.2;          /* 行高 1.2 倍字号 */
-  letter-spacing: 2px;       /* 字间距加宽 */
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.2;
 }
 #subtitle {
-  font-size: clamp(12px, 2vw, 16px); /* 副标题略小 */
-  line-height: 1.2;
-  letter-spacing: 1px;
+  font-size: clamp(13px, 2vw, 17px);
+  line-height: 1.3;
+  opacity: 0.9;
+  font-weight: 300;
 }
 #subtitle-wrap { margin-top: 16px; } /* 副标题距 logo 的间距 */
 
@@ -243,17 +254,17 @@ body:after { clear: both; }
 }
 /* 导航按钮通用样式 */
 .nav-icon, .main-nav-link {
-  float: left;               /* 横向排列 */
-  color: #fff;               /* 白色文字 */
-  opacity: 0.6;              /* 默认半透明 */
-  text-decoration: none;     /* 去掉下划线 */
-  text-shadow: 0 1px rgba(0,0,0,0.2); /* 轻微阴影 */
-  transition: opacity 0.2s;  /* 悬停透明度过渡 */
-  display: block;            /* 块级，方便设宽高 */
-  padding: 20px 15px;        /* 内边距，扩大点击区域 */
+  float: left;
+  color: #fff;
+  opacity: 0.8;
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: opacity 0.2s;
+  display: block;
+  padding: 20px 15px;
 }
 .nav-icon:hover, .main-nav-link:hover {
-  opacity: 1;                /* 悬停时完全不透明 */
+  opacity: 1;
 }
 .nav-icon {
   text-align: center; font-size: 14px;
@@ -294,19 +305,20 @@ body:after { clear: both; }
   .search-form-submit { right: 10px; margin-top: -8px; font-size: 15px; }
 }
 .search-form {
-  position: absolute;        /* 填充父容器 */
+  position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: #fff;          /* 白色背景 */
-  padding: 6px 38px 6px 16px; /* 右侧留空给搜索图标按钮 */
-  border-radius: 19px;       /* 两端半圆（胶囊形） */
-  box-shadow: 0 0 10px rgba(0,0,0,0.3); /* 周围阴影，突出 */
+  background: #fff;
+  padding: 6px 38px 6px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid #e8e5e0;
 }
 .search-form-input {
-  border: none; background: none; /* 去掉输入框默认样式 */
-  color: #555;               /* 灰色文字 */
-  width: 100%; height: 100%; /* 撑满 */
+  border: none; background: none;
+  color: #334155;
+  width: 100%; height: 100%;
   font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  outline: none;             /* 去掉聚焦蓝色外框 */
+  outline: none;
 }
 /* 隐藏 WebKit 浏览器搜索框的默认图标和清除按钮 */
 .search-form-input::-webkit-search-results-decoration,
@@ -318,53 +330,55 @@ body:after { clear: both; }
   margin-top: -9px;          /* 配合 top:50% 完成垂直居中 */
   font: 16px ForkAwesome;    /* 用图标字体 ForkAwesome 显示搜索图标 */
   border: none; background: none;
-  color: #bbb;               /* 浅灰色 */
-  cursor: pointer;           /* 鼠标变手型 */
+  color: #94a3b8;
+  cursor: pointer;
 }
-.search-form-submit:hover, .search-form-submit:focus { color: #777; } /* 悬停加深 */
+.search-form-submit:hover, .search-form-submit:focus { color: #64748b; }
 
 /* ---- 搜索结果下拉框（挂在 #search-form-wrap 内部，自然跟随搜索框） ---- */
 #search-results {
-  position: absolute;        /* 相对 #search-form-wrap 定位 */
-  top: 100%;                 /* 紧贴搜索框下方 */
-  left: 0; width: 100%;      /* 与搜索框等宽 */
-  margin-top: 4px;           /* 与搜索框之间留一点空隙 */
+  position: absolute;
+  top: 100%;
+  left: 0; width: 100%;
+  margin-top: 6px;
   background: #fff;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   overflow: hidden;
   z-index: 100;
+  border: 1px solid #e8e5e0;
 }
 .search-result-item {
-  display: block;            /* 整行可点击 */
-  padding: 10px 15px;
-  text-decoration: none;     /* 去掉链接下划线 */
-  color: #555;
-  border-bottom: 1px solid #eee; /* 条目间浅灰分割线 */
-  transition: background 0.15s;  /* 悬停背景色过渡 */
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #334155;
+  border-bottom: 1px solid #f1f0ed;
+  transition: background 0.15s;
 }
-.search-result-item:last-child { border-bottom: none; } /* 最后一条无分割线 */
+.search-result-item:last-child { border-bottom: none; }
 .search-result-item:hover,
-.search-result-item.active { background: #f0f7ff; } /* 悬停/键盘选中：浅蓝背景 */
-.search-result-title { display: block; font-weight: bold; font-size: 13px; }
-.search-result-date  { display: block; font-size: 11px; color: #999; margin-top: 2px; }
-.search-no-result { padding: 10px 15px; color: #999; font-size: 13px; text-align: center; }
+.search-result-item.active { background: #eff6ff; }
+.search-result-title { display: block; font-weight: 600; font-size: 14px; }
+.search-result-date  { display: block; font-size: 11px; color: #94a3b8; margin-top: 3px; }
+.search-no-result { padding: 14px 16px; color: #94a3b8; font-size: 13px; text-align: center; }
 
 /* ==============================================
    五、页脚（页面底部深色区域，版权信息）
    ============================================== */
 
 #footer {
-  background: #262a30;       /* 深灰黑色背景 */
-  padding: 50px 0;           /* 上下 50px 内边距 */
-  border-top: 1px solid #ddd; /* 顶部分割线 */
-  color: #999;               /* 文字浅灰色 */
+  background: #1e293b;
+  padding: 40px 0;
+  color: #94a3b8;
+  margin-top: 60px;
 }
-#footer a { color: #258fb8; text-decoration: none; } /* 页脚链接蓝色 */
+#footer a { color: #60a5fa; text-decoration: none; }
 #footer a:hover { text-decoration: underline; }
 #footer-info {
-  line-height: 1.6em;        /* 行高 */
-  font-size: 0.85em;         /* 比正文略小 */
+  line-height: 1.8em;
+  font-size: 0.85em;
+  text-align: center;
 }
 
 /* ==============================================
@@ -382,39 +396,37 @@ body:after { clear: both; }
 
 /* 侧边栏卡片外观 */
 .widget {
-  color: #777;               /* 卡片内文字灰色 */
-  text-shadow: 0 1px #fff;   /* 白色文字阴影，增加立体感 */
-  background: #ddd;          /* 浅灰卡片背景 */
-  box-shadow: 0 -1px 4px #ccc inset; /* 内阴影压在顶部，凹陷效果 */
-  border: 1px solid #ccc;    /* 边框 */
-  padding: 15px;             /* 内边距 */
-  border-radius: 3px;        /* 轻微圆角 */
-  line-height: 1.6em;
-  word-wrap: break-word;     /* 长单词/长链接自动换行 */
-  font-size: 0.9em;          /* 略小于正文 */
+  color: #475569;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid #e8e5e0;
+  padding: 18px;
+  border-radius: 10px;
+  line-height: 1.7em;
+  word-wrap: break-word;
+  font-size: 0.9em;
 }
-.widget a { color: #258fb8; text-decoration: none; }
-.widget a:hover { text-decoration: underline; }
-.widget ul, .widget ol { list-style: none; margin: 0; } /* 去掉列表默认圆点/数字 */
-.widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; } /* 嵌套列表缩进 */
-.widget ul ul, .widget ol ul { list-style: disc; }  /* 二级无序列表：实心圆点 */
-.widget ul ol, .widget ol ol { list-style: decimal; } /* 二级有序列表：数字 */
+.widget a { color: #3b82f6; text-decoration: none; transition: color 0.15s; }
+.widget a:hover { color: #2563eb; }
+.widget ul, .widget ol { list-style: none; margin: 0; }
+.widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; }
+.widget ul ul, .widget ol ul { list-style: disc; }
+.widget ul ol, .widget ol ol { list-style: decimal; }
 
-/* 侧边栏小标题（"标签"、"归档"、"最新文章"） */
+/* 侧边栏小标题 */
 .widget-title {
   text-decoration: none;
-  text-transform: uppercase; /* 全大写 */
-  letter-spacing: 2px;       /* 字间距加宽 */
-  color: #999;               /* 浅灰色 */
-  margin-bottom: 1em;        /* 下方间距 */
-  margin-left: 5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #94a3b8;
+  margin-bottom: 0.8em;
+  margin-left: 2px;
   line-height: 1em;
-  text-shadow: 0 1px #fff;   /* 白色阴影 */
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.8em;
 }
-/* 标签/分类后面的文章数量，如 "前端 (1)" */
 .category-list-count, .tag-list-count, .archive-list-count {
-  padding-left: 5px; color: #999; font-size: 0.85em;
+  padding-left: 5px; color: #94a3b8; font-size: 0.85em;
 }
 .category-list-count:before, .tag-list-count:before, .archive-list-count:before { content: "("; } /* 自动加左括号 */
 .category-list-count:after, .tag-list-count:after, .archive-list-count:after { content: ")"; }   /* 自动加右括号 */
@@ -426,111 +438,120 @@ body:after { clear: both; }
 
 @media screen and (max-width: 479px) {
   #mobile-nav {
-    position: absolute;      /* 绝对定位 */
-    top: 0; left: 0;         /* 左上角 */
-    width: 280px;            /* 菜单宽度 */
-    height: 100%;            /* 全屏高度 */
-    background: #191919;     /* 深黑背景 */
-    border-right: 1px solid #fff; /* 右侧白边分割 */
+    position: absolute;
+    top: 0; left: 0;
+    width: 280px;
+    height: 100%;
+    background: #1e293b;
   }
   .mobile-nav-link {
-    display: block;          /* 每项占满一整行 */
-    color: #999;             /* 灰色文字 */
+    display: block;
+    color: #94a3b8;
     text-decoration: none;
-    padding: 15px 20px;      /* 内边距扩大点击区 */
-    font-weight: bold;
+    padding: 16px 24px;
+    font-weight: 600;
   }
-  .mobile-nav-link:hover { color: #fff; } /* 悬停变白 */
+  .mobile-nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
 }
 
 /* ==============================================
    八、文章卡片外观（首页每篇文章的预览卡片）
    ============================================== */
 
-.article { margin: 50px 0; } /* 卡片之间的上下间距 */
+.article { margin: 40px 0; }
 
-/* ---- 卡片本身：白底 + 阴影 + 圆角 ---- */
-.article-inner,
-.archive-article-inner {
-  background: #fff;          /* 纯白卡片背景 */
-  box-shadow: 1px 2px 3px #ddd; /* 右下方浅阴影 */
-  border: 1px solid #ddd;    /* 浅灰边框 */
-  border-radius: 3px;        /* 轻微圆角 */
+/* ---- 卡片本身 ---- */
+.article-inner {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  border: 1px solid #e8e5e0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
 }
-.article-inner { overflow: hidden; } /* 裁剪超出圆角的内容（如全宽代码块） */
+.article-inner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+}
 .archive-article-inner {
-  padding: 10px;             /* 归档卡片稍紧凑 */
-  margin-bottom: 15px;
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #e8e5e0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
 /* ---- 卡片顶部元信息：日期 ---- */
 .article-meta:before, .article-meta:after { content: ""; display: table; }
 .article-meta:after { clear: both; }
 .article-date {
-  float: left;               /* 左浮动，与分类标签同行 */
+  float: left;
   text-decoration: none;
-  text-transform: uppercase; /* 日期大写 */
-  letter-spacing: 2px;       /* 字间距 */
-  color: #999;               /* 灰色 */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #94a3b8;
   margin-bottom: 1em; margin-left: 5px;
   line-height: 1em;
-  text-shadow: 0 1px #fff;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 0.85em;
 }
 .article-category {
-  float: left;               /* 紧跟在日期后面 */
+  float: left;
   line-height: 1em;
-  color: #ccc;               /* 很淡的灰色 */
-  text-shadow: 0 1px #fff;
+  color: #cbd5e1;
   margin-left: 8px;
 }
-.article-category:before { content: "\2022"; } /* 日期和分类之间的圆点分隔符 */
+.article-category:before { content: "\2022"; }
 .article-category-link {
   text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
-  color: #999; margin: 0 12px 1em;
-  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  color: #94a3b8; margin: 0 12px 1em;
+  line-height: 1em; font-weight: 600; font-size: 0.85em;
 }
 
 /* ---- 卡片头部：文章大标题 ---- */
-.article-header { padding: 20px 20px 0; } /* 上左右有内边距，底部无（紧接正文） */
+.article-header { padding: 24px 24px 0; }
 .article-title {
   text-decoration: none;
-  font-size: 2em;            /* 标题大字号 */
-  font-weight: bold;
-  color: #555;               /* 深灰色 */
-  line-height: 1.1em;
-  transition: color 0.2s;    /* 悬停变色过渡 */
+  font-size: 1.75em;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.3;
+  transition: color 0.2s;
+  letter-spacing: -0.01em;
 }
-a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
+a.article-title:hover { color: #3b82f6; }
 
 /* ---- "阅读全文"按钮 ---- */
 .article-more-link a {
-  display: inline-block;     /* 行内块，可设宽高 */
+  display: inline-block;
   line-height: 1em;
-  padding: 6px 15px;         /* 按钮内边距 */
-  border-radius: 15px;       /* 两端半圆（胶囊形按钮） */
-  background: #eee;          /* 浅灰背景 */
-  color: #999;               /* 灰色文字 */
-  text-shadow: 0 1px #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  color: #64748b;
   text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 .article-more-link a:hover {
-  background: #258fb8;       /* 悬停变蓝色背景 */
-  color: #fff;               /* 悬停白色文字 */
-  text-shadow: 0 1px #1e7293;
+  background: #3b82f6;
+  color: #fff;
+  transform: translateY(-1px);
 }
 
-/* ---- 卡片底部：标签 #tag + 分享链接 ---- */
+/* ---- 卡片底部 ---- */
 .article-footer {
   font-size: 0.85em; line-height: 1.6em;
-  border-top: 1px solid #ddd; /* 顶部分割线，与正文分隔 */
-  padding-top: 1.6em;
-  margin: 0 20px 20px;       /* 左右下边距 */
+  border-top: 1px solid #f1f0ed;
+  padding-top: 1.4em;
+  margin: 0 24px 20px;
 }
 .article-footer:before, .article-footer:after { content: ""; display: table; }
 .article-footer:after { clear: both; }
-.article-footer a { color: #999; text-decoration: none; }
-.article-footer a:hover { color: #555; }
+.article-footer a { color: #94a3b8; text-decoration: none; transition: color 0.15s; }
+.article-footer a:hover { color: #475569; }
 .article-tag-list-item { float: left; margin-right: 10px; } /* 标签横向排列 */
 .article-tag-list-link:before { content: "#"; } /* 每个标签前自动加 # 号 */
 .article-comment-link { float: right; }
@@ -548,24 +569,24 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 @media screen and (min-width: 768px) {
   #article-nav { margin: 50px 0; }
   #article-nav:before {
-    width: 8px; height: 8px;  /* 中间小圆点尺寸 */
+    width: 8px; height: 8px;
     position: absolute;
-    top: 50%; left: 50%;      /* 居中定位 */
-    margin-top: -4px; margin-left: -4px; /* 配合50%精确居中 */
+    top: 50%; left: 50%;
+    margin-top: -4px; margin-left: -4px;
     content: "";
-    border-radius: 50%;       /* 正圆形 */
-    background: #ddd;         /* 浅灰圆点 */
-    box-shadow: 0 1px 2px #fff;
+    border-radius: 50%;
+    background: #e2e8f0;
   }
 }
 .article-nav-link-wrap {
-  text-decoration: none; text-shadow: 0 1px #fff;
-  color: #999;               /* 灰色链接文字 */
-  box-sizing: border-box;    /* 边框和内边距计入总宽度 */
+  text-decoration: none;
+  color: #64748b;
+  box-sizing: border-box;
   margin-top: 50px;
   text-align: center; display: block;
+  transition: color 0.15s;
 }
-.article-nav-link-wrap:hover { color: #555; }
+.article-nav-link-wrap:hover { color: #334155; }
 @media screen and (min-width: 768px) {
   .article-nav-link-wrap { width: 50%; margin-top: 0; } /* 桌面端左右各一半 */
   #article-nav-newer { float: left; text-align: right; padding-right: 20px; }  /* 较新文章在左 */
@@ -573,8 +594,9 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 }
 .article-nav-caption {
   text-transform: uppercase; letter-spacing: 2px;
-  color: #ddd;               /* "上一篇"/"下一篇" 标签很淡 */
-  line-height: 1em; font-weight: bold;
+  color: #94a3b8;
+  line-height: 1em; font-weight: 700;
+  font-size: 0.85em;
 }
 #article-nav-newer .article-nav-caption { margin-right: -2px; }
 .article-nav-title { font-size: 0.85em; line-height: 1.6em; margin-top: 0.5em; }
@@ -584,57 +606,58 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
    ============================================== */
 
 .article-share-box {
-  position: absolute;        /* 相对于分享按钮定位 */
-  display: none;             /* 默认隐藏 */
+  position: absolute;
+  display: none;
   background: #fff;
-  box-shadow: 1px 2px 10px rgba(0,0,0,0.2); /* 较大阴影，弹窗感 */
-  border-radius: 3px;
-  margin-left: -145px;       /* 向左偏移，居中在按钮上方 */
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  border-radius: 10px;
+  margin-left: -145px;
   overflow: hidden;
-  z-index: 1;
+  z-index: 10;
+  border: 1px solid #e8e5e0;
 }
-.article-share-box.is-active { display: block; } /* JS 触发显示 */
+.article-share-box.is-active { display: block; }
 .article-share-input {
-  width: 100%;               /* 撑满 */
+  width: 100%;
   background: none;
-  box-sizing: border-box;    /* 边框计入宽度 */
+  box-sizing: border-box;
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  padding: 0 15px; color: #555;
-  outline: none;             /* 去掉聚焦外框 */
-  border: 1px solid #ddd;
-  border-radius: 3px 3px 0 0; /* 仅顶部圆角，与下方按钮无缝衔接 */
-  height: 36px; line-height: 36px;
+  padding: 0 15px; color: #334155;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #e8e5e0;
+  height: 40px; line-height: 40px;
 }
-.article-share-links { background: #eee; } /* 社交按钮区域底色 */
+.article-share-links { background: #f8fafc; }
 .article-share-links:before, .article-share-links:after { content: ""; display: table; }
 .article-share-links:after { clear: both; }
 
-/* 各社交平台分享按钮（横向排列，中文文字标签） */
 .article-share-qq,
 .article-share-wechat,
 .article-share-qzone,
 .article-share-copy {
-  min-width: 50px; height: 36px;
+  min-width: 50px; height: 40px;
   display: block; float: left;
   position: relative;
-  color: #999; text-shadow: 0 1px #fff;
-  text-align: center; line-height: 36px;
+  color: #64748b;
+  text-align: center; line-height: 40px;
   font-size: 13px; text-decoration: none;
-  padding: 0 10px;
+  padding: 0 12px;
   cursor: pointer; border: none; background: none;
+  transition: background 0.15s, color 0.15s;
 }
 .article-share-wechat,
-.article-share-copy { font-family: inherit; } /* button 需要显式继承 */
+.article-share-copy { font-family: inherit; }
 
 .article-share-qq:hover,
 .article-share-wechat:hover,
 .article-share-qzone:hover,
 .article-share-copy:hover { color: #fff; }
 
-.article-share-qq:hover      { background: #12b7f5; }  /* QQ蓝       */
-.article-share-wechat:hover  { background: #07c160; }  /* 微信绿     */
-.article-share-qzone:hover   { background: #fca130; }  /* QQ空间橙   */
-.article-share-copy:hover    { background: #555; }     /* 灰色       */
+.article-share-qq:hover      { background: #12b7f5; }
+.article-share-wechat:hover  { background: #07c160; }
+.article-share-qzone:hover   { background: #f97316; }
+.article-share-copy:hover    { background: #475569; }
 
 /* ==============================================
    十一、归档页面布局（按年份分栏：手机1栏、平板2栏、桌面3栏）
@@ -649,9 +672,10 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 .archive-year {
   text-decoration: none; text-transform: uppercase;
   letter-spacing: 2px;
-  color: #999;               /* 年份颜色 */
-  margin-bottom: 1em; margin-left: 5px;
-  line-height: 1em; text-shadow: 0 1px #fff; font-weight: bold;
+  color: #64748b;
+  margin-bottom: 1em; margin-left: 2px;
+  line-height: 1em; font-weight: 700;
+  font-size: 0.85em;
 }
 
 /* CSS 多列布局实现分栏（不需要 JS） */
@@ -662,14 +686,14 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
 /* 归档中每篇文章条目 */
 .archive-article { break-inside: avoid-column; overflow: hidden; } /* 禁止条目在栏间断裂 */
 .archive-article-title {
-  text-decoration: none; font-weight: bold;
-  color: #555;               /* 文章标题颜色 */
+  text-decoration: none; font-weight: 600;
+  color: #334155;
   transition: color 0.2s; line-height: 1.6em;
 }
-.archive-article-title:hover { color: #258fb8; }
+.archive-article-title:hover { color: #3b82f6; }
 .archive-article-footer { margin-top: 1em; }
 .archive-article-date {
-  color: #999;               /* 日期浅灰色 */
+  color: #94a3b8;
   text-decoration: none; font-size: 0.85em;
   line-height: 1em; margin-bottom: 0.5em; display: block;
 }
@@ -679,42 +703,43 @@ a.article-title:hover { color: #258fb8; } /* 悬停变蓝色 */
    ============================================== */
 
 #page-nav {
-  margin: 50px auto;         /* 上下50px，左右auto居中 */
+  margin: 40px auto;
   background: #fff;
-  box-shadow: 1px 2px 3px #ddd; border: 1px solid #ddd;
-  border-radius: 3px;
-  text-align: center;        /* 内容居中 */
-  color: #999; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid #e8e5e0;
+  border-radius: 10px;
+  text-align: center;
+  color: #64748b;
+  overflow: hidden;
 }
 #page-nav:before, #page-nav:after { content: ""; display: table; }
 #page-nav:after { clear: both; }
 #page-nav a, #page-nav span {
-  padding: 10px 20px;        /* 按钮内边距 */
+  padding: 12px 20px;
   line-height: 1;
-  height: 2ex;               /* ex = x字母高度，大致等于文字高度 */
 }
-#page-nav a { color: #999; text-decoration: none; }
-#page-nav a:hover { background: #999; color: #fff; } /* 悬停反色 */
-#page-nav .prev { float: left; }    /* "上一页"靠左 */
-#page-nav .next { float: right; }   /* "下一页"靠右 */
-#page-nav .page-number { display: inline-block; } /* 页码居中排列 */
-@media screen and (max-width: 479px) { #page-nav .page-number { display: none; } } /* 手机端隐藏页码数字 */
-#page-nav .current { color: #555; font-weight: bold; } /* 当前页码加粗 */
-#page-nav .space { color: #ddd; }   /* 省略号(...)的颜色 */
+#page-nav a { color: #64748b; text-decoration: none; transition: background 0.15s, color 0.15s; }
+#page-nav a:hover { background: #3b82f6; color: #fff; }
+#page-nav .prev { float: left; }
+#page-nav .next { float: right; }
+#page-nav .page-number { display: inline-block; }
+@media screen and (max-width: 479px) { #page-nav .page-number { display: none; } }
+#page-nav .current { color: #1e293b; font-weight: 700; }
+#page-nav .space { color: #cbd5e1; }
 
 /* ==============================================
    十三、评论区外观
    ============================================== */
 
 #comments {
-  background: #fff;          /* 白色背景 */
-  box-shadow: 1px 2px 3px #ddd;
-  padding: 20px;             /* 内边距 */
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  margin: 50px 0;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  padding: 24px;
+  border: 1px solid #e8e5e0;
+  border-radius: 12px;
+  margin: 40px 0;
 }
-#comments a { color: #258fb8; }
+#comments a { color: #3b82f6; }
 
 /* ==============================================
    十四、文章内图片画廊（多张图片的轮播展示，黑底）
