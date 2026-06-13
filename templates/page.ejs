@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
 
-
   <title><%= title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="张良的技术博客，记录编程学习与思考">
   <meta property="og:type" content="website">
 <meta property="og:title" content="南不及晚风的博客">
 <meta property="og:url" content="https://nanbujiwanfeng.github.io/zl.github.io/<%= ogUrlFile %>">
@@ -14,23 +14,16 @@
 <meta property="article:author" content="张良">
 <meta name="twitter:card" content="summary">
 
-
   <link rel="shortcut icon" href="/zl.github.io/favicon.png">
 
+  <!-- 预加载首张 banner 图（LCP 关键资源） -->
+  <link rel="preload" as="image" href="/zl.github.io/images/1.jpg" fetchpriority="high">
 
-
-<link rel="stylesheet" href="/zl.github.io/css/reset.css?v=<%= version %>">
-<link rel="stylesheet" href="/zl.github.io/css/theme.css?v=<%= version %>">
-<link rel="stylesheet" href="/zl.github.io/css/content.css?v=<%= version %>">
-
-
-
-
-
-
-<link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=<%= version %>">
-<link rel="stylesheet" href="/zl.github.io/css/style.css?v=<%= version %>">
-
+  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=<%= version %>">
+  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=<%= version %>">
+  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=<%= version %>">
+  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=<%= version %>">
+  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=<%= version %>">
 
 <body>
   <div id="container">
@@ -160,8 +153,8 @@
 
 
 
-<script src="/zl.github.io/js/tokenize.js?v=<%= version %>"></script>
-<script src="/zl.github.io/js/script.js?v=<%= version %>"></script>
+<script defer src="/zl.github.io/js/tokenize.js?v=<%= version %>"></script>
+<script defer src="/zl.github.io/js/script.js?v=<%= version %>"></script>
 
 
 

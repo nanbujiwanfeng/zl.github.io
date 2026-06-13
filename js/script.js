@@ -23,53 +23,61 @@
     '/zl.github.io/images/3.jpg'          // 第 3 张
   ];
 
-  (function() {                           // 子 IIFE：banner 模块独立作用域
-    const banner = document.getElementById('banner');   // 轮播容器 #banner
-    const header = document.getElementById('header');   // 头部 #header（箭头/圆点挂这里）
-    if (!banner || bannerSlides.length === 0) return;   // 没有 banner 或没图则退出
+  (function() {
+    const banner = document.getElementById('banner');
+    const header = document.getElementById('header');
+    if (!banner || bannerSlides.length === 0) return;
 
-    /* 预加载第一张图片，减少首屏等待时间 */
-    const preload = new Image();          // 创建 Image 对象触发预加载
-    preload.src = bannerSlides[0];        // 浏览器开始下载第一张图
-
-    /* 构建图片和圆点的 HTML 字符串 */
-    let imgs = '', dots = '';             // imgs：图片标签  dots：圆点按钮
+    /* 构建 HTML：首张图直接设 src，其余图用 data-src 延迟加载 */
+    let imgs = '', dots = '';
     for (let i = 0; i < bannerSlides.length; i++) {
-      imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '" src="' + bannerSlides[i] + '" alt="">';
-                                          // 第一张图加 is-active（默认可见）
+      const srcAttr = i === 0 ? ' src="' + bannerSlides[i] + '"' : ' data-src="' + bannerSlides[i] + '"';
+      imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '"' + srcAttr + ' alt="">';
       dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
-                                          // 第一个圆点加 is-active（默认高亮）
     }
-    banner.insertAdjacentHTML('beforeend', imgs);   // 图片注入 #banner
-    header.insertAdjacentHTML('beforeend',          // 箭头 + 圆点注入 #header
-      '<button class="banner-arrow banner-prev">&#8249;</button>' +  // 左箭头 ‹
-      '<button class="banner-arrow banner-next">&#8250;</button>' +  // 右箭头 ›
-      '<div class="banner-dots">' + dots + '</div>'                  // 圆点容器
+    banner.insertAdjacentHTML('beforeend', imgs);
+    header.insertAdjacentHTML('beforeend',
+      '<button class="banner-arrow banner-prev">&#8249;</button>' +
+      '<button class="banner-arrow banner-next">&#8250;</button>' +
+      '<div class="banner-dots">' + dots + '</div>'
     );
 
-    const slideEls = banner.querySelectorAll('.banner-slide');  // 所有图片元素（NodeList）
-    const dotEls  = header.querySelectorAll('.banner-dot');     // 所有圆点元素（NodeList）
+    const slideEls = banner.querySelectorAll('.banner-slide');
+    const dotEls  = header.querySelectorAll('.banner-dot');
 
-    // 首张图片加载完成后移除骨架屏动画，停止无意义的 GPU 合成
-    const firstSlide = slideEls[0];       // 第一张 <img>
-    if (firstSlide.complete) {            // 缓存命中：图片已经加载完
-      banner.classList.add('is-loaded');  // CSS 中 #banner.is-loaded::before { content:none }
-    } else {
-      firstSlide.addEventListener('load', function() { // 监听 load 事件
-        banner.classList.add('is-loaded');
-      });
+    // 标记每张图是否已触发加载，避免重复设置 src
+    const loaded = [true, false, false];
+
+    // 懒加载指定索引的图片（从 data-src 搬到 src）
+    function lazyLoad(i) {
+      if (loaded[i]) return;
+      const el = slideEls[i];
+      const src = el.getAttribute('data-src');
+      if (!src) return;
+      el.setAttribute('src', src);
+      el.removeAttribute('data-src');
+      loaded[i] = true;
     }
 
-    let idx = 0;                          // 当前显示的图片索引
-    let timer;                            // 自动播放定时器 ID
+    // 首张图片加载完成 → 移除骨架屏 + 预加载第 2 张
+    const firstSlide = slideEls[0];
+    function onFirstLoad() {
+      banner.classList.add('is-loaded');
+      lazyLoad(1);
+    }
+    if (firstSlide.complete) { onFirstLoad(); }
+    else { firstSlide.addEventListener('load', onFirstLoad); }
 
-    // 切换到第 n 张（n 支持负值，自动循环）
+    let idx = 0;
+    let timer;
+
     function go(n) {
-      slideEls[idx].classList.remove('is-active');  // 隐藏当前图片
-      dotEls[idx].classList.remove('is-active');    // 取消当前圆点高亮
-      idx = (n + bannerSlides.length) % bannerSlides.length; // 循环取模（支持负索引）
-      slideEls[idx].classList.add('is-active');     // 显示新图片
-      dotEls[idx].classList.add('is-active');       // 高亮新圆点
+      slideEls[idx].classList.remove('is-active');
+      dotEls[idx].classList.remove('is-active');
+      idx = (n + bannerSlides.length) % bannerSlides.length;
+      lazyLoad(idx);                                    // 切换到该图时才加载
+      slideEls[idx].classList.add('is-active');
+      dotEls[idx].classList.add('is-active');
     }
 
     function next()  { go(idx + 1); }     // 下一张
@@ -101,35 +109,39 @@
   // 点击取消静音 / 再次点击恢复静音
   // ==============================================
 
-  (function() {                           // 子 IIFE：音乐模块独立作用域
-    const audio = document.createElement('audio');  // 创建 <audio> 元素
-    audio.id = 'bgm';                     // 背景音乐 ID
-    audio.src = '/zl.github.io/audio/昔涟.flac';   // 音乐文件路径
-    audio.autoplay = true;                // 自动播放（必须配合 muted 才能通过浏览器策略）
-    audio.muted = true;                   // 默认静音：Chrome 的 autoplay 策略要求
-    audio.loop = true;                    // 循环播放
-    document.body.appendChild(audio);     // 将 <audio> 添加到页面
+  (function() {
+    var audio = null;                     // 延迟创建：首屏不加载 38MB 音频
+    var playing = false;
 
-    const btn = document.createElement('button'); // 创建播放按钮
-    btn.id = 'music-btn';                 // 按钮 ID（CSS 定位用）
-    btn.title = '音乐已静音 — 点击播放';    // 悬停提示：当前状态 + 预告操作
-    btn.innerHTML = '&#9834;';             // ♪ 音符符号
-    document.body.appendChild(btn);       // 将按钮添加到页面
+    var btn = document.createElement('button');
+    btn.id = 'music-btn';
+    btn.title = '点击播放背景音乐';
+    btn.innerHTML = '&#9834;';
+    document.body.appendChild(btn);
 
-    let playing = false;                  // 是否正在有声播放
     btn.addEventListener('click', function(e) {
-      e.stopPropagation();               // 阻止冒泡，避免触发 body 上的其他逻辑
-      if (!playing) {                     // 当前静音 → 取消静音
-        audio.muted = false;              // 关闭静音
-        audio.play().then(function() {    // play() 返回 Promise
-          btn.classList.add('is-playing');// 按钮变蓝色背景
+      e.stopPropagation();
+      // 首次点击才创建 audio，避免页面加载时下载 38MB FLAC
+      if (!audio) {
+        audio = document.createElement('audio');
+        audio.id = 'bgm';
+        audio.loop = true;
+        audio.muted = true;
+        audio.src = '/zl.github.io/audio/昔涟.flac';
+        document.body.appendChild(audio);
+        btn.title = '音乐加载中…';
+      }
+      if (!playing) {
+        audio.muted = false;
+        audio.play().then(function() {
+          btn.classList.add('is-playing');
           btn.title = '音乐播放中 — 点击静音';
           playing = true;
         });
-      } else {                            // 当前有声 → 恢复静音
+      } else {
         audio.muted = true;
-        btn.classList.remove('is-playing'); // 按钮恢复默认灰色
-        btn.title = '音乐已静音 — 点击播放';
+        btn.classList.remove('is-playing');
+        btn.title = '点击播放背景音乐';
         playing = false;
       }
     });

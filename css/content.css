@@ -20,14 +20,24 @@
 .article-entry {
   color: #334155;
   padding: 0 24px;
+  font-size: 1.05em;
+  line-height: 1.8;
 }
 .article-entry:before, .article-entry:after { content: ""; display: table; }
 .article-entry:after { clear: both; }
 
+/* 正文段落限制阅读宽度，代码块/表格可撑满卡片 */
+.article-entry p,
+.article-entry h1, .article-entry h2, .article-entry h3,
+.article-entry h4, .article-entry h5, .article-entry h6,
+.article-entry ul, .article-entry ol, .article-entry dl,
+.article-entry blockquote {
+  max-width: 70ch;
+}
+
 .article-entry p,
 .article-entry table {
-  line-height: 1.6em;        /* 段落行距 1.6 倍字号 */
-  margin: 1.6em 0;           /* 段落上下间距 = 行距 */
+  margin: 1.3em 0;
 }
 
 /* ==============================================
@@ -35,16 +45,17 @@
    ============================================== */
 .article-entry h1, .article-entry h2, .article-entry h3,
 .article-entry h4, .article-entry h5, .article-entry h6 {
-  font-weight: bold;         /* 标题加粗 */
-  line-height: 1.1em;        /* 行高紧凑 */
-  margin: 1.1em 0;           /* 标题上下间距 */
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.6em 0 0.6em;
+  color: #1e293b;
 }
-.article-entry h1 { font-size: 2em; }     /* 一级标题 2em */
-.article-entry h2 { font-size: 1.5em; }   /* 二级 1.5em */
-.article-entry h3 { font-size: 1.3em; }   /* 三级 1.3em */
-.article-entry h4 { font-size: 1.2em; }   /* 四级 1.2em */
-.article-entry h5 { font-size: 1em; }     /* 五级 = 正文大小 */
-.article-entry h6 { font-size: 1em; color: #94a3b8; }
+.article-entry h1 { font-size: 1.8em; letter-spacing: -0.02em; }
+.article-entry h2 { font-size: 1.45em; letter-spacing: -0.01em; }
+.article-entry h3 { font-size: 1.25em; }
+.article-entry h4 { font-size: 1.1em; }
+.article-entry h5 { font-size: 1em; }
+.article-entry h6 { font-size: 0.95em; color: #64748b; }
 
 /* ==============================================
    三、文本样式（加粗、斜体、上下标、水平线）
@@ -69,9 +80,10 @@
 .article-entry ul,
 .article-entry ol,
 .article-entry dl {
-  margin: 1.6em 20px;        /* 上下行距，左侧缩进 20px */
-  line-height: 1.6em;
+  margin: 1.2em 0 1.2em 1.5em;
+  line-height: 1.8;
 }
+.article-entry li { margin: 0.3em 0; }
 .article-entry ul { list-style: disc; }   /* 无序列表：实心圆点 */
 .article-entry ol { list-style: decimal; } /* 有序列表：数字 */
 .article-entry dt { font-weight: bold; }  /* 定义列表项：加粗 */
@@ -94,10 +106,11 @@
    六、图片和视频（响应式，自动缩放）
    ============================================== */
 .article-entry img, .article-entry video {
-  max-width: 100%;           /* 图片最大宽度 = 文章宽度，超出则缩放 */
-  height: auto;              /* 高度自动，保持比例 */
-  display: block;            /* 块级，独占一行 */
-  margin: auto;              /* 居中 */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.8em auto;
+  border-radius: 6px;
 }
 .article-entry iframe { border: none; } /* 嵌入框架去边框 */
 

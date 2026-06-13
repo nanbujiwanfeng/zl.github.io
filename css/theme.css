@@ -409,6 +409,10 @@ body:after { clear: both; }
 .widget a { color: #3b82f6; text-decoration: none; transition: color 0.15s; }
 .widget a:hover { color: #2563eb; }
 .widget ul, .widget ol { list-style: none; margin: 0; }
+.widget > ul > li,
+.widget > ol > li { padding: 5px 0; }
+.widget > ul > li + li,
+.widget > ol > li + li { border-top: 1px solid #f1f0ed; }
 .widget ul ul, .widget ol ul, .widget ul ol, .widget ol ol { margin: 0 20px; }
 .widget ul ul, .widget ol ul { list-style: disc; }
 .widget ul ol, .widget ol ol { list-style: decimal; }
