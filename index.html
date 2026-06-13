@@ -1,7 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+
+  <!-- Google Fonts: Noto Sans SC + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <title>南不及晚风的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,13 +24,16 @@
   <!-- 预加载首张 banner 图（LCP 关键资源） -->
   <link rel="preload" as="image" href="/zl.github.io/images/1.jpg" fetchpriority="high">
 
-  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781348088825">
-  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781348088825">
-  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781348088825">
-  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781348088825">
-  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781348088825">
+  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781348623291">
+  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781348623291">
+  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781348623291">
+  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781348623291">
+  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781348623291">
 
 <body>
+
+  <!-- 阅读进度条 -->
+  <div id="reading-progress"></div>
   <div id="container">
     <div id="wrap">
       <!-- ========== 页面头部 ========== -->
@@ -457,13 +465,18 @@ return 0;
 
 
 
-<script defer src="/zl.github.io/js/tokenize.js?v=1781348088825"></script>
-<script defer src="/zl.github.io/js/script.js?v=1781348088825"></script>
+<script defer src="/zl.github.io/js/tokenize.js?v=1781348623291"></script>
+<script defer src="/zl.github.io/js/script.js?v=1781348623291"></script>
 
 
 
 
 
   </div>
+
+  <!-- 回到顶部按钮 -->
+  <button id="back-to-top" title="回到顶部" aria-label="回到顶部">
+    <span class="fa fa-chevron-up"></span>
+  </button>
 </body>
 </html>

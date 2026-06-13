@@ -1,4 +1,4 @@
-/* ===================================
+﻿/* ===================================
    自定义样式 — 你的个人覆盖区
 
    用法：
@@ -170,4 +170,112 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+
+/* ==============================================
+   阅读进度条
+   ============================================== */
+#reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #6366f1, #ec4899);
+  z-index: 10000;
+  width: 0%;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ==============================================
+   回到顶部按钮
+   ============================================== */
+#back-to-top {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  z-index: 999;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(59,130,246,0.9);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s, background 0.25s;
+}
+#back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+#back-to-top:hover {
+  background: rgba(37,99,235,0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59,130,246,0.5);
+}
+
+/* ==============================================
+   代码块复制按钮
+   ============================================== */
+.code-block-wrapper { position: relative; }
+.code-copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  z-index: 5;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #94a3b8;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  opacity: 0;
+}
+.code-block-wrapper:hover .code-copy-btn,
+.code-copy-btn:focus-visible { opacity: 1; }
+.code-copy-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+.code-copy-btn.copied {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
+}
+
+/* ==============================================
+   Banner 覆盖层增强
+   ============================================== */
+#banner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(15,23,42,0.35), rgba(15,23,42,0.55));
+  z-index: 1;
+  pointer-events: none;
+}
+#banner .banner-slide { z-index: 0; }
+
+/* ==============================================
+   搜索框增强
+   ============================================== */
+.search-form-input {
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  outline: none;
 }

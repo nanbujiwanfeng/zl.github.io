@@ -1,4 +1,4 @@
-/* ===================================
+﻿/* ===================================
    文章内容样式 — 决定文章正文长什么样
    改动这里的样式会影响所有文章的正文显示
    如果只想改某一篇文章，直接改那篇文章的 HTML
@@ -194,7 +194,7 @@
   background: #f1f5f9;
   padding: 0.1em 0.4em;
   border-radius: 4px;
-  font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'Source Code Pro', Consolas, Monaco, Menlo, monospace;
   font-size: 0.9em;
   color: #e11d48;
 }
@@ -210,7 +210,7 @@
   overflow: auto;
   color: #e2e8f0;
   line-height: 1.6;
-  font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'Source Code Pro', Consolas, Monaco, Menlo, monospace;
   font-size: 0.9em;
 }
 .article-entry pre code {
@@ -252,7 +252,7 @@
 }
 .article-entry .gist .gist-file {
   border: none;              /* 去边框 */
-  font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'Source Code Pro', Consolas, Monaco, Menlo, monospace;
   margin: 0;
 }
 .article-entry .gist .gist-file .gist-data { background: none; border: none; } /* 透明背景 */

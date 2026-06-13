@@ -1,4 +1,4 @@
-/* ===================================
+﻿/* ===================================
    博客前端脚本 — 页面交互逻辑（原生 JS，零外部依赖）
 
    功能模块：
@@ -462,6 +462,92 @@
   initLightbox();                         // 页面加载时初始化灯箱包裹
 
   // ==============================================
+  
+  // ==============================================
+  // 八、阅读进度条
+  // ==============================================
+  (function() {
+    const bar = document.getElementById('reading-progress');
+    if (!bar) return;
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const pct = Math.min((scrollTop / docHeight) * 100, 100);
+      bar.style.width = pct + '%';
+    }, { passive: true });
+  })();
+
+  // ==============================================
+  // 九、回到顶部按钮
+  // ==============================================
+  (function() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          if (window.scrollY > 400) {
+            btn.classList.add('is-visible');
+          } else {
+            btn.classList.remove('is-visible');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    btn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+
+  // ==============================================
+  // 十、代码块复制按钮
+  // ==============================================
+  (function() {
+    document.querySelectorAll('.article-entry pre').forEach(function(pre) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+      var btn = document.createElement('button');
+      btn.className = 'code-copy-btn';
+      btn.textContent = '复制';
+      wrapper.appendChild(btn);
+      btn.addEventListener('click', function() {
+        var code = pre.textContent || '';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(function() {
+            btn.textContent = '已复制!';
+            btn.classList.add('copied');
+            setTimeout(function() {
+              btn.textContent = '复制';
+              btn.classList.remove('copied');
+            }, 2000);
+          });
+        } else {
+          // fallback
+          var ta = document.createElement('textarea');
+          ta.value = code;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          btn.textContent = '已复制!';
+          btn.classList.add('copied');
+          setTimeout(function() {
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+      });
+    });
+  })();
+
   // 六、滚动渐入动画
   // 文章卡片在滚动进入视口时带淡入上移效果
   // ==============================================
@@ -495,7 +581,7 @@
   })();
 
   // ==============================================
-  // 七、移动端菜单
+  // 十一、移动端菜单
   // 点击汉堡图标 → #wrap 右移，露出左侧菜单
   // 点击页面内容区 → 关闭菜单
   // ==============================================
