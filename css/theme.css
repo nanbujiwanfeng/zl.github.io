@@ -630,7 +630,7 @@ a.article-title:hover { color: #3b82f6; }
 }
 .article-footer:before, .article-footer:after { content: ""; display: table; }
 .article-footer:after { clear: both; }
-.article-footer a { color: var(--muted-heavy); text-decoration: none; transition: color 0.15s; }
+.article-footer a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
 .article-footer a:hover { color: #475569; }
 .article-tag-list-item { float: left; margin-right: 10px; } /* 标签横向排列 */
 .article-tag-list-link:before { content: "#"; } /* 每个标签前自动加 # 号 */
@@ -666,7 +666,7 @@ a.article-title:hover { color: #3b82f6; }
   text-align: center; display: block;
   transition: color 0.15s;
 }
-.article-nav-link-wrap:hover { color: #334155; }
+.article-nav-link-wrap:hover { color: var(--text); }
 @media screen and (min-width: 768px) {
   .article-nav-link-wrap { width: 50%; margin-top: 0; } /* 桌面端左右各一半 */
   #article-nav-newer { float: left; text-align: right; padding-right: 20px; }  /* 较新文章在左 */
@@ -702,7 +702,7 @@ a.article-title:hover { color: #3b82f6; }
   background: none;
   box-sizing: border-box;
   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  padding: 0 15px; color: #334155;
+  padding: 0 15px; color: var(--text);
   outline: none;
   border: none;
   border-bottom: 1px solid var(--border);
@@ -767,13 +767,13 @@ a.article-title:hover { color: #3b82f6; }
 .archive-article { break-inside: avoid-column; overflow: hidden; } /* 禁止条目在栏间断裂 */
 .archive-article-title {
   text-decoration: none; font-weight: 600;
-  color: #334155;
+  color: var(--text);
   transition: color 0.2s; line-height: 1.6em;
 }
 .archive-article-title:hover { color: #3b82f6; }
 .archive-article-footer { margin-top: 1em; }
 .archive-article-date {
-  color: var(--muted-heavy);
+  color: var(--muted);
   text-decoration: none; font-size: 0.85em;
   line-height: 1em; margin-bottom: 0.5em; display: block;
 }
