@@ -379,4 +379,47 @@ walkDir(path.join(BASE_DIR, 'posts'));                    // 文章详情页（p
 walkDir(path.join(BASE_DIR, 'tags'));                     // 标签页（tags/xxx/index.html）
 walkDir(path.join(BASE_DIR, 'archives'));                 // 归档页（archives/.../index.html）
 
+// ==================== 生成 RSS 2.0 Feed ====================
+function buildRss() {
+  const rssItems = searchData.map(function(post) {
+    const slug    = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, '');
+    const content = extractContent(post.url);
+    const excerpt = generateExcerpt(content, 300)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    const url     = SITE_URL + post.url;
+    const pubDate = new Date(post.date + 'T00:00:00+08:00').toUTCString();
+
+    return [
+      '    <item>',
+      '      <title>' + post.title + '</title>',
+      '      <link>' + url + '</link>',
+      '      <guid isPermaLink="true">' + url + '</guid>',
+      '      <pubDate>' + pubDate + '</pubDate>',
+      '      <description>' + excerpt + '</description>',
+      '    </item>'
+    ].join('\n');
+  }).join('\n');
+
+  const rss = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+    '  <channel>',
+    '    <title>' + BLOG_TITLE + '</title>',
+    '    <link>' + SITE_URL + SITE_ROOT + '/</link>',
+    '    <description>张良的技术博客，记录编程学习与思考</description>',
+    '    <language>zh-CN</language>',
+    '    <lastBuildDate>' + new Date().toUTCString() + '</lastBuildDate>',
+    '    <atom:link href="' + SITE_URL + SITE_ROOT + '/rss.xml" rel="self" type="application/rss+xml"/>',
+    rssItems,
+    '  </channel>',
+    '</rss>'
+  ].join('\n');
+
+  fs.writeFileSync(path.join(BASE_DIR, 'rss.xml'), rss);
+  console.log('RSS feed generated: rss.xml');
+}
+
+buildRss();
+
 console.log('Built ' + totalPages + ' page(s) + inverted search index.  Version: ' + VERSION);

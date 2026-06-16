@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>南不及晚风的博客</title>
+    <link>https://nanbujiwanfeng.github.io/zl.github.io/</link>
+    <description>张良的技术博客，记录编程学习与思考</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 16 Jun 2026 14:03:44 GMT</lastBuildDate>
+    <atom:link href="https://nanbujiwanfeng.github.io/zl.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三子棋</title>
+      <link>https://nanbujiwanfeng.github.io/zl.github.io/posts/tic-tac-toe/</link>
+      <guid isPermaLink="true">https://nanbujiwanfeng.github.io/zl.github.io/posts/tic-tac-toe/</guid>
+      <pubDate>Mon, 06 Apr 2026 16:00:00 GMT</pubDate>
+      <description>#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;void printBoard(char board[3][3]){ printf(“\n”); printf(“ 1 2 3\n”); for (int i = 0; i &lt; 3; i++) { printf(“%d “, i + 1); for (int j = 0; j &lt; 3; j++) { printf(“%c”, board[i][j]); if (j &lt; 2) printf(“|”); } printf(“\n”); if (i &lt; 2) printf(“ —–\n”); } printf(“\n”);}...</description>
+    </item>
+    <item>
+      <title>动态数组</title>
+      <link>https://nanbujiwanfeng.github.io/zl.github.io/posts/dynamic-array/</link>
+      <guid isPermaLink="true">https://nanbujiwanfeng.github.io/zl.github.io/posts/dynamic-array/</guid>
+      <pubDate>Fri, 27 Mar 2026 16:00:00 GMT</pubDate>
+      <description>#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;int main(){ int n = 5; //申请一块连续的内存，字节总数为：20个字节 int* ptr = (int*)malloc(n * sizeof(int)); if (ptr != NULL) { for (int i = 0; i &lt; n; i++) { //通过int类型指针每次访问4个字节 *(ptr + i) = i + 1; } for (int i = 0; i &lt; n; i++) { printf(“%d “, *(ptr+i)); } } return 0;}</description>
+    </item>
+    <item>
+      <title>你好，新生！属于我的第一个博客</title>
+      <link>https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-new-life/</link>
+      <guid isPermaLink="true">https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-new-life/</guid>
+      <pubDate>Thu, 19 Mar 2026 16:00:00 GMT</pubDate>
+      <description>登录交互界面 &lt;!DOCTYPE html&gt; &lt;html lang=&quot;zh-CN&quot;&gt; &lt;head&gt; &lt;meta charset=&quot;UTF-8&quot;&gt; &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt; &lt;title&gt;模拟用户登录&lt;/title&gt; &lt;style&gt; /* 简单美化界面，提升体验 */ * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; } .login-container {...</description>
+    </item>
+    <item>
+      <title>Hello World</title>
+      <link>https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-world/</link>
+      <guid isPermaLink="true">https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-world/</guid>
+      <pubDate>Thu, 19 Mar 2026 16:00:00 GMT</pubDate>
+      <description>这是我的第一篇博客文章，标志着这个博客的诞生。 从这里开始，我将记录学习编程的点点滴滴。</description>
+    </item>
+  </channel>
+</rss>
