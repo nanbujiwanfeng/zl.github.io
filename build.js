@@ -37,6 +37,13 @@ const searchData  = JSON.parse(                                    // 解析文�
 );
 const templateFn  = ejs.compile(templateStr, { filename: TEMPLATE_FILE }); // 编译模板（缓存函数，多次调用高效）
 
+// 读取友链数据
+const friendsData = (function() {
+  const fp = path.join(BASE_DIR, 'friends.json');
+  if (!fs.existsSync(fp)) return [];
+  return JSON.parse(fs.readFileSync(fp, 'utf8'));
+})();
+
 // ==================== HTML → 纯文本 ====================
 // 去除 HTML 标签并解码实体，用于生成文章摘要
 function stripHtml(html) {
@@ -207,7 +214,11 @@ for (let page = 1; page <= totalPages; page++) {
     ogUrlFile:    page === 1 ? 'index.html' : 'page/' + page + '/index.html',   // OG URL 文件名
     articlesHtml: pagePosts.map(buildArticle).join('\n\n'),                      // 当前页文章卡片 HTML
     pageNavHtml:  buildPageNav(page, totalPages),                                // 分页导航 HTML
-    recentPosts:  buildRecentPosts()                                             // 侧边栏"最新文章" [{url, title}, ...]
+    recentPosts:  buildRecentPosts(),                                            // 侧边栏"最新文章" [{url, title}, ...]
+    showComments: false,                                                         // 首页不显示评论
+    isHome:       page === 1,                                                    // 仅第1页是首页
+    friends:      friendsData,                                                   // 友链数据
+    showFriends:  page === 1                                                     // 仅首页侧边栏显示友链
   };
 
   const html = templateFn(vars); // EJS 渲染：数据 + 模板 → 完整 HTML
@@ -298,7 +309,11 @@ searchData.forEach(function(post, idx) {                                        
     ogUrlFile:    'posts/' + slug + '/index.html',                                  // OG URL 文件名
     articlesHtml: fullArticle,                                                     // 完整文章 HTML
     pageNavHtml:  postNav,                                                         // 上下篇导航
-    recentPosts:  buildRecentPosts()                                               // 侧边栏最新文章
+    recentPosts:  buildRecentPosts(),                                              // 侧边栏最新文章
+    showComments: true,                                                            // 详情页显示评论
+    isHome:       false,                                                           // 详情页不是首页
+    friends:      friendsData,                                                     // 友链数据
+    showFriends:  false                                                            // 详情页侧边栏不显示友链
   };
 
   const postHtml = templateFn(postVars);                                           // EJS 渲染
