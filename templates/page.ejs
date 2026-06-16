@@ -20,6 +20,7 @@
 <meta name="twitter:card" content="summary">
 
   <link rel="shortcut icon" href="/zl.github.io/favicon.png">
+  <link rel="alternate" type="application/rss+xml" title="南不及晚风的博客 RSS" href="/zl.github.io/rss.xml">
 
   <!-- 预加载首张 banner 图（LCP 关键资源） -->
   <link rel="preload" as="image" href="/zl.github.io/images/1.jpg" fetchpriority="high">
@@ -142,6 +143,28 @@
       </ul>
     </div>
   </div>
+
+  <% if (showFriends && friends && friends.length > 0) { %>
+  <div class="widget-wrap">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      <ul class="friend-list">
+        <% friends.forEach(function(f) { %>
+        <li class="friend-item">
+          <a href="<%= f.url %>" target="_blank" rel="noopener noreferrer" class="friend-link">
+            <span class="friend-avatar"></span>
+            <span class="friend-info">
+              <span class="friend-name"><%= f.name %></span>
+              <span class="friend-desc"><%= f.description %></span>
+            </span>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+      <a href="/zl.github.io/friends/" class="friend-more">查看更多友链 →</a>
+    </div>
+  </div>
+  <% } %>
 
 
 </aside>
