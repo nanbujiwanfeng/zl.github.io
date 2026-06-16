@@ -71,6 +71,26 @@
         <section id="main">
           <%- articlesHtml %>
           <%- pageNavHtml %>
+          <% if (showComments) { %>
+          <!-- ========== Giscus 评论区 ========== -->
+          <div id="giscus-container">
+            <script src="https://giscus.app/client.js"
+              data-repo="nanbujiwanfeng/zl.github.io"
+              data-repo-id="R_kg_xxxxxxxxxxx"
+              data-category="Announcements"
+              data-category-id="DIC_kwxxxxxxxxx"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="preferred_color_scheme"
+              data-lang="zh-CN"
+              crossorigin="anonymous"
+              async>
+            </script>
+          </div>
+          <% } %>
         </section>
 
           <!-- ========== 侧边栏 ========== -->
