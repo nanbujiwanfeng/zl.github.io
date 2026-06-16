@@ -504,7 +504,82 @@
   })();
 
   // ==============================================
-  // 十、代码块复制按钮
+  // 十、运行时代码块检测与转换
+  // 将 <p> + <br> 写成的代码自动转为 <pre><code>，
+  // 使其获得代码块样式、语法高亮和复制按钮
+  // ==============================================
+  (function() {
+    // 判断文本是否像代码（多行 + 含代码特征）
+    function looksLikeCode(text) {
+      var lines = text.split(/\n/).filter(function(l) { return l.trim(); });
+      if (lines.length < 3) return false;
+      var score = 0;
+      if (/[{}]/.test(text)) score++;              // 花括号
+      if (/;\s*$/.test(text)) score++;              // 分号结尾
+      if (/#include|#define|#pragma/.test(text)) score++; // C 预处理
+      if (/^\s*\/\//m.test(text)) score++;          // 单行注释
+      if (/^\s*(int|void|char|float|double|long|unsigned|struct)\s/m.test(text)) score++; // C 类型
+      if (/printf|scanf|malloc|sizeof|getchar/.test(text)) score++; // C 函数
+      if (/function\s*\(/.test(text)) score++;      // JS 函数
+      if (/^\s*(var|let|const|function)\s/m.test(text)) score++; // JS 声明
+      if (/<\/?[a-zA-Z][a-zA-Z0-9]*>/i.test(text)) score++; // HTML 标签
+      if (/<!DOCTYPE|lang=/i.test(text)) score++;   // HTML 文档头
+      if (/^\s*class\s/m.test(text)) score++;       // class 关键字
+      return score >= 2;
+    }
+
+    // 推断代码语言
+    function guessLanguage(text) {
+      if (/#include|printf|scanf|malloc|sizeof|int main/.test(text)) return 'c';
+      if (/<!DOCTYPE|<html|<head|<meta|<body|<div|<script|<style/i.test(text)) return 'html';
+      if (/function\s*\(|const |let |var |=>/.test(text)) return 'javascript';
+      if (/[{]\s*[\n]|@\w+|font-size|margin|padding|color|background/.test(text) && text.includes(':')) return 'css';
+      return '';
+    }
+
+    var entries = document.querySelectorAll('.article-entry');
+    entries.forEach(function(entry) {
+      var paragraphs = entry.querySelectorAll('p');
+      paragraphs.forEach(function(p) {
+        var brs = p.querySelectorAll('br');
+        if (brs.length < 2) return;              // 忽略单行或无机换行
+
+        // 提取纯文本，用 \n 替换 <br>
+        var text = p.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+        // 去 HTML 标签和实体得到纯文本
+        text = text.replace(/<[^>]*>/g, '');
+        text = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+                   .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+                   .replace(/&#39;/g, "'");
+
+        if (!looksLikeCode(text)) return;        // 不像代码，跳过
+
+        // 转为 <pre><code>
+        var lang = guessLanguage(text);
+        var pre = document.createElement('pre');
+        var code = document.createElement('code');
+        if (lang) code.className = 'language-' + lang;
+        code.textContent = text.replace(/\n$/, '');
+        pre.appendChild(code);
+        p.parentNode.replaceChild(pre, p);
+      });
+
+      // 合并紧跟在 <pre> 后面的孤立 }</p>（如三子棋结尾的 }）
+      var pres = entry.querySelectorAll('pre');
+      pres.forEach(function(pre) {
+        var next = pre.nextElementSibling;
+        if (!next || next.tagName !== 'P') return;
+        var t = next.textContent.trim();
+        if (t === '}' || t === '});' || t === '};') {
+          pre.querySelector('code').textContent += '\n' + t;
+          next.parentNode.removeChild(next);
+        }
+      });
+    });
+  })();
+
+  // ==============================================
+  // 十一、代码块复制按钮
   // ==============================================
   (function() {
     document.querySelectorAll('.article-entry pre').forEach(function(pre) {
@@ -581,7 +656,109 @@
   })();
 
   // ==============================================
-  // 十一、移动端菜单
+  // 十三、文章目录 TOC 自动生成
+  // 扫描 .article-entry 的 h1~h3 标题，生成目录插入正文顶部
+  // IntersectionObserver 实现滚动高亮当前章节
+  // ==============================================
+  (function() {
+    var entries = document.querySelectorAll('.article-entry');
+    entries.forEach(function(entry) {
+      var headings = entry.querySelectorAll('h1, h2, h3');
+      if (headings.length < 2) return;           // 少于2个标题不生成目录
+
+      // 收集标题信息，赋予唯一 id
+      var items = [];
+      headings.forEach(function(h, i) {
+        var id = h.id || 'section-' + (i + 1);   // 已有 id 则复用，否则生成
+        h.id = id;                               // 确保标题有 id 供跳转
+        items.push({ level: parseInt(h.tagName.charAt(1)), text: h.textContent, id: id, el: h });
+      });
+
+      // 构建 TOC HTML（嵌套 <ol> 表示层级）
+      function buildToc(list, depth) {
+        if (!list.length) return '';
+        var html = '<ol>';
+        for (var x = 0; x < list.length; x++) {
+          var item = list[x];
+          // 收集子项：比当前层级深的连续项目
+          var children = [];
+          while (x + 1 < list.length && list[x + 1].level > item.level) {
+            children.push(list[x + 1]);
+            x++;
+          }
+          html += '<li><a href="#' + item.id + '" data-toc-target="' + item.id + '">' + item.text + '</a>';
+          if (children.length) html += buildToc(children, item.level + 1);
+          html += '</li>';
+        }
+        html += '</ol>';
+        return html;
+      }
+
+      var tocHtml = '<nav class="article-toc"><details open><summary>目录</summary>' + buildToc(items, 1) + '</details></nav>';
+
+      // 插入到正文顶部（第一个元素之前）
+      entry.insertAdjacentHTML('afterbegin', tocHtml);
+    });
+
+    // 滚动高亮当前章节
+    if (!('IntersectionObserver' in window)) return;
+    var tocLinks = document.querySelectorAll('.article-toc a[data-toc-target]');
+    if (!tocLinks.length) return;
+
+    var idToLink = {};
+    tocLinks.forEach(function(a) {
+      idToLink[a.getAttribute('data-toc-target')] = a;
+    });
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        var link = idToLink[e.target.id];
+        if (!link) return;
+        if (e.isIntersecting) {
+          // 清除所有高亮，再高亮当前
+          tocLinks.forEach(function(l) { l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+    Object.keys(idToLink).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  })();
+
+  // ==============================================
+  // 十四、阅读时间估算
+  // 统计正文纯文本字数，按中文300字/分钟估算
+  // 仅在文章详情页显示（跳过首页摘要卡片）
+  // ==============================================
+  (function() {
+    var entries = document.querySelectorAll('.article-entry');
+    entries.forEach(function(entry) {
+      var article = entry.closest('.article');
+      if (!article) return;
+      // 首页卡片有 .article-more-link，只对详情页生效
+      if (article.querySelector('.article-more-link')) return;
+
+      var text = entry.textContent || entry.innerText || '';
+      var chineseChars = (text.match(/[一-鿿]/g) || []).length;
+      var nonChinese  = text.replace(/[一-鿿]/g, '');
+      var englishWords = nonChinese.split(/\s+/).filter(Boolean).length;
+      var minutes = Math.max(1, Math.round((chineseChars + englishWords * 2) / 300));
+
+      var dateEl = article.querySelector('.article-date');
+      if (!dateEl) return;
+
+      var badge = document.createElement('span');
+      badge.className = 'reading-time';
+      badge.textContent = '约 ' + minutes + ' 分钟';
+      dateEl.parentNode.insertBefore(badge, dateEl.nextSibling);
+    });
+  })();
+
+  // ==============================================
+  // 十二、移动端菜单
   // 点击汉堡图标 → #wrap 右移，露出左侧菜单
   // 点击页面内容区 → 关闭菜单
   // ==============================================

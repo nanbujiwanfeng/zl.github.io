@@ -295,3 +295,96 @@ pre .perl .sub, pre .javascript .title,
 pre .coffeescript .title { color: #69c; }
 
 pre .keyword, pre .javascript .function { color: #c9c; }                            /* 关键字 — 紫色 */
+
+/* ==============================================
+   十三、文章目录 TOC
+   ============================================== */
+.article-toc {
+  margin: 0 0 1.8em 0;
+  padding: 18px 22px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95em;
+  line-height: 1.8;
+}
+.article-toc summary {
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+.article-toc summary::-webkit-details-marker { display: none; }
+.article-toc ol { list-style: none; margin: 0.6em 0 0 0; padding: 0; }
+.article-toc ol ol { margin-left: 1.2em; border-left: 2px solid #e2e8f0; padding-left: 0.8em; }
+.article-toc li { margin: 0.35em 0; }
+.article-toc a {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s;
+  display: inline-block;
+}
+.article-toc a:hover { color: #3b82f6; }
+.article-toc a.active {
+  color: #3b82f6;
+  font-weight: 600;
+  position: relative;
+}
+.article-toc a.active::before {
+  content: '';
+  position: absolute;
+  left: -1.2em;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  background: #3b82f6;
+  border-radius: 2px;
+}
+
+/* ==============================================
+   十四、阅读时间徽章
+   ============================================== */
+.reading-time {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 4px 10px;
+  background: #eef2ff;
+  color: #6366f1;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* ==============================================
+   十五、文章正文段落增强
+   ============================================== */
+.article-entry > p {
+  text-indent: 2em;
+}
+/* 紧跟标题的段落不缩进（描述性开头） */
+.article-entry > h1 + p,
+.article-entry > h2 + p,
+.article-entry > h3 + p { text-indent: 0; }
+/* 列表、表格、引用块后面的段落不缩进 */
+.article-entry > ul + p,
+.article-entry > ol + p,
+.article-entry > blockquote + p,
+.article-entry > pre + p,
+.article-entry > .article-toc + p { text-indent: 0; }
+
+/* ==============================================
+   十六、代码块与正文间距
+   ============================================== */
+.article-entry > pre,
+.article-entry > .highlight {
+  margin-top: 1.4em;
+  margin-bottom: 1.4em;
+  border-radius: 8px;
+}
+/* 给代码块上方添加语言标签 */
+.article-entry pre[class]::before {
+  display: none;
+}
