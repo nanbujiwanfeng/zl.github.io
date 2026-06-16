@@ -422,4 +422,61 @@ function buildRss() {
 
 buildRss();
 
+// ==================== 生成友链独立页 ====================
+(function() {
+  const friendsDir = path.join(BASE_DIR, 'friends');
+  fs.mkdirSync(friendsDir, { recursive: true });
+
+  const friendsItems = friendsData.map(function(f) {
+    return [
+      '<li class="friend-item friend-page-item">',
+      '  <a href="' + f.url + '" target="_blank" rel="noopener noreferrer" class="friend-link">',
+      '    <span class="friend-avatar"></span>',
+      '    <span class="friend-info">',
+      '      <span class="friend-name">' + f.name + '</span>',
+      '      <span class="friend-desc">' + f.description + '</span>',
+      '    </span>',
+      '  </a>',
+      '</li>'
+    ].join('\n');
+  }).join('\n');
+
+  const friendsHtml = [
+    '<article class="h-entry article article-type-page">',
+    '  <div class="article-meta"></div>',
+    '  <div class="article-inner">',
+    '    <header class="article-header">',
+    '      <h1 itemprop="name">',
+    '        <span class="p-name article-title">友情链接</span>',
+    '      </h1>',
+    '    </header>',
+    '    <div class="e-content article-entry">',
+    '      <p>以下是一些优秀的技术博客和朋友站点。</p>',
+    '      <p>想交换友链？在 <a href="https://github.com/nanbujiwanfeng/zl.github.io" target="_blank" rel="noopener noreferrer">GitHub</a> 提交 PR 修改 friends.json 即可。</p>',
+    '      <ul class="friend-list friend-page-list">',
+    friendsItems,
+    '      </ul>',
+    '    </div>',
+    '  </div>',
+    '</article>'
+  ].join('\n');
+
+  const friendsVars = {
+    version:      VERSION,
+    title:        '友情链接 | ' + BLOG_TITLE,
+    ogUrlFile:    'friends/index.html',
+    articlesHtml: friendsHtml,
+    pageNavHtml:  '',
+    showComments: false,
+    isHome:       false,
+    friends:      friendsData,
+    showFriends:  false,
+    recentPosts:  buildRecentPosts()
+  };
+
+  const friendsPageHtml = templateFn(friendsVars);
+  fs.writeFileSync(path.join(friendsDir, 'index.html'), friendsPageHtml);
+  console.log('Friends page generated: friends/index.html');
+})();
+
 console.log('Built ' + totalPages + ' page(s) + inverted search index.  Version: ' + VERSION);
