@@ -37,6 +37,30 @@ const searchData  = JSON.parse(                                    // 解析文�
 );
 const templateFn  = ejs.compile(templateStr, { filename: TEMPLATE_FILE }); // 编译模板（缓存函数，多次调用高效）
 
+// ==================== HTML → 纯文本 ====================
+// 去除 HTML 标签并解码实体，用于生成文章摘要
+function stripHtml(html) {
+  return html
+    .replace(/<[^>]*>/g, '')           // 去除所有 HTML 标签
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x([0-9A-Fa-f]+);/g, function(_, hex) { return String.fromCharCode(parseInt(hex, 16)); })
+    .replace(/&#(\d+);/g, function(_, dec) { return String.fromCharCode(+dec); })
+    .replace(/\s+/g, ' ')              // 合并多余空白
+    .trim();
+}
+
+// 从 HTML 生成摘要：取纯文本前 N 个字符
+function generateExcerpt(html, maxLen) {
+  maxLen = maxLen || 200;
+  var text = stripHtml(html);
+  if (text.length <= maxLen) return text;
+  return text.substring(0, maxLen).replace(/\s+\S*$/, '') + '...';
+}
+
 // ==================== 从文章详情页提取正文 HTML ====================
 // 用深度计数法精确匹配 <div class="e-content article-entry"> 的闭合标签
 // 正确处理正文内可能嵌套的 <div>（如登录页面嵌入的完整 HTML）
@@ -71,10 +95,11 @@ function extractContent(postUrl) {
   return html.substring(html.indexOf('>', idx) + 1, pos - 6).trim(); // 提取正文内容
 }
 
-// ==================== 构建单篇文章的列表卡片 HTML ====================
+// ==================== 构建单篇文章的列表卡片 HTML（摘要版） ====================
 function buildArticle(post) {
   const slug    = post.url.replace(SITE_ROOT + '/posts/', '').replace(/\/$/, '');
   const content = extractContent(post.url);
+  const excerpt = generateExcerpt(content);  // 纯文本摘要，去除了代码块等 HTML 噪音
 
   // 构建标签列表
   let tagsHtml = '';
@@ -99,7 +124,10 @@ function buildArticle(post) {
     '      </h1>',
     '    </header>',
     '    <div class="e-content article-entry" itemprop="articleBody">',
-    '      ' + content,
+    '      <p class="article-excerpt">' + excerpt + '</p>',
+    '    </div>',
+    '    <div class="article-more-link">',
+    '      <a href="' + post.url + '">阅读全文</a>',
     '    </div>',
     '    <footer class="article-footer">',
     '      <a data-url="' + SITE_URL + post.url + '" data-title="' + post.title + '" class="article-share-link"><span class="fa fa-share">分享</span></a>',

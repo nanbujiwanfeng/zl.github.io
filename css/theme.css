@@ -526,7 +526,18 @@ body:after { clear: both; }
 }
 a.article-title:hover { color: #3b82f6; }
 
+/* ---- 文章摘要文字 ---- */
+.article-excerpt {
+  color: #64748b;
+  line-height: 1.8;
+  margin-bottom: 0.8em;
+}
+
 /* ---- "阅读全文"按钮 ---- */
+.article-more-link {
+  padding: 0 24px 18px;
+  margin-top: -0.5em;
+}
 .article-more-link a {
   display: inline-block;
   line-height: 1em;

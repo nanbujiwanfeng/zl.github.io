@@ -24,11 +24,11 @@
   <!-- 预加载首张 banner 图（LCP 关键资源） -->
   <link rel="preload" as="image" href="/zl.github.io/images/1.jpg" fetchpriority="high">
 
-  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781348623291">
-  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781348623291">
-  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781348623291">
-  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781348623291">
-  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781348623291">
+  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781617285263">
+  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781617285263">
+  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781617285263">
+  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781617285263">
+  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781617285263">
 
 <body>
 
@@ -82,71 +82,10 @@
       </h1>
     </header>
     <div class="e-content article-entry" itemprop="articleBody">
-      <p>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>void printBoard(char board[3][3])<br>{<br>    printf(“\n”);<br>    printf(“  1 2 3\n”);<br>    for (int i &#x3D; 0; i &lt; 3; i++) {<br>        printf(“%d “, i + 1);<br>        for (int j &#x3D; 0; j &lt; 3; j++) {<br>            printf(“%c”, board[i][j]);<br>            if (j &lt; 2) printf(“|”);<br>        }<br>        printf(“\n”);<br>        if (i &lt; 2) printf(“  —–\n”);<br>    }<br>    printf(“\n”);<br>}</p>
-<p>int checkWinner(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++) {<br>        if (board[i][0] !&#x3D; ‘ ‘ &amp;&amp; board[i][0] &#x3D;&#x3D; board[i][1] &amp;&amp; board[i][1] &#x3D;&#x3D; board[i][2])<br>            return board[i][0];<br>        if (board[0][i] !&#x3D; ‘ ‘ &amp;&amp; board[0][i] &#x3D;&#x3D; board[1][i] &amp;&amp; board[1][i] &#x3D;&#x3D; board[2][i])<br>            return board[0][i];<br>    }<br>    if (board[0][0] !&#x3D; ‘ ‘ &amp;&amp; board[0][0] &#x3D;&#x3D; board[1][1] &amp;&amp; board[1][1] &#x3D;&#x3D; board[2][2])<br>        return board[0][0];<br>    if (board[0][2] !&#x3D; ‘ ‘ &amp;&amp; board[0][2] &#x3D;&#x3D; board[1][1] &amp;&amp; board[1][1] &#x3D;&#x3D; board[2][0])<br>        return board[0][2];<br>    return 0;<br>}</p>
-<p>int isBoardFull(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++)<br>        for (int j &#x3D; 0; j &lt; 3; j++)<br>            if (board[i][j] &#x3D;&#x3D; ‘ ‘) return 0;<br>    return 1;<br>}</p>
-<p>void initBoard(char board[3][3])<br>{<br>    for (int i &#x3D; 0; i &lt; 3; i++)<br>        for (int j &#x3D; 0; j &lt; 3; j++)<br>            board[i][j] &#x3D; ‘ ‘;<br>}</p>
-<p>int main()<br>{</p>
-<pre><code>char board[3][3];
-char current;
-int row, col;
-int winner;
-char playAgain = &#39;Y&#39;;
-
-printf(&quot;三子棋游戏\n&quot;);
-printf(&quot;玩家 X 和 玩家 O 轮流下棋。输入行和列（1-3）。\n&quot;);
-
-while (playAgain == &#39;Y&#39; || playAgain == &#39;y&#39;) &#123;
-    initBoard(board);
-    current = &#39;X&#39;;
-    winner = 0;
-
-    while (1) &#123;
-        printBoard(board);
-        printf(&quot;当前玩家: %c\n&quot;, current);
-        printf(&quot;请输入行 列（例如 2 3）：&quot;);
-
-        if (scanf(&quot;%d %d&quot;, &amp;row, &amp;col) != 2) &#123;
-            printf(&quot;输入格式错误，请输入两个数字。\n&quot;);
-            while (getchar() != &#39;\n&#39;);
-            continue;
-        &#125;
-
-        if (row &lt; 1 || row &gt; 3 || col &lt; 1 || col &gt; 3) &#123;
-            printf(&quot;输入超出范围，请输入 1 到 3。\n&quot;);
-            continue;
-        &#125;
-
-        if (board[row - 1][col - 1] != &#39; &#39;) &#123;
-            printf(&quot;该位置已被占用，请选择其他位置。\n&quot;);
-            continue;
-        &#125;
-
-        board[row - 1][col - 1] = current;
-        winner = checkWinner(board);
-        if (winner) break;
-        if (isBoardFull(board)) break;
-
-        current = (current == &#39;X&#39;) ? &#39;O&#39; : &#39;X&#39;;
-    &#125;
-
-    printBoard(board);
-    if (winner) &#123;
-        printf(&quot;玩家 %c 获胜！\n&quot;, winner);
-    &#125; else &#123;
-        printf(&quot;平局！\n&quot;);
-    &#125;
-
-    printf(&quot;是否再来一局？(Y/N): &quot;);
-    scanf(&quot; %c&quot;, &amp;playAgain);
-    while (getchar() != &#39;\n&#39;);
-    printf(&quot;\n&quot;);
-&#125;
-
-printf(&quot;谢谢游玩！\n&quot;);
-return 0;
-</code></pre>
-<p>}</p>
+      <p class="article-excerpt">#include <stdio.h>#include <stdlib.h>void printBoard(char board[3][3]){ printf(“\n”); printf(“ 1 2 3\n”); for (int i = 0; i < 3; i++) { printf(“%d “, i + 1); for (int j = 0; j < 3; j++) {...</p>
+    </div>
+    <div class="article-more-link">
+      <a href="/zl.github.io/posts/tic-tac-toe/">阅读全文</a>
     </div>
     <footer class="article-footer">
       <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/posts/tic-tac-toe/" data-title="三子棋" class="article-share-link"><span class="fa fa-share">分享</span></a>
@@ -170,7 +109,10 @@ return 0;
       </h1>
     </header>
     <div class="e-content article-entry" itemprop="articleBody">
-      <p>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>int main()<br>{<br>    int n &#x3D; 5;<br>    &#x2F;&#x2F;申请一块连续的内存，字节总数为：20个字节<br>    int* ptr &#x3D; (int*)malloc(n * sizeof(int));<br>    if (ptr !&#x3D; NULL)<br>    {<br>        for (int i &#x3D; 0; i &lt; n; i++)<br>        {<br>            &#x2F;&#x2F;通过int类型指针每次访问4个字节<br>            *(ptr + i) &#x3D; i + 1;<br>        }<br>        for (int i &#x3D; 0; i &lt; n; i++)<br>        {<br>            printf(“%d “, *(ptr+i));<br>        }<br>    }<br>    return 0;<br>}</p>
+      <p class="article-excerpt">#include <stdio.h>#include <stdlib.h>int main(){ int n = 5; //申请一块连续的内存，字节总数为：20个字节 int* ptr = (int*)malloc(n * sizeof(int)); if (ptr != NULL) { for (int i = 0; i < n; i++) { //通过int类型指针每次访问4个字节...</p>
+    </div>
+    <div class="article-more-link">
+      <a href="/zl.github.io/posts/dynamic-array/">阅读全文</a>
     </div>
     <footer class="article-footer">
       <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/posts/dynamic-array/" data-title="动态数组" class="article-share-link"><span class="fa fa-share">分享</span></a>
@@ -194,142 +136,10 @@ return 0;
       </h1>
     </header>
     <div class="e-content article-entry" itemprop="articleBody">
-      <p>登录交互界面</p>
-<pre><code class="html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;zh-CN&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-    &lt;title&gt;模拟用户登录&lt;/title&gt;
-    &lt;style&gt;
-        /* 简单美化界面，提升体验 */
-        * &#123;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        &#125;
-        .login-container &#123;
-            width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        &#125;
-        .login-title &#123;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        &#125;
-        .form-item &#123;
-            margin-bottom: 20px;
-        &#125;
-        .form-item label &#123;
-            display: block;
-            margin-bottom: 8px;
-            color: #666;
-        &#125;
-        .form-item input &#123;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            font-size: 16px;
-        &#125;
-        .login-btn &#123;
-            width: 100%;
-            padding: 12px;
-            background-color: #409eff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        &#125;
-        .login-btn:hover &#123;
-            background-color: #337ecc;
-        &#125;
-        .tip &#123;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            color: red;
-        &#125;
-        .success-tip &#123;
-            color: green;
-        &#125;
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;div class=&quot;login-container&quot;&gt;
-        &lt;h2 class=&quot;login-title&quot;&gt;用户登录&lt;/h2&gt;
-        &lt;div class=&quot;form-item&quot;&gt;
-            &lt;label for=&quot;username&quot;&gt;用户名&lt;/label&gt;
-            &lt;input type=&quot;text&quot; id=&quot;username&quot; placeholder=&quot;请输入用户名&quot;&gt;
-        &lt;/div&gt;
-        &lt;div class=&quot;form-item&quot;&gt;
-            &lt;label for=&quot;password&quot;&gt;密码&lt;/label&gt;
-            &lt;input type=&quot;password&quot; id=&quot;password&quot; placeholder=&quot;请输入密码&quot;&gt;
-        &lt;/div&gt;
-        &lt;button class=&quot;login-btn&quot; id=&quot;loginBtn&quot;&gt;登录&lt;/button&gt;
-        &lt;div class=&quot;tip&quot; id=&quot;tip&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;script&gt;
-        // 1. 初始化用户数据（数组存储）
-        // 检查localStorage是否有用户数据，没有则初始化预设用户
-        function initUserList() &#123;
-            const userList = JSON.parse(localStorage.getItem(&#39;userList&#39;));
-            if (!userList) &#123;
-                // 预设测试用户（数组形式，每个元素是用户对象）
-                const defaultUsers = [
-                    &#123; username: &#39;admin&#39;, password: &#39;123456&#39; &#125;,
-                    &#123; username: &#39;testuser&#39;, password: &#39;test123&#39; &#125;
-                ];
-                // 存储到localStorage（需转成JSON字符串，因为localStorage只能存字符串）
-                localStorage.setItem(&#39;userList&#39;, JSON.stringify(defaultUsers));
-            &#125;
-        &#125;
-        // 2. 登录验证函数
-        function login() &#123;
-            // 获取输入的用户名和密码
-            const username = document.getElementById(&#39;username&#39;).value.trim();
-            const password = document.getElementById(&#39;password&#39;).value.trim();
-            const tip = document.getElementById(&#39;tip&#39;);
-            // 空值校验
-            if (!username || !password) &#123;
-                tip.textContent = &#39;用户名和密码不能为空！&#39;;
-                return;
-            &#125;
-            // 从localStorage读取用户数组
-            const userList = JSON.parse(localStorage.getItem(&#39;userList&#39;));
-            // 遍历数组验证用户
-            const loginUser = userList.find(user =&gt; user.username === username &amp;&amp; user.password === password);
-            if (loginUser) &#123;
-                // 登录成功：存储当前登录用户信息，提示成功
-                localStorage.setItem(&#39;currentUser&#39;, JSON.stringify(loginUser));
-                tip.className = &#39;tip success-tip&#39;;
-                tip.textContent = `登录成功！欢迎你，$&#123;username&#125;！`;
-                // 模拟跳转到首页（可替换为实际页面跳转）
-                setTimeout(() =&gt; &#123;
-                    alert(&#39;即将跳转到首页&#39;);
-                &#125;, 1500);
-            &#125; else &#123;
-                // 登录失败
-                tip.textContent = &#39;用户名或密码错误！&#39;;
-            &#125;
-        &#125;
-
-        // 3. 页面加载时初始化用户数据
-        window.onload = function() &#123;
-            initUserList();
-            // 绑定登录按钮点击事件
-            document.getElementById(&#39;loginBtn&#39;).addEventListener(&#39;click&#39;, login);
-        &#125;;
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+      <p class="article-excerpt">登录交互界面 <!DOCTYPE html> <html lang="zh-CN"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>模拟用户登录</title> <style> /* 简单美化界面，提升体验 */ * {...</p>
+    </div>
+    <div class="article-more-link">
+      <a href="/zl.github.io/posts/hello-new-life/">阅读全文</a>
     </div>
     <footer class="article-footer">
       <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-new-life/" data-title="你好，新生！属于我的第一个博客" class="article-share-link"><span class="fa fa-share">分享</span></a>
@@ -353,8 +163,10 @@ return 0;
       </h1>
     </header>
     <div class="e-content article-entry" itemprop="articleBody">
-      <p>这是我的第一篇博客文章，标志着这个博客的诞生。</p>
-<p>从这里开始，我将记录学习编程的点点滴滴。</p>
+      <p class="article-excerpt">这是我的第一篇博客文章，标志着这个博客的诞生。 从这里开始，我将记录学习编程的点点滴滴。</p>
+    </div>
+    <div class="article-more-link">
+      <a href="/zl.github.io/posts/hello-world/">阅读全文</a>
     </div>
     <footer class="article-footer">
       <a data-url="https://nanbujiwanfeng.github.io/zl.github.io/posts/hello-world/" data-title="Hello World" class="article-share-link"><span class="fa fa-share">分享</span></a>
@@ -465,8 +277,8 @@ return 0;
 
 
 
-<script defer src="/zl.github.io/js/tokenize.js?v=1781348623291"></script>
-<script defer src="/zl.github.io/js/script.js?v=1781348623291"></script>
+<script defer src="/zl.github.io/js/tokenize.js?v=1781617285263"></script>
+<script defer src="/zl.github.io/js/script.js?v=1781617285263"></script>
 
 
 
