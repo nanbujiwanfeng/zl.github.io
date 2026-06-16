@@ -388,3 +388,11 @@ pre .keyword, pre .javascript .function { color: #c9c; }                        
 .article-entry pre[class]::before {
   display: none;
 }
+
+/* ==============================================
+   十七、评论区容器
+   ============================================== */
+#giscus-container {
+  margin: 50px 0 20px;
+  padding: 0 24px;
+}
