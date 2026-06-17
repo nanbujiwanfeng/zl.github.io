@@ -107,7 +107,7 @@
     function go(n) {
       slideEls[idx].classList.remove('is-active');
       dotEls[idx].classList.remove('is-active');
-      idx = (n + bannerSlides.length) % bannerSlides.length;
+      idx = (n + bannerBase.length) % bannerBase.length;
       lazyLoad(idx);                                    // 切换到该图时才加载
       slideEls[idx].classList.add('is-active');
       dotEls[idx].classList.add('is-active');
