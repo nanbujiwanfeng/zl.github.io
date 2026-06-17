@@ -568,7 +568,7 @@ body:after { clear: both; }
 .article-category {
   float: left;
   line-height: 1em;
-  color: #cbd5e1;
+  color: var(--muted);
   margin-left: 8px;
 }
 .article-category:before { content: "\2022"; }
@@ -805,7 +805,7 @@ a.article-title:hover { color: var(--accent); }
 #page-nav .page-number { display: inline-block; }
 @media screen and (max-width: 479px) { #page-nav .page-number { display: none; } }
 #page-nav .current { color: var(--heading); font-weight: 700; }
-#page-nav .space { color: #cbd5e1; }
+#page-nav .space { color: var(--scrollbar-thumb); }
 
 /* ==============================================
    十三、评论区外观
