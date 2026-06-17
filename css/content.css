@@ -477,3 +477,37 @@ pre .keyword, pre .javascript .function { color: #c9c; }                        
    ============================================== */
 .article-entry p { margin: 1.6em 0; }
 .article-entry { padding: 0 32px; }
+
+/* ==============================================
+   二十二、链接下划线滑动动画
+   ============================================== */
+.article-entry a:not(.article-share-link):not(.tag-list-link):not([rel="tag"]) {
+  position: relative;
+  text-decoration: none;
+}
+.article-entry a:not(.article-share-link):not(.tag-list-link):not([rel="tag"])::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.article-entry a:not(.article-share-link):not(.tag-list-link):not([rel="tag"]):hover::after {
+  transform: scaleX(1);
+}
+
+/* ==============================================
+   二十三、卡片悬停光晕增强
+   ============================================== */
+.article-inner {
+  transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.article-inner:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 40px rgba(59,130,246,0.1), 0 4px 15px rgba(59,130,246,0.06);
+}
