@@ -137,14 +137,31 @@
    八、引用块 blockquote（"> 引用"效果：居中衬线字体）
    ============================================== */
 .article-entry blockquote {
-  font-family: Georgia, "Times New Roman", serif;
-  margin: 1.6em 0;
-  padding: 0.8em 20px;
-  text-align: left;
-  border-left: 4px solid var(--accent);
-  background: var(--tag-bg);
-  border-radius: 0 8px 8px 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.1em;
+  text-align: center;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  padding: 1.5em 2em;
+  margin: 2em 0;
   color: var(--muted-heavy);
+  position: relative;
+  border-radius: 0;
+}
+.article-entry blockquote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3em;
+  color: var(--accent);
+  font-family: Georgia, serif;
+  line-height: 1;
+  background: var(--card-bg);
+  padding: 0 0.3em;
 }
 .article-entry blockquote footer {
   font-size: 14px; margin: 1.6em 0;
@@ -396,3 +413,67 @@ pre .keyword, pre .javascript .function { color: #c9c; }                        
   margin: 50px 0 20px;
   padding: 0 24px;
 }
+
+/* ==============================================
+   十八、杂志排版 — 首字下沉
+   ============================================== */
+.article-entry > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.8em;
+  font-weight: 700;
+  line-height: 0.75;
+  margin-right: 0.12em;
+  color: var(--heading);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+/* 首页摘要卡片不启用首字下沉 */
+.article-excerpt::first-letter {
+  float: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  font-family: inherit;
+}
+
+/* ==============================================
+   十九、杂志排版 — 标题装饰
+   ============================================== */
+.article-entry h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.article-entry h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.article-entry h1, .article-entry h2, .article-entry h3 {
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+   二十、杂志排版 — 装饰分割线
+   ============================================== */
+.article-entry hr {
+  border: none;
+  text-align: center;
+  margin: 2.2em 0;
+}
+.article-entry hr::after {
+  content: '·  ·  ·';
+  font-size: 1.2em;
+  color: var(--muted);
+  letter-spacing: 0.5em;
+}
+
+/* ==============================================
+   二十一、杂志排版 — 宽松留白
+   ============================================== */
+.article-entry p { margin: 1.6em 0; }
+.article-entry { padding: 0 32px; }
