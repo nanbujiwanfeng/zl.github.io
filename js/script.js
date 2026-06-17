@@ -758,6 +758,119 @@
   })();
 
   // ==============================================
+  // 十五、Banner 视差滚动 + 滚动指示箭头
+  // ==============================================
+  (function() {
+    var header = document.getElementById('header');
+    var banner = document.getElementById('banner');
+    var title  = document.getElementById('header-title');
+    if (!header || !banner) return;
+
+    // 添加滚动指示箭头
+    var indicator = document.createElement('div');
+    indicator.className = 'scroll-indicator';
+    indicator.innerHTML = '&#8964;<br>&#8964;';
+    indicator.setAttribute('aria-hidden', 'true');
+    header.appendChild(indicator);
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          if (scrollTop <= header.offsetHeight) {
+            banner.style.transform = 'translateY(' + (scrollTop * 0.35) + 'px)';
+            if (title) title.style.transform = 'translateY(-50%) translateY(' + (scrollTop * 0.15) + 'px)';
+          }
+          // 滚动超过 100px 后隐藏指示箭头
+          if (scrollTop > 100) {
+            indicator.classList.add('is-hidden');
+          } else {
+            indicator.classList.remove('is-hidden');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
+  // ==============================================
+  // 十六、打字机效果（首页副标题）
+  // 仅在首页执行，逐字打出副标题文字
+  // ==============================================
+  (function() {
+    var subtitleWrap = document.getElementById('subtitle-wrap');
+    if (!subtitleWrap) return;
+    var text = subtitleWrap.textContent.trim();
+    if (!text) return;
+    subtitleWrap.textContent = '';
+    subtitleWrap.style.borderRight = '2px solid #fff';
+
+    var i = 0;
+    function type() {
+      if (i < text.length) {
+        subtitleWrap.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 80 + Math.random() * 60);
+      } else {
+        subtitleWrap.style.borderRight = 'none';
+      }
+    }
+    setTimeout(type, 600);  // 页面加载后 600ms 开始
+  })();
+
+  // ==============================================
+  // 十七、Staggered 入场 + 滚动触发 Reveal
+  // ==============================================
+  (function() {
+    // Staggered 卡片入场（首页）
+    var cards = document.querySelectorAll('.article');
+    if (cards.length > 0 && 'IntersectionObserver' in window) {
+      cards.forEach(function(card, i) {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        card.style.transitionDelay = (i * 0.1) + 's';
+      });
+
+      var cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            cardObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05 });
+
+      cards.forEach(function(card) { cardObserver.observe(card); });
+    }
+
+    // 滚动 Reveal：文章内段落/图片/引用块依次淡入
+    var revealEls = document.querySelectorAll('.article-entry > p, .article-entry > pre, .article-entry > blockquote, .article-entry > ul, .article-entry > ol, .article-entry img');
+    if (revealEls.length > 0 && 'IntersectionObserver' in window) {
+      revealEls.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      });
+
+      var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      revealEls.forEach(function(el) { revealObserver.observe(el); });
+    }
+  })();
+
+  // ==============================================
   // 十二、移动端菜单
   // 点击汉堡图标 → #wrap 右移，露出左侧菜单
   // 点击页面内容区 → 关闭菜单
