@@ -151,16 +151,16 @@ body:after { clear: both; }
    ============================================== */
 
 #header {
-  height: 50vh;
-  min-height: 200px;
+  height: 60vh;
+  min-height: 320px;
   position: relative;
   overflow: hidden;
 }
 @media screen and (min-width: 768px) {
-  #header { height: 42vh; }  /* 平板：稍矮一点 */
+  #header { height: 80vh; }
 }
 @media screen and (min-width: 1024px) {
-  #header { height: 36vh; }  /* 桌面大屏：再矮一点，比例更舒适 */
+  #header { height: 100vh; }
 }
 
 /* ---- 横幅顶部和底部的渐变遮罩（增强标题和导航的可读性）---- */
@@ -1002,3 +1002,28 @@ a.article-title:hover { color: var(--accent); }
   text-decoration: none;
 }
 .friend-more:hover { text-decoration: underline; }
+
+/* ==============================================
+   十九、Banner 底部滚动指示箭头
+   ============================================== */
+.scroll-indicator {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.7);
+  font-size: 20px;
+  animation: scroll-bounce 2s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.scroll-indicator.is-hidden { opacity: 0; }
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
