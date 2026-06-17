@@ -17,22 +17,45 @@
   // 三张图片自动循环，支持左右箭头和底部圆点切换
   // ==============================================
 
-  const bannerSlides = [                  // 轮播图片路径数组
-    '/zl.github.io/images/1.jpg',         // 第 1 张
-    '/zl.github.io/images/2.jpg',         // 第 2 张
-    '/zl.github.io/images/3.jpg'          // 第 3 张
+  // 每张图的主路径（用于生成响应式 srcset）
+  const bannerBase = [
+    '/zl.github.io/images/1',
+    '/zl.github.io/images/2',
+    '/zl.github.io/images/3'
   ];
+  // 响应式尺寸描述符
+  const SRC_SIZES = '100vw';
+  const WIDTHS    = [400, 800, 1200];
+
+  function buildSrcset(base, ext) {
+    return WIDTHS.map(function(w) { return base + '-' + w + 'w.' + ext + ' ' + w + 'w'; }).join(', ');
+  }
 
   (function() {
     const banner = document.getElementById('banner');
     const header = document.getElementById('header');
-    if (!banner || bannerSlides.length === 0) return;
+    if (!banner || bannerBase.length === 0) return;
 
-    /* 构建 HTML：首张图直接设 src，其余图用 data-src 延迟加载 */
+    /* 构建 HTML：首张图直接设 src/srcset，其余图用 data-* 延迟加载 */
     let imgs = '', dots = '';
-    for (let i = 0; i < bannerSlides.length; i++) {
-      const srcAttr = i === 0 ? ' src="' + bannerSlides[i] + '"' : ' data-src="' + bannerSlides[i] + '"';
-      imgs += '<img class="banner-slide' + (i === 0 ? ' is-active' : '') + '"' + srcAttr + ' alt="">';
+    for (let i = 0; i < bannerBase.length; i++) {
+      const base = bannerBase[i];
+      const srcsetJpg = buildSrcset(base, 'jpg');
+      if (i === 0) {
+        // 首张：直接加载，优先 WebP
+        imgs += '<picture>';
+        imgs += '<source srcset="' + buildSrcset(base, 'webp') + '" sizes="' + SRC_SIZES + '" type="image/webp">';
+        imgs += '<source srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" type="image/jpeg">';
+        imgs += '<img class="banner-slide is-active" src="' + base + '.jpg" srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" alt="" decoding="async" fetchpriority="high">';
+        imgs += '</picture>';
+      } else {
+        // 其余：延迟加载
+        imgs += '<picture>';
+        imgs += '<source data-srcset="' + buildSrcset(base, 'webp') + '" sizes="' + SRC_SIZES + '" type="image/webp">';
+        imgs += '<source data-srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" type="image/jpeg">';
+        imgs += '<img class="banner-slide" data-src="' + base + '.jpg" data-srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" alt="" decoding="async">';
+        imgs += '</picture>';
+      }
       dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
     }
     banner.insertAdjacentHTML('beforeend', imgs);
@@ -45,17 +68,27 @@
     const slideEls = banner.querySelectorAll('.banner-slide');
     const dotEls  = header.querySelectorAll('.banner-dot');
 
-    // 标记每张图是否已触发加载，避免重复设置 src
+    // 标记每张图是否已触发加载，避免重复设置
     const loaded = [true, false, false];
 
-    // 懒加载指定索引的图片（从 data-src 搬到 src）
+    // 懒加载指定索引的图片（从 data-* 搬到 src/srcset）
     function lazyLoad(i) {
       if (loaded[i]) return;
       const el = slideEls[i];
       const src = el.getAttribute('data-src');
       if (!src) return;
       el.setAttribute('src', src);
+      el.setAttribute('srcset', el.getAttribute('data-srcset'));
       el.removeAttribute('data-src');
+      el.removeAttribute('data-srcset');
+      // 同时移动 <source> 的 srcset
+      const picture = el.closest('picture');
+      if (picture) {
+        picture.querySelectorAll('source[data-srcset]').forEach(function(s) {
+          s.setAttribute('srcset', s.getAttribute('data-srcset'));
+          s.removeAttribute('data-srcset');
+        });
+      }
       loaded[i] = true;
     }
 
@@ -426,6 +459,10 @@
       entry.querySelectorAll('img').forEach(function(img) {
                                           // 遍历正文中的所有图片
         if (img.closest('a[data-lightbox]')) return; // 已包裹过，跳过
+
+        // 性能优化：延迟加载 + 异步解码
+        if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+        if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
 
         if (img.alt) {                    // 有 alt 文字 → 在图片下方添加说明
           img.insertAdjacentHTML('afterend', '<span class="caption">' + img.alt + '</span>');

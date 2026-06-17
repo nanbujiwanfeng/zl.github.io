@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
 
-  <!-- Google Fonts: Noto Sans SC + JetBrains Mono -->
+  <!-- Google Fonts: Noto Sans SC + JetBrains Mono（异步加载，不阻塞渲染） -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 
   <title>你好，新生！属于我的第一个博客 | 南不及晚风的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,14 +23,14 @@
   <link rel="shortcut icon" href="/zl.github.io/favicon.png">
   <link rel="alternate" type="application/rss+xml" title="南不及晚风的博客 RSS" href="/zl.github.io/rss.xml">
 
-  <!-- 预加载首张 banner 图（LCP 关键资源） -->
-  <link rel="preload" as="image" href="/zl.github.io/images/1.jpg" fetchpriority="high">
+  <!-- 预加载首张 banner 图（LCP 关键资源，WebP 优先） -->
+  <link rel="preload" as="image" href="/zl.github.io/images/1.webp" fetchpriority="high" imagesrcset="/zl.github.io/images/1-400w.webp 400w, /zl.github.io/images/1-800w.webp 800w, /zl.github.io/images/1-1200w.webp 1200w" imagesizes="100vw">
 
-  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781693651377">
-  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781693651377">
-  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781693651377">
-  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781693651377">
-  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781693651377">
+  <link rel="stylesheet" href="/zl.github.io/css/reset.css?v=1781701066761">
+  <link rel="stylesheet" href="/zl.github.io/css/theme.css?v=1781701066761">
+  <link rel="stylesheet" href="/zl.github.io/css/content.css?v=1781701066761">
+  <link rel="stylesheet" href="/zl.github.io/css/fork-awesome.min.css?v=1781701066761">
+  <link rel="stylesheet" href="/zl.github.io/css/style.css?v=1781701066761">
 
 <body>
 
@@ -365,8 +366,8 @@
 
 
 
-<script defer src="/zl.github.io/js/tokenize.js?v=1781693651377"></script>
-<script defer src="/zl.github.io/js/script.js?v=1781693651377"></script>
+<script defer src="/zl.github.io/js/tokenize.js?v=1781701066761"></script>
+<script defer src="/zl.github.io/js/script.js?v=1781701066761"></script>
 
 
 
