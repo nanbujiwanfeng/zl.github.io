@@ -609,14 +609,28 @@
       });
 
       // 合并紧跟在 <pre> 后面的孤立 }</p>（如三子棋结尾的 }）
+      // 同时合并 <pre> 前面以 { 结尾的短 <p>（如 int main()<br>{）
       var pres = entry.querySelectorAll('pre');
       pres.forEach(function(pre) {
         var next = pre.nextElementSibling;
-        if (!next || next.tagName !== 'P') return;
-        var t = next.textContent.trim();
-        if (t === '}' || t === '});' || t === '};') {
-          pre.querySelector('code').textContent += '\n' + t;
-          next.parentNode.removeChild(next);
+        if (next && next.tagName === 'P') {
+          var t = next.textContent.trim();
+          if (t === '}' || t === '});' || t === '};') {
+            pre.querySelector('code').textContent += '\n' + t;
+            next.parentNode.removeChild(next);
+          }
+        }
+
+        var prev = pre.previousElementSibling;
+        if (prev && prev.tagName === 'P') {
+          // 提取纯文本（<br> → 换行）
+          var raw = prev.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '');
+          var t = raw.trim();
+          // 短文本 + 以 { 结尾的函数/方法签名，合并到代码块开头
+          if (t.length < 120 && /\)\s*\{\s*$/.test(t) && !/[。！？，、；：》\.\?!,;:]/.test(t)) {
+            pre.querySelector('code').textContent = t + '\n' + pre.querySelector('code').textContent;
+            prev.parentNode.removeChild(prev);
+          }
         }
       });
     });
