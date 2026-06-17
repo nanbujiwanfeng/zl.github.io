@@ -36,13 +36,17 @@
     const header = document.getElementById('header');
     if (!banner || bannerBase.length === 0) return;
 
-    /* 构建 HTML：首张图直接设 src/srcset，其余图用 data-* 延迟加载 */
+    // 首张图已服务端直出在模板中，仅需追加 2-3 张 + 控件
+    const firstExists = banner.querySelectorAll('.banner-slide').length > 0;
+
+    /* 构建 HTML：首张图已存在于模板，仅追加其余图片 */
     let imgs = '', dots = '';
-    for (let i = 0; i < bannerBase.length; i++) {
+    const startIdx = firstExists ? 1 : 0;
+    for (let i = startIdx; i < bannerBase.length; i++) {
       const base = bannerBase[i];
       const srcsetJpg = buildSrcset(base, 'jpg');
-      if (i === 0) {
-        // 首张：直接加载，优先 WebP
+      if (i === 0 && !firstExists) {
+        // 降级路径：模板中无首张图时才 JS 构建
         imgs += '<picture>';
         imgs += '<source srcset="' + buildSrcset(base, 'webp') + '" sizes="' + SRC_SIZES + '" type="image/webp">';
         imgs += '<source srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" type="image/jpeg">';
@@ -56,9 +60,12 @@
         imgs += '<img class="banner-slide" data-src="' + base + '.jpg" data-srcset="' + srcsetJpg + '" sizes="' + SRC_SIZES + '" alt="" decoding="async">';
         imgs += '</picture>';
       }
+    }
+    // 圆点：全部由 JS 生成（包括第 0 个）
+    for (let i = 0; i < bannerBase.length; i++) {
       dots += '<button class="banner-dot' + (i === 0 ? ' is-active' : '') + '"></button>';
     }
-    banner.insertAdjacentHTML('beforeend', imgs);
+    if (imgs) banner.insertAdjacentHTML('beforeend', imgs);
     header.insertAdjacentHTML('beforeend',
       '<button class="banner-arrow banner-prev">&#8249;</button>' +
       '<button class="banner-arrow banner-next">&#8250;</button>' +
@@ -68,8 +75,8 @@
     const slideEls = banner.querySelectorAll('.banner-slide');
     const dotEls  = header.querySelectorAll('.banner-dot');
 
-    // 标记每张图是否已触发加载，避免重复设置
-    const loaded = [true, false, false];
+    // 标记每张图是否已触发加载（首张已由模板直出，标记为已加载）
+    const loaded = bannerBase.map(function(_, i) { return i === 0 && firstExists; });
 
     // 懒加载指定索引的图片（从 data-* 搬到 src/srcset）
     function lazyLoad(i) {
