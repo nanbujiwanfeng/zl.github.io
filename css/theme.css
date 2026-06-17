@@ -919,7 +919,7 @@ a.article-title:hover { color: var(--accent); }
   box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 .article-title {
-  background: linear-gradient(to right, var(--accent), #6366f1);
+  background: linear-gradient(to right, var(--accent), var(--accent-hover));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

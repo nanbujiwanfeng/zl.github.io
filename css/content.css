@@ -60,7 +60,7 @@
 /* ==============================================
    三、文本样式（加粗、斜体、上下标、水平线）
    ============================================== */
-.article-entry hr { border: 1px dashed var(--border); }
+/* hr 样式见 杂志排版 — 装饰分割线 */
 .article-entry strong { font-weight: bold; }   /* 加粗 */
 .article-entry em, .article-entry cite { font-style: italic; } /* 斜体 */
 .article-entry sup, .article-entry sub {
@@ -415,29 +415,7 @@ pre .keyword, pre .javascript .function { color: #c9c; }                        
 }
 
 /* ==============================================
-   十八、杂志排版 — 首字下沉
-   ============================================== */
-.article-entry > p:first-of-type::first-letter {
-  float: left;
-  font-size: 3.8em;
-  font-weight: 700;
-  line-height: 0.75;
-  margin-right: 0.12em;
-  color: var(--heading);
-  font-family: Georgia, 'Times New Roman', serif;
-}
-/* 首页摘要卡片不启用首字下沉 */
-.article-excerpt::first-letter {
-  float: none;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  color: inherit;
-  font-family: inherit;
-}
-
-/* ==============================================
-   十九、杂志排版 — 标题装饰
+   十八、杂志排版 — 标题装饰
    ============================================== */
 .article-entry h2 {
   display: flex;
@@ -509,5 +487,5 @@ pre .keyword, pre .javascript .function { color: #c9c; }                        
 }
 .article-inner:hover {
   border-color: var(--accent);
-  box-shadow: 0 12px 40px rgba(59,130,246,0.1), 0 4px 15px rgba(59,130,246,0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px var(--accent);
 }

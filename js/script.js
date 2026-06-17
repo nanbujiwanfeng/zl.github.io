@@ -631,7 +631,7 @@
     if (typeof window === 'undefined') return;
 
     // 为首页文章卡片和侧边栏部件添加动画初始状态
-    const cards = document.querySelectorAll('.article, .widget-wrap');
+    const cards = document.querySelectorAll('.widget-wrap');
     if (!cards.length) return;
 
     // 使用 IntersectionObserver 做高性能滚动检测
